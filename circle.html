@@ -1,0 +1,637 @@
+<!-- --- START OF FILE circle.html --- -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Geometry</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Remove input spinners */
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    
+    .input-card { transition: all 0.2s ease-out; }
+    .input-card:focus-within { border-color: #71717a; background-color: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+    
+    .layer-btn[data-active="true"] { background-color: var(--active-bg); color: white; border-color: var(--active-bg); }
+    .layer-btn[data-active="false"] { background-color: white; color: #71717a; border-color: #e4e4e7; }
+    
+    /* Clean details marker */
+    details > summary { list-style: none; cursor: pointer; user-select: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary:focus { outline: none; }
+    
+    /* Animations */
+    .formula-row { animation: slideIn 0.2s ease-out forwards; opacity: 0; transform: translateY(4px); }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Dropdown Animation */
+    details[open] summary ~ div { animation: popDown 0.2s ease-out; }
+    @keyframes popDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Back Button Styling - Enhanced */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
+
+  <!-- Header -->
+  <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Left: Back Button & "What is Pi" Dropdown -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="back-button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Back
+        </a>
+        <div class="w-px h-6 bg-zinc-200"></div>
+        <div class="relative z-50">
+        <details class="group">
+          <summary class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
+            <span class="bg-zinc-100 text-zinc-500 font-bold font-serif italic px-2 py-0.5 rounded border border-zinc-200">π</span>
+            <span>What is Pi?</span>
+            <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          
+          <!-- Dropdown Card - Enhanced -->
+          <div class="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
+             <h3 class="font-bold text-zinc-900 mb-1 text-lg">π (Pi)</h3>
+             <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Circle Constant</p>
+             
+             <p class="text-sm text-zinc-700 mb-4 leading-relaxed">
+               The ratio of any circle's circumference to its diameter. Regardless of size, this ratio is always π ≈ 3.14159...
+             </p>
+             
+             <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-4">
+               <p class="text-xs text-blue-900 font-medium">
+                 <strong>If diameter = 1</strong>, then the perimeter = π
+               </p>
+             </div>
+             
+             <p class="text-[10px] text-zinc-500 leading-relaxed">
+               An irrational number — its decimals never end or repeat. Ancient mathematicians discovered this constant appears universally in all circles, nature, and physics.
+             </p>
+          </div>
+        </details>
+        </div>
+      </div>
+      
+      <!-- Right controls -->
+      <div class="flex items-center gap-4">
+        <!-- Unit Selector -->
+        <div class="flex items-center gap-2 bg-zinc-100 rounded-md px-3 py-1.5 border border-zinc-200">
+          <span class="text-xs font-semibold text-zinc-500 uppercase">Unit</span>
+          <select id="unitSelect" onchange="updateLabels()" class="bg-transparent text-sm font-medium text-zinc-900 outline-none cursor-pointer">
+            <option value="cm">cm</option>
+            <option value="m">m</option>
+            <option value="mm">mm</option>
+          </select>
+        </div>
+
+        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
+    
+    <!-- Left: Inputs & Formulas -->
+    <div class="lg:w-[460px] flex-none bg-white border-r border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin">
+      <div class="p-6 space-y-6">
+        
+        <!-- Standard Inputs -->
+        <div>
+          <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            Standard Dimensions
+            <span class="h-px bg-zinc-100 flex-1"></span>
+          </h2>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Radius -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Radius (r)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-r" oninput="calculate('r')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Diameter -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-indigo-500 uppercase mb-1 block">Diameter (d)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-d" oninput="calculate('d')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Circumference -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Circumference (C)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-c" oninput="calculate('c')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Area -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-a" oninput="calculate('a')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label-sq">cm²</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulas Panel -->
+        <div id="formula-panel" class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
+          <p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>
+        </div>
+
+        <!-- Advanced Section (Collapsible) -->
+        <div class="border-t border-dashed border-zinc-200 pt-2">
+          <details open class="group">
+            <summary class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
+              <h2 class="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-purple-500 transition-transform group-open:scale-110"></div>
+                Sector & Arc
+              </h2>
+              <div class="flex items-center gap-2">
+                 <span class="text-[10px] bg-purple-50 text-purple-600 font-medium px-2 py-0.5 rounded border border-purple-100 uppercase tracking-wide">Advanced</span>
+                 <svg class="text-zinc-400 transform transition-transform duration-200 group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </summary>
+
+            <div class="pb-2 pl-2 border-l-2 border-zinc-100 ml-1 space-y-4">
+               <!-- Angle Input -->
+               <div class="input-card bg-white border border-zinc-200 rounded-lg p-3 shadow-sm ring-1 ring-transparent focus-within:ring-purple-200 focus-within:border-purple-300">
+                <label class="text-[10px] font-bold text-zinc-500 uppercase mb-1 block flex justify-between">
+                  <span>Sector Angle (θ)</span>
+                </label>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-angle" oninput="calculate('angle')" class="w-full bg-transparent font-mono text-lg outline-none text-purple-900" placeholder="e.g. 60">
+                  <span class="text-xs text-zinc-400 font-mono">deg</span>
+                </div>
+              </div>
+
+              <!-- Advanced Results -->
+              <div class="grid grid-cols-1 gap-1 text-sm bg-zinc-50/50 rounded-lg border border-zinc-100 p-2">
+                 
+                 <div class="flex justify-between items-center p-2 border-b border-dashed border-zinc-200">
+                   <span class="text-zinc-500 text-xs font-medium uppercase tracking-wide">Arc Length (s)</span>
+                   <div class="text-right">
+                     <span id="out-arc" class="font-mono font-medium text-zinc-900">-</span>
+                     <span class="text-[10px] text-zinc-400 unit-label">cm</span>
+                   </div>
+                 </div>
+
+                 <div class="flex justify-between items-center p-2 border-b border-dashed border-zinc-200">
+                  <span class="text-zinc-500 text-xs font-medium uppercase tracking-wide">Chord (L)</span>
+                  <div class="text-right">
+                    <span id="out-chord" class="font-mono font-medium text-zinc-900">-</span>
+                    <span class="text-[10px] text-zinc-400 unit-label">cm</span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center p-2">
+                  <span class="text-zinc-500 text-xs font-medium uppercase tracking-wide">Sector Area</span>
+                  <div class="text-right">
+                    <span id="out-sector" class="font-mono font-medium text-zinc-900">-</span>
+                    <span class="text-[10px] text-zinc-400 unit-label-sq">cm²</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Visualizer -->
+    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+      
+      <!-- Canvas Backdrop -->
+      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+      
+      <!-- Canvas -->
+      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-6">
+        <canvas id="geoCanvas"></canvas>
+      </div>
+
+      <!-- Layer Controls -->
+      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-4">
+        
+        <button onclick="toggleLayer('radius')" id="btn-radius" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Radius
+        </button>
+
+        <button onclick="toggleLayer('diameter')" id="btn-diameter" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #6366f1">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Diameter
+        </button>
+        
+        <button onclick="toggleLayer('circumference')" id="btn-circumference" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #10b981">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Perimeter
+        </button>
+
+        <button onclick="toggleLayer('area')" id="btn-area" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #f43f5e">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Area
+        </button>
+
+        <div class="w-px h-6 bg-zinc-200 mx-1"></div>
+
+        <button onclick="toggleLayer('sector')" id="btn-sector" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #a855f7">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Sector
+        </button>
+
+        <button onclick="toggleLayer('arc')" id="btn-arc" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #d946ef">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Arc
+        </button>
+
+        <button onclick="toggleLayer('chord')" id="btn-chord" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #ea580c">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Chord
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // --- CANVAS CONFIG ---
+    const canvas = document.getElementById('geoCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Constant Display Size
+    const SIZE = 500;
+    canvas.style.width = SIZE + 'px';
+    canvas.style.height = SIZE + 'px';
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    ctx.scale(dpr, dpr);
+
+    const CENTER = SIZE / 2;
+    const VISUAL_R = 170; // Fixed radius size for drawing
+
+    // --- STATE ---
+    let state = {
+      r: 0,
+      d: 0,
+      c: 0,
+      a: 0,
+      angle: 0,
+      activeMode: 'r' // which input triggered calculation
+    };
+
+    let layers = {
+      radius: true,
+      diameter: true, 
+      circumference: true,
+      area: false,
+      sector: true,
+      arc: false,
+      chord: false
+    };
+
+    const inputs = {
+      r: document.getElementById('in-r'),
+      d: document.getElementById('in-d'),
+      c: document.getElementById('in-c'),
+      a: document.getElementById('in-a'),
+      angle: document.getElementById('in-angle')
+    };
+    
+    const outputs = {
+      arc: document.getElementById('out-arc'),
+      chord: document.getElementById('out-chord'),
+      sector: document.getElementById('out-sector')
+    };
+    
+    const formulaPanel = document.getElementById('formula-panel');
+
+    // --- LOGIC ---
+    function updateLabels() {
+      const unit = document.getElementById('unitSelect').value;
+      document.querySelectorAll('.unit-label').forEach(el => el.textContent = unit);
+      document.querySelectorAll('.unit-label-sq').forEach(el => el.textContent = unit + "²");
+      generateFormulas();
+    }
+
+    function toggleLayer(layerName) {
+      layers[layerName] = !layers[layerName];
+      document.getElementById(`btn-${layerName}`).dataset.active = layers[layerName];
+      draw();
+    }
+
+    function resetCalc() {
+      Object.values(inputs).forEach(i => i.value = '');
+      Object.values(outputs).forEach(i => i.innerText = '-');
+      state = { r: 0, d: 0, c: 0, a: 0, angle: 0, activeMode: null };
+      
+      formulaPanel.innerHTML = '<p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>';
+      
+      draw();
+    }
+
+    function calculate(source) {
+      const val = parseFloat(inputs[source].value);
+      state.activeMode = source;
+
+      if (isNaN(val) || val < 0) {
+        if (source !== 'angle') state.r = 0;
+        if (source === 'angle') state.angle = 0;
+        draw();
+        return;
+      }
+
+      // 1. Math
+      let r = 0;
+      if (source === 'r') r = val;
+      else if (source === 'd') r = val / 2;
+      else if (source === 'c') r = val / (2 * Math.PI);
+      else if (source === 'a') r = Math.sqrt(val / Math.PI);
+      else { r = parseFloat(inputs.r.value) || 0; } 
+
+      if (source === 'angle') state.angle = val;
+      else { state.r = r; } 
+
+      // 2. Derive Standard
+      state.r = r;
+      state.d = r * 2;
+      state.c = 2 * Math.PI * r;
+      state.a = Math.PI * r * r;
+
+      // 3. Update Inputs (guard against active focus)
+      if (source !== 'r' && source !== 'angle') inputs.r.value = Number(state.r.toPrecision(5));
+      if (source !== 'd' && source !== 'angle') inputs.d.value = Number(state.d.toPrecision(5));
+      if (source !== 'c' && source !== 'angle') inputs.c.value = Number(state.c.toPrecision(5));
+      if (source !== 'a' && source !== 'angle') inputs.a.value = Number(state.a.toPrecision(5));
+
+      // 4. Advanced Math
+      if (state.angle > 0 && state.r > 0) {
+        const thetaRad = state.angle * (Math.PI / 180);
+        
+        const arc = thetaRad * state.r;
+        outputs.arc.innerText = Number(arc.toPrecision(5));
+        
+        const chord = 2 * state.r * Math.sin(thetaRad/2);
+        outputs.chord.innerText = Number(chord.toPrecision(5));
+
+        const sect = 0.5 * state.r * state.r * thetaRad;
+        outputs.sector.innerText = Number(sect.toPrecision(5));
+        
+        if (source === 'angle') {
+            if(!layers.sector) toggleLayer('sector');
+        }
+      }
+
+      // 5. Update UI
+      generateFormulas();
+      draw();
+    }
+
+    function generateFormulas() {
+      if (state.r === 0) return;
+      
+      const m = state.activeMode;
+      const unit = document.getElementById('unitSelect').value;
+      const rStr = state.r.toFixed(2);
+      
+      // Base styles
+      const lineClass = "formula-row flex justify-between items-center font-mono text-xs lg:text-sm h-6";
+      const lbl = "text-zinc-500";
+      const val = "text-zinc-200 font-medium";
+
+      let html = `<div class="space-y-1">`;
+      
+      if (m === 'r' || !m || m === 'angle') {
+         html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given Radius</span> <span class="${val}">r = ${rStr}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-indigo-400">d = 2·r</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-emerald-400">C = 2·π·r</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-rose-400">A = π·r²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      } 
+      else if (m === 'd') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Diam</span> <span class="${val}">d = ${state.d.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">r = d / 2</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-emerald-400">C = π·d</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-rose-400">A = π(d/2)²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      }
+      else if (m === 'c') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Circ</span> <span class="${val}">C = ${state.c.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">r = C/2π</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+      }
+      else if (m === 'a') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${state.a.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">r = √(A/π)</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+      }
+
+      if (state.angle > 0) {
+        html += `<div class="h-px bg-zinc-700 my-2"></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:200ms"><span class="text-purple-400">s = r·θ(rad)</span> <span class="${val}">${outputs.arc.innerText} ${unit}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:250ms"><span class="text-orange-400">L = 2r·sin(θ/2)</span> <span class="${val}">${outputs.chord.innerText} ${unit}</span></div>`;
+      }
+
+      html += `</div>`;
+      formulaPanel.innerHTML = html;
+    }
+
+    // --- VISUALIZATION ---
+    function draw() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      if (state.r <= 0) {
+        ctx.beginPath();
+        ctx.arc(CENTER, CENTER, 120, 0, Math.PI * 2);
+        ctx.setLineDash([5, 8]);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = "italic 14px sans-serif";
+        ctx.fillStyle = "#d4d4d8";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Ready for geometry", CENTER, CENTER);
+        return;
+      }
+
+      const r = VISUAL_R;
+      const cx = CENTER;
+      const cy = CENTER;
+      const thetaRad = state.angle * (Math.PI / 180);
+
+      // 1. AREA LAYER
+      if (layers.area) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.08)'; 
+        ctx.fill();
+      }
+
+      // SECTOR DRAWING
+      if (layers.sector && state.angle > 0) {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, 0, -thetaRad, true); 
+        ctx.lineTo(cx, cy);
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'; 
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
+        ctx.stroke();
+      }
+
+      // 2. MAIN CIRCLE STROKE
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.lineWidth = layers.circumference ? 3 : 1;
+      ctx.strokeStyle = layers.circumference ? '#10b981' : '#f4f4f5';
+      ctx.stroke();
+
+      // 3. DIAMETER (Horizontal)
+      if (layers.diameter) {
+        ctx.beginPath();
+        ctx.moveTo(cx - r, cy);
+        ctx.lineTo(cx + r, cy);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#6366f1'; 
+        ctx.stroke();
+        drawLabel('d', cx, cy + 15, '#6366f1', 'top'); 
+      }
+
+      // 4. RADIUS (Diagonal - FIX SCRIBBLE)
+      if (layers.radius) {
+        const radAngle = -Math.PI / 4; // -45 degrees
+        
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        const rx = cx + r * Math.cos(radAngle);
+        const ry = cy + r * Math.sin(radAngle);
+        ctx.lineTo(rx, ry);
+        
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#3b82f6';
+        ctx.stroke();
+
+        const lx = cx + (r/2) * Math.cos(radAngle);
+        const ly = cy + (r/2) * Math.sin(radAngle);
+        drawLabel('r', lx - 8, ly - 8, '#3b82f6', 'middle');
+      }
+
+      // 5. ADVANCED GEOMETRY OVERLAYS
+      if (state.angle > 0) {
+        const ex = cx + r * Math.cos(-thetaRad);
+        const ey = cy + r * Math.sin(-thetaRad);
+
+        if (layers.arc) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, -thetaRad, true);
+          ctx.lineWidth = 5;
+          ctx.lineCap = 'round';
+          ctx.strokeStyle = '#d946ef'; 
+          ctx.stroke();
+        }
+
+        if (layers.chord) {
+          ctx.beginPath();
+          const sx = cx + r; 
+          const sy = cy;
+          ctx.moveTo(sx, sy);
+          ctx.lineTo(ex, ey);
+          
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#ea580c'; 
+          ctx.stroke();
+        }
+      }
+      
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI*2);
+      ctx.fillStyle = '#18181b';
+      ctx.fill();
+    }
+
+    function drawLabel(text, x, y, color, baseline='middle') {
+      ctx.save();
+      ctx.font = "bold 14px 'JetBrains Mono'";
+      ctx.textAlign = "center";
+      ctx.textBaseline = baseline;
+      
+      ctx.shadowColor = "white";
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = color;
+      
+      ctx.fillText(text, x, y);
+      ctx.fillText(text, x, y); 
+      ctx.restore();
+    }
+
+    resetCalc();
+  </script>
+</body>
+</html>

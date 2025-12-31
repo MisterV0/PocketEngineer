@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resistor Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+          boxShadow: {
+            'glass': '0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.5) inset',
+            'floating': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          },
+          animation: {
+            'pop-in': 'popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'shimmer': 'shimmer 4s infinite',
+          },
+          keyframes: {
+            popIn: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+            shimmer: {
+              '0%': { backgroundPosition: '-100% 0' },
+              '100%': { backgroundPosition: '200% 0' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+    .hide-scroll::-webkit-scrollbar { display: none; }
+    .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Interaction Hitboxes */
+    .band-hitbox {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .band-hitbox:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+    .band-hitbox:active {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* List Item Click State */
+    .list-item-active:active {
+        background-color: #F2F2F7;
+        transform: scale(0.98);
+    }
+
+    /* Premium Button Shimmer */
+    .btn-shine {
+      background: linear-gradient(110deg, #ffffff 30%, #f4f4f5 45%, #ffffff 60%);
+      background-size: 200% 100%;
+    }
+
+    /* Back Button Styling - Enhanced */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+
+    /* Hint Text Animation */
+    @keyframes fadeInShow {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+    #hint-text {
+      animation: fadeInShow 4s ease-in-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F5F5F7] text-zinc-900 min-h-screen font-sans flex flex-col overflow-hidden">
+
+  <!-- Header: Toggle & Back Button -->
+  <header class="flex-none h-16 px-6 flex items-center justify-between z-10 bg-white/70 backdrop-blur-md border-b border-black/5 sticky top-0">
+    <a href="index.html" class="back-button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      Back
+    </a>
+    <div class="bg-zinc-200/60 p-1 rounded-lg flex relative h-9 w-[160px]">
+      <div id="toggle-indicator" class="absolute left-1 top-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-[6px] shadow-sm transition-transform duration-300"></div>
+      <button onclick="setBands(4)" class="relative z-10 w-1/2 text-xs font-semibold transition-colors duration-200" id="btn-4">4 Bands</button>
+      <button onclick="setBands(5)" class="relative z-10 w-1/2 text-xs font-semibold text-zinc-500 transition-colors duration-200" id="btn-5">5 Bands</button>
+    </div>
+    <div></div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 overflow-y-auto hide-scroll w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
+    
+    <!-- 3D Resistor Canvas -->
+    <div class="relative w-full max-w-2xl aspect-[2.6/1] mb-16 group perspective-1000">
+      <div class="absolute inset-10 bg-gradient-to-tr from-amber-100/40 to-orange-100/40 blur-3xl rounded-full opacity-60 pointer-events-none"></div>
+      <canvas id="resistorCanvas" class="relative z-10 w-full h-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.02]"></canvas>
+      <div id="hitbox-layer" class="absolute inset-0 z-20 w-full h-full"></div>
+      <div id="hint-text" class="absolute -bottom-16 left-0 right-0 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900/5 backdrop-blur-sm border border-zinc-200/50 rounded-full text-xs font-medium text-zinc-600 uppercase tracking-widest">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="animate-pulse"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+          <span>Press resistor to edit colors</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Card -->
+    <div class="w-full max-w-xl bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-glass p-8 flex flex-col items-center text-center transition-all mb-10">
+      <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Total Resistance</div>
+      <div class="flex items-baseline gap-2 mb-4">
+        <!-- Added word-break to prevent overflow on mobile -->
+        <span class="font-mono text-6xl font-bold tracking-tighter text-zinc-900 drop-shadow-sm break-all" id="result-val">--</span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 w-full">
+        <div class="bg-white/50 rounded-2xl p-3 border border-white/50">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">Tolerance</div>
+          <div class="font-mono text-lg font-semibold text-zinc-700" id="result-tol">--</div>
+        </div>
+        <div class="bg-white/50 rounded-2xl p-3 border border-white/50">
+          <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">Range</div>
+          <div class="font-mono text-sm font-semibold text-zinc-600 pt-1" id="result-range">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- "Understand the conversion" Button (Shimmer Effect) -->
+    <button onclick="toggleEdu(true)" class="animate-shimmer btn-shine relative overflow-hidden px-8 py-4 rounded-full bg-white border border-black/5 shadow-sm hover:shadow-md hover:border-black/10 transition-all text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-600 active:scale-95">
+      Understand the conversion
+    </button>
+
+  </main>
+
+  <!-- Color Picker Modal -->
+  <div id="picker-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-zinc-900/20 backdrop-blur-sm transition-opacity opacity-0" id="picker-backdrop" onclick="closePicker()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+      <div class="bg-white/90 backdrop-blur-2xl w-full max-w-[340px] rounded-[32px] shadow-floating pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[70vh] border border-white/40" id="picker-panel">
+        <div class="px-6 py-5 border-b border-zinc-200/50 text-center flex-shrink-0">
+          <h3 class="text-lg font-bold text-zinc-900" id="picker-title">Select Color</h3>
+          <p class="text-xs text-zinc-500 font-medium mt-0.5" id="picker-subtitle">Band 1</p>
+        </div>
+        <div class="overflow-y-auto p-2 hide-scroll" id="picker-list">
+          <!-- Items injected via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Modal -->
+  <div id="edu-modal" class="fixed inset-0 z-[60] hidden" role="dialog">
+    <div class="absolute inset-0 bg-zinc-900/30 backdrop-blur-md transition-opacity opacity-0" id="edu-backdrop" onclick="toggleEdu(false)"></div>
+    
+    <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+      <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300" id="edu-panel">
+        
+        <!-- Header (Refined) -->
+        <div class="px-6 py-5 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
+          <!-- Text Only, No Icon -->
+          <h2 class="text-lg font-bold text-zinc-900">Calculation breakdown</h2>
+          
+          <button onclick="toggleEdu(false)" class="w-8 h-8 rounded-full bg-zinc-200/50 hover:bg-zinc-300/50 flex items-center justify-center text-zinc-500 transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Content -->
+        <div class="overflow-y-auto px-6 py-6">
+          
+          <!-- Live Calculation Box -->
+          <div class="mb-6 bg-blue-50/50 border border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center">
+            <div id="live-formula" class="font-mono text-sm leading-relaxed text-zinc-700 w-full flex justify-center">
+               <!-- JS Populates this -->
+            </div>
+            <p class="mt-2 text-xs text-zinc-400 font-medium max-w-[80%]">Band values are concatenated then multiplied.</p>
+          </div>
+
+          <!-- Reference Table -->
+          <h3 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3 px-1">Color Code Reference</h3>
+          <div class="border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-zinc-50 text-xs text-zinc-500 uppercase font-semibold border-b border-zinc-200">
+                <tr>
+                  <th class="px-4 py-2">Color</th>
+                  <th class="px-2 py-2 text-center">Digit</th>
+                  <th class="px-2 py-2 text-center">Mult</th>
+                  <th class="px-4 py-2 text-right">Tol</th>
+                </tr>
+              </thead>
+              <tbody id="edu-table-body" class="divide-y divide-zinc-100 bg-white">
+                <!-- JS Injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* --- CONFIGURATION --- */
+    const COLORS = {
+      black:  { val: 0, mult: 1, hex: '#1c1c1e', name: 'Black' },
+      brown:  { val: 1, mult: 10, tol: 1, hex: '#7c2d12', name: 'Brown' },
+      red:    { val: 2, mult: 100, tol: 2, hex: '#ef4444', name: 'Red' },
+      orange: { val: 3, mult: 1000, hex: '#f97316', name: 'Orange' },
+      yellow: { val: 4, mult: 10000, hex: '#facc15', name: 'Yellow' },
+      green:  { val: 5, mult: 100000, tol: 0.5, hex: '#22c55e', name: 'Green' },
+      blue:   { val: 6, mult: 1000000, tol: 0.25, hex: '#3b82f6', name: 'Blue' },
+      violet: { val: 7, mult: 10000000, tol: 0.1, hex: '#8b5cf6', name: 'Violet' },
+      gray:   { val: 8, mult: 100000000, tol: 0.05, hex: '#71717a', name: 'Gray' },
+      white:  { val: 9, mult: 1000000000, hex: '#f4f4f5', name: 'White' },
+      gold:   { mult: 0.1,  tol: 5,  hex: 'gold', name: 'Gold', grad: true },
+      silver: { mult: 0.01, tol: 10, hex: 'silver', name: 'Silver', grad: true },
+    };
+    
+    const SEQ = ['black','brown','red','orange','yellow','green','blue','violet','gray','white','gold','silver'];
+
+    /* --- STATE --- */
+    let bands = 4;
+    let selections = ['brown', 'black', 'red', 'gold', 'brown'];
+    let activeIndex = null;
+
+    const canvas = document.getElementById('resistorCanvas');
+    const ctx = canvas.getContext('2d');
+    const CW = 800;
+    const CH = 300;
+
+    /* --- INIT --- */
+    function init() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = CW * dpr;
+      canvas.height = CH * dpr;
+      ctx.scale(dpr, dpr);
+      
+      setBands(4);
+      buildEduTable();
+      window.addEventListener('resize', () => requestAnimationFrame(placeHitboxes));
+    }
+
+    /* --- LOGIC --- */
+    window.setBands = function(n) {
+      bands = n;
+      activeIndex = null;
+      closePicker();
+      
+      const indicator = document.getElementById('toggle-indicator');
+      const btn4 = document.getElementById('btn-4');
+      const btn5 = document.getElementById('btn-5');
+      
+      if(n === 4) {
+        indicator.style.transform = 'translateX(0)';
+        btn4.classList.replace('text-zinc-500', 'text-zinc-900');
+        btn5.classList.replace('text-zinc-900', 'text-zinc-500');
+      } else {
+        indicator.style.transform = 'translateX(100%)';
+        btn4.classList.replace('text-zinc-900', 'text-zinc-500');
+        btn5.classList.replace('text-zinc-500', 'text-zinc-900');
+      }
+
+      update();
+    }
+
+    // Floating point fix helper
+    function stripFloat(num) {
+        return parseFloat(num.toPrecision(12));
+    }
+
+    function update() {
+      const c = selections.map(k => COLORS[k]);
+      let ohms = 0, tol = 0, digits = "";
+      
+      if(bands === 4) {
+        digits = `${c[0].val}${c[1].val}`;
+        // Apply stripFloat to multiplication result
+        ohms = stripFloat(parseInt(digits) * c[2].mult);
+        tol = c[3].tol;
+      } else {
+        digits = `${c[0].val}${c[1].val}${c[2].val}`;
+        // Apply stripFloat to multiplication result
+        ohms = stripFloat(parseInt(digits) * c[3].mult);
+        tol = c[4].tol;
+      }
+
+      document.getElementById('result-val').innerText = fmtOhms(ohms);
+      document.getElementById('result-tol').innerText = `±${tol}%`;
+      
+      // Calculate Range
+      const dev = ohms * (tol/100);
+      const min = stripFloat(ohms - dev);
+      const max = stripFloat(ohms + dev);
+      
+      document.getElementById('result-range').innerText = `${fmtShort(min)}Ω — ${fmtShort(max)}Ω`;
+
+      updateEduFormula(ohms, tol);
+      drawResistor();
+      placeHitboxes();
+    }
+
+    /* --- VISUALS --- */
+    function drawResistor() {
+      ctx.clearRect(0, 0, CW, CH);
+      const cx = CW/2; const cy = CH/2;
+      
+      // Leads
+      const leadGrad = ctx.createLinearGradient(0, cy-10, 0, cy+10);
+      leadGrad.addColorStop(0, '#6b7280'); 
+      leadGrad.addColorStop(0.4, '#e5e7eb'); 
+      leadGrad.addColorStop(0.6, '#e5e7eb');
+      leadGrad.addColorStop(1, '#6b7280');
+      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(CW, cy);
+      ctx.lineWidth = 14; ctx.strokeStyle = leadGrad; ctx.lineCap = 'round'; ctx.stroke();
+
+      // Body Shape
+      const W = 520; const H = 160; const HM = 130; const R = 40;
+      const pathBody = () => {
+        ctx.beginPath();
+        ctx.moveTo(cx - W/2 + R, cy - H/2);
+        ctx.bezierCurveTo(cx - W/4, cy - H/2, cx - W/4, cy - HM/2, cx, cy - HM/2);
+        ctx.bezierCurveTo(cx + W/4, cy - HM/2, cx + W/4, cy - H/2, cx + W/2 - R, cy - H/2);
+        ctx.quadraticCurveTo(cx + W/2, cy - H/2, cx + W/2, cy);
+        ctx.quadraticCurveTo(cx + W/2, cy + H/2, cx + W/2 - R, cy + H/2);
+        ctx.bezierCurveTo(cx + W/4, cy + H/2, cx + W/4, cy + HM/2, cx, cy + HM/2);
+        ctx.bezierCurveTo(cx - W/4, cy + HM/2, cx - W/4, cy + H/2, cx - W/2 + R, cy + H/2);
+        ctx.quadraticCurveTo(cx - W/2, cy + H/2, cx - W/2, cy);
+        ctx.quadraticCurveTo(cx - W/2, cy - H/2, cx - W/2 + R, cy - H/2);
+        ctx.closePath();
+      };
+
+      // Shadow
+      ctx.save(); pathBody(); ctx.fillStyle = 'black';
+      ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = 40; ctx.shadowOffsetY = 25;
+      ctx.fill(); ctx.restore();
+
+      // Fill
+      ctx.save(); pathBody(); ctx.clip();
+      const bodyGrad = ctx.createLinearGradient(0, cy - H/2, 0, cy + H/2);
+      bodyGrad.addColorStop(0, '#fde68a'); bodyGrad.addColorStop(0.3, '#d4b996'); bodyGrad.addColorStop(0.9, '#927552');
+      ctx.fillStyle = bodyGrad; ctx.fill();
+
+      // Bands
+      const startX = (CW - W)/2 + 90;
+      const spacing = bands === 4 ? 100 : 75;
+      for(let i=0; i<bands; i++) {
+        let bx = startX + (i*spacing);
+        if(i === bands-1) bx = (CW + W)/2 - 90;
+
+        const col = COLORS[selections[i]];
+        const bw = 28;
+
+        ctx.save();
+        ctx.beginPath(); ctx.rect(bx - bw/2, 0, bw, CH); ctx.clip();
+        pathBody();
+        
+        if(col.grad) {
+          const m = ctx.createLinearGradient(bx-10, 0, bx+10, 0);
+          const isG = selections[i] === 'gold';
+          m.addColorStop(0, isG ? '#854d0e' : '#4b5563');
+          m.addColorStop(0.5, isG ? '#fef08a' : '#f4f4f5');
+          m.addColorStop(1, isG ? '#854d0e' : '#4b5563');
+          ctx.fillStyle = m; ctx.fill();
+        } else {
+          ctx.fillStyle = col.hex; ctx.fill();
+        }
+        
+        const light = ctx.createLinearGradient(0, cy - H/2, 0, cy + H/2);
+        light.addColorStop(0, 'rgba(255,255,255,0.4)'); light.addColorStop(0.3, 'rgba(255,255,255,0)');
+        light.addColorStop(0.7, 'rgba(0,0,0,0.1)'); light.addColorStop(1, 'rgba(0,0,0,0.4)');
+        ctx.fillStyle = light; ctx.fill();
+        ctx.restore();
+      }
+
+      // Gloss
+      const gloss = ctx.createLinearGradient(0, cy - H/2, 0, cy + H/2);
+      gloss.addColorStop(0, 'rgba(255,255,255,0.7)'); gloss.addColorStop(0.15, 'rgba(255,255,255,0.1)');
+      gloss.addColorStop(0.5, 'transparent'); gloss.addColorStop(1, 'rgba(0,0,0,0.1)');
+      ctx.fillStyle = gloss; ctx.fill();
+      ctx.restore();
+    }
+
+    function placeHitboxes() {
+      const container = document.getElementById('hitbox-layer');
+      container.innerHTML = '';
+      const W = 520;
+      const startX = (CW - W)/2 + 90;
+      const spacing = bands === 4 ? 100 : 75;
+      
+      for(let i=0; i<bands; i++) {
+        let bx = startX + (i*spacing);
+        if(i === bands-1) bx = (CW + W)/2 - 90;
+        
+        const div = document.createElement('div');
+        div.className = 'band-hitbox';
+        const hw = 60; const hh = 160;
+        div.style.left = `${((bx - hw/2)/CW)*100}%`;
+        div.style.top = `${((CH/2 - hh/2)/CH)*100}%`;
+        div.style.width = `${(hw/CW)*100}%`;
+        div.style.height = `${(hh/CH)*100}%`;
+        
+        div.onclick = (e) => { e.stopPropagation(); openPicker(i); };
+        container.appendChild(div);
+      }
+    }
+
+    /* --- PICKER --- */
+    function openPicker(index) {
+      activeIndex = index;
+      document.getElementById('hint-text').style.display = 'none';
+
+      const type = getBandType(index);
+      const title = document.getElementById('picker-title');
+      const sub = document.getElementById('picker-subtitle');
+      
+      if(type === 'digit') { title.innerText = "Select Digit"; sub.innerText = `Band ${index+1}`; }
+      else if(type === 'mult') { title.innerText = "Select Multiplier"; sub.innerText = "Multiplier"; }
+      else { title.innerText = "Select Tolerance"; sub.innerText = "Tolerance"; }
+
+      const list = document.getElementById('picker-list');
+      list.innerHTML = '';
+
+      SEQ.forEach(key => {
+        const c = COLORS[key];
+        if(type === 'digit' && c.val === undefined) return;
+        if(type === 'mult' && c.mult === undefined) return;
+        if(type === 'tol' && c.tol === undefined) return;
+
+        const btn = document.createElement('button');
+        const isSel = selections[index] === key;
+        
+        btn.className = `w-full flex items-center gap-4 px-4 py-3 rounded-2xl mb-1 transition-all list-item-active group ${isSel ? 'bg-zinc-100' : 'hover:bg-zinc-50'}`;
+        const swatch = c.grad ? `linear-gradient(135deg, ${c.hex === 'gold' ? '#fde047, #a16207' : '#e4e4e7, #52525b'})` : c.hex;
+        let label = type === 'digit' ? c.val : (type === 'mult' ? "×"+fmtShort(c.mult) : "±"+c.tol+"%");
+
+        btn.innerHTML = `
+          <div class="w-10 h-10 rounded-full shadow-inner ring-1 ring-black/5 flex-shrink-0" style="background:${swatch}"></div>
+          <div class="flex-1 text-left">
+            <div class="text-sm font-semibold text-zinc-900">${c.name}</div>
+            <div class="text-xs font-mono text-zinc-500">${label}</div>
+          </div>
+          ${isSel ? `<div class="text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>` : ''}
+        `;
+        
+        btn.onclick = () => { selections[index] = key; update(); closePicker(); };
+        list.appendChild(btn);
+      });
+
+      const modal = document.getElementById('picker-modal');
+      const backdrop = document.getElementById('picker-backdrop');
+      const panel = document.getElementById('picker-panel');
+      
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        backdrop.classList.remove('opacity-0');
+        panel.classList.remove('scale-95', 'opacity-0');
+        panel.classList.add('animation-pop-in');
+      });
+    }
+
+    function closePicker() {
+      const modal = document.getElementById('picker-modal');
+      const backdrop = document.getElementById('picker-backdrop');
+      const panel = document.getElementById('picker-panel');
+      backdrop.classList.add('opacity-0');
+      panel.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); activeIndex = null; }, 200);
+    }
+
+    /* --- EDUCATIONAL --- */
+    function toggleEdu(show) {
+      const modal = document.getElementById('edu-modal');
+      const backdrop = document.getElementById('edu-backdrop');
+      const panel = document.getElementById('edu-panel');
+
+      if(show) {
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          panel.classList.remove('scale-95', 'opacity-0');
+          panel.classList.add('scale-100', 'opacity-100');
+        });
+      } else {
+        backdrop.classList.add('opacity-0');
+        panel.classList.remove('scale-100', 'opacity-100');
+        panel.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+      }
+    }
+
+    function updateEduFormula(ohms, tol) {
+       const container = document.getElementById('live-formula');
+       const cols = selections.map(k => COLORS[k]);
+       
+       let html = `<div class="flex flex-wrap items-center justify-center gap-2">`;
+       
+       // Digits
+       if(bands === 4) {
+          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[0].hex}"></span><span class="font-bold">${cols[0].val}</span></div>`;
+          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[1].hex}"></span><span class="font-bold">${cols[1].val}</span></div>`;
+       } else {
+          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[0].hex}"></span><span class="font-bold">${cols[0].val}</span></div>`;
+          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[1].hex}"></span><span class="font-bold">${cols[1].val}</span></div>`;
+          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[2].hex}"></span><span class="font-bold">${cols[2].val}</span></div>`;
+       }
+       
+       // Multiplier
+       const multCol = bands === 4 ? cols[2] : cols[3];
+       html += `<span class="text-zinc-400 mx-1">×</span>`;
+       html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${multCol.hex}"></span><span>${fmtShort(multCol.mult)}</span></div>`;
+       
+       // Result
+       html += `<span class="text-zinc-400 mx-1">=</span>`;
+       html += `<span class="font-bold text-blue-600 bg-blue-50 px-2 rounded">${fmtOhms(ohms)}</span>`;
+       
+       // Tol
+       html += `<span class="text-zinc-300 mx-1">|</span>`;
+       html += `<span class="text-zinc-500">±${tol}%</span>`;
+       html += `</div>`;
+       
+       container.innerHTML = html;
+    }
+
+    function buildEduTable() {
+      const t = document.getElementById('edu-table-body');
+      SEQ.forEach(k => {
+        const c = COLORS[k];
+        const row = document.createElement('tr');
+        row.className = "hover:bg-zinc-50 transition-colors";
+        const swatch = c.grad ? `linear-gradient(135deg, ${c.hex === 'gold' ? '#fde047, #a16207' : '#e4e4e7, #52525b'})` : c.hex;
+        row.innerHTML = `
+          <td class="px-4 py-2 font-medium text-zinc-900 flex items-center gap-3">
+             <div class="w-4 h-4 rounded-full shadow-inner ring-1 ring-black/10" style="background:${swatch}"></div> ${c.name}
+          </td>
+          <td class="px-2 py-2 text-zinc-500 font-mono text-center">${c.val ?? '-'}</td>
+          <td class="px-2 py-2 text-zinc-500 font-mono text-center">${c.mult ? '×'+fmtShort(c.mult) : '-'}</td>
+          <td class="px-4 py-2 text-zinc-500 font-mono text-right">${c.tol ? '±'+c.tol+'%' : '-'}</td>
+        `;
+        t.appendChild(row);
+      });
+    }
+
+    function getBandType(i) {
+      if(i === bands-1) return 'tol';
+      if(i === bands-2) return 'mult';
+      return 'digit';
+    }
+    
+    // Updated Formatter with StripFloat
+    function fmtOhms(n) {
+      n = stripFloat(n); // Ensure incoming is clean
+      if(n >= 1e9) return stripFloat(n/1e9) + " GΩ";
+      if(n >= 1e6) return stripFloat(n/1e6) + " MΩ";
+      if(n >= 1e3) return stripFloat(n/1e3) + " kΩ";
+      return n + " Ω";
+    }
+    
+    function fmtShort(n) {
+      n = stripFloat(n);
+      if(n >= 1e9) return stripFloat(n/1e9) + "G";
+      if(n >= 1e6) return stripFloat(n/1e6) + "M";
+      if(n >= 1e3) return stripFloat(n/1e3) + "k";
+      if(n > 0 && n < 1) return n.toString().replace('0.','.');
+      return n;
+    }
+
+    init();
+    update();
+  </script>
+</body>
+</html>
