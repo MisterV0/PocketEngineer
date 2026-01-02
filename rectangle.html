@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rectangle Geometry</title>
+  <meta name="description" content="Calculate rectangle dimensions, area, perimeter, and diagonal. Solves for any two inputs.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+          animation: {
+            'fade-in': 'fadeIn 0.3s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0', transform: 'translateY(5px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Input Polish */
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    
+    .input-card { transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .input-card:focus-within { 
+      border-color: #71717a; 
+      background-color: white; 
+      box-shadow: 0 4px 12px -2px rgba(0,0,0,0.05); 
+      transform: translateY(-1px);
+    }
+    
+    .layer-btn[data-active="true"] { background-color: var(--active-bg); color: white; border-color: var(--active-bg); }
+    .layer-btn[data-active="false"] { background-color: white; color: #71717a; border-color: #e4e4e7; }
+    
+    /* Details Animation */
+    details > summary { list-style: none; cursor: pointer; user-select: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary:focus { outline: none; }
+    
+    /* Formula Animation */
+    .formula-row { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(8px); }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Back Button Styling */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+    
+    /* Active Input Indicator */
+    .input-active-dot {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s ease;
+    }
+    .input-card:focus-within .input-active-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
+
+  <!-- Header -->
+  <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Left: Back Button & Info Dropdown -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="back-button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Back
+        </a>
+        <div class="w-px h-6 bg-zinc-200"></div>
+        <div class="relative z-50">
+        <details class="group">
+          <summary class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
+            <span>Properties</span>
+            <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          
+          <!-- Dropdown Card -->
+          <div class="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
+             <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Rectangle</p>
+             
+             <p class="text-sm text-zinc-700 leading-relaxed mb-4">
+               A quadrilateral with four right angles (90°). 
+             </p>
+             
+             <ul class="text-xs text-zinc-600 space-y-2 list-disc pl-4 mb-2">
+                 <li>Opposite sides are parallel and equal in length.</li>
+                 <li>The diagonals bisect each other and are equal in length.</li>
+             </ul>
+          </div>
+        </details>
+        </div>
+      </div>
+      
+      <!-- Right controls -->
+      <div class="flex items-center gap-4">
+        <!-- Unit Selector -->
+        <div class="flex items-center gap-2 bg-zinc-100 rounded-md px-3 py-1.5 border border-zinc-200">
+          <span class="text-xs font-semibold text-zinc-500 uppercase">Unit</span>
+          <select id="unitSelect" onchange="updateLabels()" class="bg-transparent text-sm font-medium text-zinc-900 outline-none cursor-pointer">
+            <option value="cm">cm</option>
+            <option value="m">m</option>
+            <option value="mm">mm</option>
+          </select>
+        </div>
+
+        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
+    
+    <!-- Left: Inputs & Formulas -->
+    <div class="lg:w-[460px] flex-none bg-white border-r border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin">
+      <div class="p-6 space-y-6">
+        
+        <!-- Dimensions Inputs -->
+        <div>
+          <div class="flex justify-between items-end mb-4">
+            <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
+              Dimensions
+              <span class="h-px bg-zinc-100 flex-1"></span>
+            </h2>
+            <!-- Dynamic Status Text -->
+            <span id="input-status" class="text-[10px] text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded border border-blue-100 transition-opacity opacity-0">
+               Enter one more value...
+            </span>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Length -->
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <div class="flex justify-between mb-1">
+                  <label class="text-[10px] font-bold text-blue-500 uppercase">Length (l)</label>
+                  <div class="w-1.5 h-1.5 rounded-full bg-blue-500 input-active-dot"></div>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-l" oninput="handleInput('l')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+                </div>
+              </div>
+
+              <!-- Width -->
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <div class="flex justify-between mb-1">
+                  <label class="text-[10px] font-bold text-indigo-500 uppercase">Width (w)</label>
+                  <div class="w-1.5 h-1.5 rounded-full bg-indigo-500 input-active-dot"></div>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-w" oninput="handleInput('w')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Derived Metrics -->
+            <div class="grid grid-cols-3 gap-3">
+              <!-- Perimeter -->
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <div class="flex justify-between mb-1">
+                  <label class="text-[10px] font-bold text-emerald-600 uppercase">Perim (P)</label>
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-600 input-active-dot"></div>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-p" oninput="handleInput('p')" class="w-full bg-transparent font-mono text-base outline-none" placeholder="0">
+                </div>
+              </div>
+
+              <!-- Area -->
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <div class="flex justify-between mb-1">
+                  <label class="text-[10px] font-bold text-rose-500 uppercase">Area (A)</label>
+                  <div class="w-1.5 h-1.5 rounded-full bg-rose-500 input-active-dot"></div>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-a" oninput="handleInput('a')" class="w-full bg-transparent font-mono text-base outline-none" placeholder="0">
+                </div>
+              </div>
+
+              <!-- Diagonal -->
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <div class="flex justify-between mb-1">
+                  <label class="text-[10px] font-bold text-purple-500 uppercase">Diag (d)</label>
+                  <div class="w-1.5 h-1.5 rounded-full bg-purple-500 input-active-dot"></div>
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <input type="number" id="in-d" oninput="handleInput('d')" class="w-full bg-transparent font-mono text-base outline-none" placeholder="0">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulas Panel -->
+        <div id="formula-panel" class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
+          <p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>
+        </div>
+
+        <!-- Advanced Section -->
+        <div class="border-t border-dashed border-zinc-200 pt-2">
+          <details open class="group">
+            <summary class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
+              <h2 class="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-amber-500 transition-transform group-open:scale-110"></div>
+                Advanced Properties
+              </h2>
+              <div class="flex items-center gap-2">
+                 <span class="text-[10px] bg-amber-50 text-amber-600 font-medium px-2 py-0.5 rounded border border-amber-100 uppercase tracking-wide">Advanced</span>
+                 <svg class="text-zinc-400 transform transition-transform duration-200 group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </summary>
+
+            <div class="pb-2 pl-2 border-l-2 border-zinc-100 ml-1 space-y-2">
+              <div class="grid grid-cols-1 gap-1 text-sm bg-zinc-50/50 rounded-lg border border-zinc-100 p-2">
+                 
+                 <!-- Aspect Ratio with Tooltip -->
+                 <div class="p-2 border-b border-dashed border-zinc-200 flex justify-between items-center">
+                   <div class="flex items-center gap-1.5">
+                       <span class="text-zinc-500 text-xs font-bold uppercase tracking-wide">Aspect Ratio</span>
+                       <!-- Tooltip Wrapper -->
+                       <div class="relative group/tooltip cursor-help">
+                           <div class="w-3.5 h-3.5 rounded-full bg-zinc-200 text-zinc-500 flex items-center justify-center text-[9px] font-bold hover:bg-zinc-300 transition-colors">?</div>
+                           <!-- Tooltip Content -->
+                           <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-3 bg-zinc-800 text-white text-xs rounded-lg shadow-xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50">
+                             <p class="mb-1"><strong>Ratio of Length to Width.</strong></p>
+                             <p class="text-zinc-400 text-[10px] leading-relaxed">
+                               If the ratio is approximately <strong>1.618</strong>, it is a Golden Rectangle, often considered aesthetically perfect in art and architecture.
+                             </p>
+                             <!-- Arrow -->
+                             <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-800"></div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="text-right">
+                     <span id="out-ratio" class="font-mono font-medium text-amber-600">-</span>
+                     <span class="text-[10px] text-zinc-400 block" id="out-ratio-desc">l : w</span>
+                   </div>
+                 </div>
+
+                 <!-- Diagonal Angle -->
+                 <div class="p-2 flex justify-between items-center">
+                    <span class="text-zinc-500 text-xs font-bold uppercase tracking-wide block">Diag. Angle</span>
+                    <div class="text-right">
+                      <span id="out-theta" class="font-mono font-medium text-zinc-900">-</span>
+                      <span class="text-[10px] text-zinc-400">deg</span>
+                    </div>
+                 </div>
+
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Visualizer -->
+    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+      
+      <!-- Canvas Backdrop -->
+      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: linear-gradient(#a1a1aa 1px, transparent 1px), linear-gradient(90deg, #a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+      
+      <!-- Canvas -->
+      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-6 transition-all duration-500">
+        <canvas id="geoCanvas"></canvas>
+      </div>
+
+      <!-- Layer Controls -->
+      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-4">
+        
+        <button onclick="toggleLayer('length')" id="btn-length" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Length
+        </button>
+
+        <button onclick="toggleLayer('width')" id="btn-width" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #6366f1">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Width
+        </button>
+
+        <button onclick="toggleLayer('perimeter')" id="btn-perimeter" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #10b981">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Perimeter
+        </button>
+
+        <button onclick="toggleLayer('area')" id="btn-area" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #f43f5e">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Area
+        </button>
+
+        <button onclick="toggleLayer('diagonal')" id="btn-diagonal" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #a855f7">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Diagonal
+        </button>
+
+        <button onclick="toggleLayer('angle')" id="btn-angle" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #d97706">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Angle
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // --- CANVAS CONFIG ---
+    const canvas = document.getElementById('geoCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    const SIZE = 500;
+    canvas.style.width = SIZE + 'px';
+    canvas.style.height = SIZE + 'px';
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    ctx.scale(dpr, dpr);
+
+    const CENTER = SIZE / 2;
+
+    // --- STATE ---
+    let state = {
+      l: 0,
+      w: 0,
+      p: 0,
+      a: 0,
+      d: 0,
+      activeInputs: [] 
+    };
+
+    let layers = {
+      length: true,
+      width: true,
+      perimeter: false,
+      area: false,
+      diagonal: false,
+      angle: false
+    };
+
+    const inputs = {
+      l: document.getElementById('in-l'),
+      w: document.getElementById('in-w'),
+      p: document.getElementById('in-p'),
+      a: document.getElementById('in-a'),
+      d: document.getElementById('in-d')
+    };
+    
+    const advanced = {
+      ratio: document.getElementById('out-ratio'),
+      ratioDesc: document.getElementById('out-ratio-desc'),
+      theta: document.getElementById('out-theta')
+    };
+    
+    const formulaPanel = document.getElementById('formula-panel');
+    const statusLabel = document.getElementById('input-status');
+
+    // --- LOGIC ---
+    function updateLabels() {
+      const unit = document.getElementById('unitSelect').value;
+      document.querySelectorAll('.unit-label').forEach(el => el.textContent = unit);
+      generateFormulas();
+    }
+
+    function toggleLayer(layerName) {
+      layers[layerName] = !layers[layerName];
+      document.getElementById(`btn-${layerName}`).dataset.active = layers[layerName];
+      draw();
+    }
+
+    function resetCalc() {
+      Object.values(inputs).forEach(i => i.value = '');
+      Object.values(advanced).forEach(i => i.innerText = '-');
+      state = { l: 0, w: 0, p: 0, a: 0, d: 0, activeInputs: [] };
+      formulaPanel.innerHTML = '<p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>';
+      
+      statusLabel.style.opacity = '0';
+      draw();
+    }
+
+    // The Solver Engine
+    function handleInput(id) {
+      // 1. Update Active Stack
+      state.activeInputs = state.activeInputs.filter(i => i !== id);
+      state.activeInputs.push(id);
+      
+      if (state.activeInputs.length > 2) {
+        state.activeInputs.shift();
+      }
+
+      // Update Status Label
+      if (state.activeInputs.length === 1) {
+          statusLabel.textContent = "Enter one more value...";
+          statusLabel.style.opacity = '1';
+          statusLabel.className = "text-[10px] text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded border border-blue-100 transition-opacity";
+      } else if (state.activeInputs.length === 2) {
+          statusLabel.textContent = "Solved";
+          statusLabel.className = "text-[10px] text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded border border-emerald-100 transition-opacity";
+      } else {
+          statusLabel.style.opacity = '0';
+      }
+
+      // 2. Read Values
+      const vals = {};
+      state.activeInputs.forEach(key => {
+        vals[key] = parseFloat(inputs[key].value);
+      });
+
+      // 3. Solve if we have 2 valid inputs
+      if (state.activeInputs.length === 2) {
+        const [k1, k2] = state.activeInputs;
+        const v1 = vals[k1];
+        const v2 = vals[k2];
+
+        if (!isNaN(v1) && !isNaN(v2) && v1 > 0 && v2 > 0) {
+           solve(k1, v1, k2, v2);
+        }
+      } else if (state.activeInputs.length === 1) {
+         state[state.activeInputs[0]] = parseFloat(inputs[state.activeInputs[0]].value);
+         draw(); // Draw partial state if needed (mostly empty)
+      }
+    }
+
+    function solve(k1, v1, k2, v2) {
+      const keys = [k1, k2].sort().join(''); 
+      let l = 0, w = 0;
+
+      if (keys === 'lw') { l = Math.max(v1, v2); w = Math.min(v1, v2); } 
+      else if (keys === 'al') { l = v1; w = vals['a'] / l; } 
+      else if (keys === 'aw') { w = v1; l = vals['a'] / w; }
+      else if (keys === 'lp') { l = v1; w = (vals['p']/2) - l; }
+      else if (keys === 'pw') { w = v1; l = (vals['p']/2) - w; }
+      else if (keys === 'dl') { l = v1; w = Math.sqrt(Math.pow(vals['d'], 2) - l*l); }
+      else if (keys === 'dw') { w = v1; l = Math.sqrt(Math.pow(vals['d'], 2) - w*w); }
+      else if (keys === 'ap') {
+         const P = vals['p'];
+         const A = vals['a'];
+         const disc = Math.pow(P/2, 2) - 4*A;
+         if (disc >= 0) {
+            const s1 = ((P/2) + Math.sqrt(disc)) / 2;
+            const s2 = ((P/2) - Math.sqrt(disc)) / 2;
+            l = Math.max(s1, s2);
+            w = Math.min(s1, s2);
+         }
+      }
+      else if (keys === 'dp') {
+         const P = vals['p'];
+         const d = vals['d'];
+         const A = (Math.pow(P/2, 2) - d*d) / 2;
+         if (A > 0) {
+            const disc = Math.pow(P/2, 2) - 4*A;
+            if (disc >= 0) {
+                const s1 = ((P/2) + Math.sqrt(disc)) / 2;
+                const s2 = ((P/2) - Math.sqrt(disc)) / 2;
+                l = Math.max(s1, s2);
+                w = Math.min(s1, s2);
+            }
+         }
+      }
+      else if (keys === 'ad') {
+         const A = vals['a'];
+         const d = vals['d'];
+         const disc = Math.pow(d*d, 2) - 4*A*A;
+         if (disc >= 0) {
+            const x1 = (d*d + Math.sqrt(disc))/2;
+            l = Math.sqrt(x1);
+            w = A / l;
+         }
+      }
+
+      if (l > 0 && w > 0) {
+          state.l = l;
+          state.w = w;
+          state.p = 2 * (l + w);
+          state.a = l * w;
+          state.d = Math.sqrt(l*l + w*w);
+          
+          updateUI();
+      }
+    }
+
+    function updateUI() {
+      const allKeys = ['l', 'w', 'p', 'a', 'd'];
+      allKeys.forEach(k => {
+         if (!state.activeInputs.includes(k)) {
+            inputs[k].value = Number(state[k].toPrecision(5));
+         }
+      });
+
+      const ratio = state.l / state.w;
+      advanced.ratio.innerText = ratio.toFixed(2);
+      advanced.ratioDesc.innerText = ratio > 1 ? "Landscape" : (ratio < 1 ? "Portrait" : "Square");
+      
+      advanced.theta.innerText = Number((Math.atan(state.w / state.l) * (180/Math.PI)).toPrecision(4));
+
+      generateFormulas();
+      draw();
+    }
+
+    function generateFormulas() {
+      if (state.l === 0) return;
+      
+      const unit = document.getElementById('unitSelect').value;
+      const inputsUsed = state.activeInputs.sort().join('');
+      
+      const lineClass = "formula-row flex justify-between items-center font-mono text-xs lg:text-sm h-6";
+      const lbl = "text-zinc-500";
+      const val = "text-zinc-200 font-medium";
+
+      let html = `<div class="space-y-1">`;
+      
+      if (inputsUsed === 'lw' || inputsUsed === '') {
+         html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given</span> <span class="${val}">l=${state.l.toFixed(2)}, w=${state.w.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-emerald-400">P = 2(l+w)</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-rose-400">A = l·w</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-purple-400">d = √(l²+w²)</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
+      } 
+      else if (inputsUsed.includes('a') && inputsUsed.includes('l')) {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Area, Len</span> <span class="${val}">A=${state.a}, l=${state.l}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-indigo-400">w = A / l</span> <span class="${val}">${state.w.toFixed(2)} ${unit}</span></div>`;
+      }
+      else if (inputsUsed.includes('p') && inputsUsed.includes('l')) {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Perim, Len</span> <span class="${val}">P=${state.p}, l=${state.l}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-indigo-400">w = (P/2) - l</span> <span class="${val}">${state.w.toFixed(2)} ${unit}</span></div>`;
+      }
+      else if (inputsUsed.includes('d') && inputsUsed.includes('l')) {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Diag, Len</span> <span class="${val}">d=${state.d}, l=${state.l}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-indigo-400">w = √(d²-l²)</span> <span class="${val}">${state.w.toFixed(2)} ${unit}</span></div>`;
+      }
+      else {
+         html += `<div class="${lineClass}"><span class="${lbl}">Solved for</span> <span class="${val}">l=${state.l.toFixed(2)}, w=${state.w.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-emerald-400">P = 2(l+w)</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-rose-400">A = l·w</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      }
+
+      html += `</div>`;
+      formulaPanel.innerHTML = html;
+    }
+
+    // --- VISUALIZATION ---
+    function draw() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      if (state.l <= 0 || state.w <= 0) {
+        // Empty State
+        ctx.beginPath();
+        const s = 200;
+        ctx.rect(CENTER - s/2, CENTER - s/2, s, s);
+        ctx.setLineDash([5, 8]);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = "italic 14px sans-serif";
+        ctx.fillStyle = "#d4d4d8";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Ready", CENTER, CENTER);
+        return;
+      }
+
+      const MAX_BOX = 340;
+      const realRatio = state.l / state.w;
+      
+      let visualL, visualW;
+      
+      if (realRatio >= 1) {
+         const clampedRatio = Math.min(realRatio, 4); 
+         visualL = MAX_BOX;
+         visualW = MAX_BOX / clampedRatio;
+      } else {
+         const clampedRatio = Math.min(1/realRatio, 4);
+         visualW = MAX_BOX;
+         visualL = MAX_BOX / clampedRatio;
+      }
+
+      const cx = CENTER;
+      const cy = CENTER;
+      const halfL = visualL / 2;
+      const halfW = visualW / 2;
+
+      // 1. BASE SHAPE (Faint Outline)
+      ctx.beginPath();
+      ctx.rect(cx - halfL, cy - halfW, visualL, visualW);
+      
+      if (layers.area) {
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.1)'; 
+        ctx.fill();
+      } else {
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.01)';
+        ctx.fill();
+      }
+      
+      // Default faint border
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#e4e4e7';
+      ctx.stroke();
+
+      // 2. PERIMETER (Full Highlight)
+      if (layers.perimeter) {
+        ctx.beginPath();
+        ctx.rect(cx - halfL, cy - halfW, visualL, visualW);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#10b981'; // Emerald
+        ctx.stroke();
+        
+        // Label P
+        drawLabel('P', cx, cy - halfW - 15, '#10b981', 'bottom');
+      }
+
+      // 3. LENGTH (Specific Side Highlights)
+      if (layers.length) {
+         // Top Line
+         ctx.beginPath();
+         ctx.moveTo(cx - halfL, cy - halfW);
+         ctx.lineTo(cx + halfL, cy - halfW);
+         ctx.lineWidth = layers.perimeter ? 0 : 3; // Don't draw if perimeter is on
+         if(!layers.perimeter) {
+            ctx.strokeStyle = '#3b82f6';
+            ctx.stroke();
+         }
+         
+         // Bottom Line
+         ctx.beginPath();
+         ctx.moveTo(cx - halfL, cy + halfW);
+         ctx.lineTo(cx + halfL, cy + halfW);
+         if(!layers.perimeter) {
+            ctx.strokeStyle = '#3b82f6';
+            ctx.stroke();
+         }
+         
+         drawLabel('l', cx, cy + halfW + 15, '#3b82f6', 'top');
+      }
+
+      // 4. WIDTH (Specific Side Highlights)
+      if (layers.width) {
+         // Left Line
+         ctx.beginPath();
+         ctx.moveTo(cx - halfL, cy - halfW);
+         ctx.lineTo(cx - halfL, cy + halfW);
+         ctx.lineWidth = layers.perimeter ? 0 : 3;
+         if(!layers.perimeter) {
+            ctx.strokeStyle = '#6366f1';
+            ctx.stroke();
+         }
+
+         // Right Line
+         ctx.beginPath();
+         ctx.moveTo(cx + halfL, cy - halfW);
+         ctx.lineTo(cx + halfL, cy + halfW);
+         if(!layers.perimeter) {
+            ctx.strokeStyle = '#6366f1';
+            ctx.stroke();
+         }
+
+         drawLabel('w', cx + halfL + 15, cy, '#6366f1', 'middle');
+      }
+
+      // 5. DIAGONAL
+      if (layers.diagonal) {
+        ctx.beginPath();
+        ctx.moveTo(cx - halfL, cy + halfW); // Bottom Left
+        ctx.lineTo(cx + halfL, cy - halfW); // Top Right
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#a855f7'; 
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        drawLabel('d', cx, cy, '#a855f7', 'middle'); // Center label
+      }
+
+      // 6. ANGLE
+      if (layers.angle) {
+         const r = Math.min(visualL, visualW) * 0.25;
+         ctx.beginPath();
+         // Bottom Left Corner
+         // We want angle between Length (Horizontal) and Diagonal
+         // Diagonal goes from Bottom-Left to Top-Right
+         const theta = Math.atan(visualW/visualL);
+         ctx.beginPath();
+         ctx.arc(cx - halfL, cy + halfW, r, 0, -theta, true);
+         
+         ctx.strokeStyle = '#d97706';
+         ctx.lineWidth = 2;
+         ctx.stroke();
+         
+         // Label
+         ctx.fillStyle = 'rgba(217, 119, 6, 0.1)';
+         ctx.lineTo(cx - halfL, cy + halfW);
+         ctx.fill();
+         
+         drawLabel('θ', cx - halfL + r + 10, cy + halfW - 5, '#d97706', 'middle');
+      }
+
+      // 7. CORNER DOTS
+      ctx.fillStyle = '#18181b';
+      [
+        [cx-halfL, cy-halfW], [cx+halfL, cy-halfW],
+        [cx+halfL, cy+halfW], [cx-halfL, cy+halfW]
+      ].forEach(([x,y]) => {
+         ctx.beginPath();
+         ctx.arc(x, y, 3, 0, Math.PI*2);
+         ctx.fill();
+      });
+    }
+
+    function drawLabel(text, x, y, color, baseline='middle') {
+      ctx.save();
+      ctx.font = "bold 14px 'JetBrains Mono'";
+      ctx.textAlign = "center";
+      ctx.textBaseline = baseline;
+      
+      ctx.shadowColor = "white";
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = color;
+      
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    resetCalc();
+  </script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Square Geometry</title>
+  <meta name="description" content="Calculate square area, perimeter, diagonal, and circle boundaries. Real-time visualization.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Remove input spinners */
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    
+    .input-card { transition: all 0.2s ease-out; }
+    .input-card:focus-within { border-color: #71717a; background-color: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+    
+    .layer-btn[data-active="true"] { background-color: var(--active-bg); color: white; border-color: var(--active-bg); }
+    .layer-btn[data-active="false"] { background-color: white; color: #71717a; border-color: #e4e4e7; }
+    
+    /* Clean details marker */
+    details > summary { list-style: none; cursor: pointer; user-select: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary:focus { outline: none; }
+    
+    /* Animations */
+    .formula-row { animation: slideIn 0.2s ease-out forwards; opacity: 0; transform: translateY(4px); }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Back Button Styling */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
+
+  <!-- Header -->
+  <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Left: Back Button & Info Dropdown -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="back-button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Back
+        </a>
+        <div class="w-px h-6 bg-zinc-200"></div>
+        <div class="relative z-50">
+        <details class="group" open>
+          <summary class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
+            <span>Properties</span>
+            <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          
+          <!-- Dropdown Card (Updated Content) -->
+          <div class="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
+             <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Perfect Shape</p>
+             
+             <p class="text-sm text-zinc-700 leading-relaxed">
+               A square is the most efficient regular quadrilateral. It has 4 equal sides and 4 right angles (90°), making it simultaneously a rectangle and a rhombus.
+             </p>
+          </div>
+        </details>
+        </div>
+      </div>
+      
+      <!-- Right controls -->
+      <div class="flex items-center gap-4">
+        <!-- Unit Selector -->
+        <div class="flex items-center gap-2 bg-zinc-100 rounded-md px-3 py-1.5 border border-zinc-200">
+          <span class="text-xs font-semibold text-zinc-500 uppercase">Unit</span>
+          <select id="unitSelect" onchange="updateLabels()" class="bg-transparent text-sm font-medium text-zinc-900 outline-none cursor-pointer">
+            <option value="cm">cm</option>
+            <option value="m">m</option>
+            <option value="mm">mm</option>
+          </select>
+        </div>
+
+        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
+    
+    <!-- Left: Inputs & Formulas -->
+    <div class="lg:w-[460px] flex-none bg-white border-r border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin">
+      <div class="p-6 space-y-6">
+        
+        <!-- Standard Inputs -->
+        <div>
+          <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            Dimensions
+            <span class="h-px bg-zinc-100 flex-1"></span>
+          </h2>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Side -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Side Length (s)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-s" oninput="calculate('s')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Diagonal -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-purple-500 uppercase mb-1 block">Diagonal (d)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-d" oninput="calculate('d')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Perimeter -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Perimeter (P)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-p" oninput="calculate('p')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+              </div>
+            </div>
+
+            <!-- Area -->
+            <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+              <label class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
+              <div class="flex items-baseline gap-1">
+                <input type="number" id="in-a" oninput="calculate('a')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <span class="text-xs text-zinc-400 font-mono unit-label-sq">cm²</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulas Panel -->
+        <div id="formula-panel" class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
+          <p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>
+        </div>
+
+        <!-- Advanced Section (Circles) -->
+        <div class="border-t border-dashed border-zinc-200 pt-2">
+          <details open class="group">
+            <summary class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
+              <h2 class="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 transition-transform group-open:scale-110"></div>
+                Circle Boundaries
+              </h2>
+              <div class="flex items-center gap-2">
+                 <span class="text-[10px] bg-orange-50 text-orange-600 font-medium px-2 py-0.5 rounded border border-orange-100 uppercase tracking-wide">Advanced</span>
+                 <svg class="text-zinc-400 transform transition-transform duration-200 group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </summary>
+
+            <div class="pb-2 pl-2 border-l-2 border-zinc-100 ml-1 space-y-2">
+               
+              <div class="grid grid-cols-1 gap-1 text-sm bg-zinc-50/50 rounded-lg border border-zinc-100 p-2">
+                 
+                 <!-- Incircle (Updated with Radius Value) -->
+                 <div class="p-2 border-b border-dashed border-zinc-200">
+                   <div class="flex justify-between items-center mb-1">
+                     <span class="text-zinc-500 text-xs font-bold uppercase tracking-wide">Incircle</span>
+                     <span class="text-[10px] text-zinc-400 font-mono">r = s / 2</span>
+                   </div>
+                   <!-- 3 Column Grid -->
+                   <div class="grid grid-cols-3 gap-2 mt-2">
+                      <div>
+                        <span class="text-[9px] text-zinc-400 uppercase block">Radius</span>
+                        <span id="out-inc-r" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                        <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                      </div>
+                      <div>
+                        <span class="text-[9px] text-zinc-400 uppercase block">Circumference</span>
+                        <span id="out-inc-c" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                        <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-[9px] text-zinc-400 uppercase block">Area</span>
+                        <span id="out-inc-a" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                        <span class="text-[9px] text-zinc-400 unit-label-sq">cm²</span>
+                      </div>
+                   </div>
+                 </div>
+
+                 <!-- Circumcircle (Updated with Radius Value) -->
+                 <div class="p-2">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-zinc-500 text-xs font-bold uppercase tracking-wide">Outer Circle</span>
+                    <span class="text-[10px] text-zinc-400 font-mono">R = d / 2</span>
+                  </div>
+                  <!-- 3 Column Grid -->
+                  <div class="grid grid-cols-3 gap-2 mt-2">
+                     <div>
+                       <span class="text-[9px] text-zinc-400 uppercase block">Radius</span>
+                       <span id="out-out-r" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                       <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                     </div>
+                     <div>
+                       <span class="text-[9px] text-zinc-400 uppercase block">Circumference</span>
+                       <span id="out-out-c" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                       <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                     </div>
+                     <div class="text-right">
+                       <span class="text-[9px] text-zinc-400 uppercase block">Area</span>
+                       <span id="out-out-a" class="font-mono font-medium text-zinc-900 text-xs">-</span>
+                       <span class="text-[9px] text-zinc-400 unit-label-sq">cm²</span>
+                     </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Visualizer -->
+    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+      
+      <!-- Canvas Backdrop -->
+      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: linear-gradient(#a1a1aa 1px, transparent 1px), linear-gradient(90deg, #a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+      
+      <!-- Canvas -->
+      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-6">
+        <canvas id="geoCanvas"></canvas>
+      </div>
+
+      <!-- Layer Controls -->
+      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-4">
+        
+        <!-- Updated: Perimeter Button -->
+        <button onclick="toggleLayer('perimeter')" id="btn-perimeter" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Perimeter
+        </button>
+
+        <button onclick="toggleLayer('area')" id="btn-area" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #f43f5e">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Area
+        </button>
+
+        <button onclick="toggleLayer('diagonal')" id="btn-diagonal" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #a855f7">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Diagonal
+        </button>
+
+        <div class="w-px h-6 bg-zinc-200 mx-1"></div>
+
+        <button onclick="toggleLayer('incircle')" id="btn-incircle" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #ea580c">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Incircle
+        </button>
+
+        <button onclick="toggleLayer('circumcircle')" id="btn-circumcircle" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #059669">
+          <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Outer Circle
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // --- CANVAS CONFIG ---
+    const canvas = document.getElementById('geoCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Constant Display Size
+    const SIZE = 500;
+    canvas.style.width = SIZE + 'px';
+    canvas.style.height = SIZE + 'px';
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    ctx.scale(dpr, dpr);
+
+    const CENTER = SIZE / 2;
+    const VISUAL_S = 240; // Fixed visual side length for drawing (pixels)
+
+    // --- STATE ---
+    let state = {
+      s: 0,
+      d: 0,
+      p: 0,
+      a: 0,
+      activeMode: 's' // which input triggered calculation
+    };
+
+    let layers = {
+      perimeter: true, // Renamed from side
+      area: false,
+      diagonal: true,
+      incircle: false,
+      circumcircle: false
+    };
+
+    const inputs = {
+      s: document.getElementById('in-s'),
+      d: document.getElementById('in-d'),
+      p: document.getElementById('in-p'),
+      a: document.getElementById('in-a')
+    };
+    
+    const outputs = {
+      inc_r: document.getElementById('out-inc-r'),
+      inc_c: document.getElementById('out-inc-c'),
+      inc_a: document.getElementById('out-inc-a'),
+      out_r: document.getElementById('out-out-r'),
+      out_c: document.getElementById('out-out-c'),
+      out_a: document.getElementById('out-out-a')
+    };
+    
+    const formulaPanel = document.getElementById('formula-panel');
+
+    // --- LOGIC ---
+    function updateLabels() {
+      const unit = document.getElementById('unitSelect').value;
+      document.querySelectorAll('.unit-label').forEach(el => el.textContent = unit);
+      document.querySelectorAll('.unit-label-sq').forEach(el => el.textContent = unit + "²");
+      generateFormulas();
+    }
+
+    function toggleLayer(layerName) {
+      layers[layerName] = !layers[layerName];
+      document.getElementById(`btn-${layerName}`).dataset.active = layers[layerName];
+      draw();
+    }
+
+    function resetCalc() {
+      Object.values(inputs).forEach(i => i.value = '');
+      Object.values(outputs).forEach(i => i.innerText = '-');
+      state = { s: 0, d: 0, p: 0, a: 0, activeMode: null };
+      
+      formulaPanel.innerHTML = '<p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>';
+      
+      draw();
+    }
+
+    function calculate(source) {
+      const val = parseFloat(inputs[source].value);
+      state.activeMode = source;
+
+      if (isNaN(val) || val < 0) {
+        state.s = 0;
+        draw();
+        return;
+      }
+
+      // 1. Math: Derive Side (s) first
+      let s = 0;
+      if (source === 's') s = val;
+      else if (source === 'd') s = val / Math.sqrt(2);
+      else if (source === 'p') s = val / 4;
+      else if (source === 'a') s = Math.sqrt(val);
+      else { s = parseFloat(inputs.s.value) || 0; } 
+
+      // 2. Derive Others
+      state.s = s;
+      state.d = s * Math.sqrt(2);
+      state.p = 4 * s;
+      state.a = s * s;
+
+      // 3. Update Inputs (guard against active focus)
+      if (source !== 's') inputs.s.value = Number(state.s.toPrecision(5));
+      if (source !== 'd') inputs.d.value = Number(state.d.toPrecision(5));
+      if (source !== 'p') inputs.p.value = Number(state.p.toPrecision(5));
+      if (source !== 'a') inputs.a.value = Number(state.a.toPrecision(5));
+
+      // 4. Advanced Math (Circles)
+      if (state.s > 0) {
+        const r_in = state.s / 2;
+        const r_out = state.d / 2;
+
+        // Incircle
+        outputs.inc_r.innerText = Number(r_in.toPrecision(5));
+        outputs.inc_c.innerText = Number((2 * Math.PI * r_in).toPrecision(5));
+        outputs.inc_a.innerText = Number((Math.PI * r_in * r_in).toPrecision(5));
+        
+        // Circumcircle
+        outputs.out_r.innerText = Number(r_out.toPrecision(5));
+        outputs.out_c.innerText = Number((2 * Math.PI * r_out).toPrecision(5));
+        outputs.out_a.innerText = Number((Math.PI * r_out * r_out).toPrecision(5));
+      }
+
+      // 5. Update UI
+      generateFormulas();
+      draw();
+    }
+
+    function generateFormulas() {
+      if (state.s === 0) return;
+      
+      const m = state.activeMode;
+      const unit = document.getElementById('unitSelect').value;
+      const sStr = state.s.toFixed(2);
+      
+      // Base styles
+      const lineClass = "formula-row flex justify-between items-center font-mono text-xs lg:text-sm h-6";
+      const lbl = "text-zinc-500";
+      const val = "text-zinc-200 font-medium";
+
+      let html = `<div class="space-y-1">`;
+      
+      if (m === 's' || !m) {
+         html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given Side</span> <span class="${val}">s = ${sStr}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-emerald-400">P = 4·s</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-rose-400">A = s²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+         html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-purple-400">d = s·√2</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
+      } 
+      else if (m === 'd') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Diag</span> <span class="${val}">d = ${state.d.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">s = d / √2</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-rose-400">A = d²/2</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      }
+      else if (m === 'p') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Perim</span> <span class="${val}">P = ${state.p.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">s = P / 4</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-rose-400">A = (P/4)²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      }
+      else if (m === 'a') {
+         html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${state.a.toFixed(2)}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-blue-400">s = √A</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
+         html += `<div class="${lineClass}"><span class="text-emerald-400">P = 4·√A</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
+      }
+
+      html += `</div>`;
+      formulaPanel.innerHTML = html;
+    }
+
+    // --- VISUALIZATION ---
+    function draw() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      if (state.s <= 0) {
+        // Empty State
+        ctx.beginPath();
+        const half = VISUAL_S / 2;
+        ctx.rect(CENTER - half, CENTER - half, VISUAL_S, VISUAL_S);
+        ctx.setLineDash([5, 8]);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = "italic 14px sans-serif";
+        ctx.fillStyle = "#d4d4d8";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Enter dimensions", CENTER, CENTER);
+        return;
+      }
+
+      const s = VISUAL_S; // Fixed visual size
+      const half = s / 2;
+      const cx = CENTER;
+      const cy = CENTER;
+
+      // 1. CIRCLE LAYERS
+      
+      // Circumcircle (Outer)
+      if (layers.circumcircle) {
+        const r_outer = (s * Math.sqrt(2)) / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r_outer, 0, Math.PI * 2);
+        ctx.strokeStyle = '#059669';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(5, 150, 105, 0.05)';
+        ctx.fill();
+        ctx.setLineDash([]);
+      }
+
+      // Incircle (Inner)
+      if (layers.incircle) {
+        const r_inner = s / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r_inner, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ea580c';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(234, 88, 12, 0.05)';
+        ctx.fill();
+        ctx.setLineDash([]);
+      }
+
+      // 2. MAIN SQUARE & AREA
+      ctx.beginPath();
+      ctx.rect(cx - half, cy - half, s, s);
+      
+      if (layers.area) {
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.1)'; // Rose fill
+        ctx.fill();
+      } else {
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.01)'; // Very faint default
+        ctx.fill();
+      }
+
+      // Use Perimeter layer for outline
+      ctx.lineWidth = layers.perimeter ? 3 : 1;
+      ctx.strokeStyle = layers.perimeter ? '#3b82f6' : '#e4e4e7';
+      ctx.stroke();
+
+      // 3. DIAGONAL
+      if (layers.diagonal) {
+        ctx.beginPath();
+        ctx.moveTo(cx - half, cy - half); // Top Left
+        ctx.lineTo(cx + half, cy + half); // Bottom Right
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#a855f7'; // Purple
+        ctx.stroke();
+        
+        // Label
+        drawLabel('d', cx, cy - 10, '#a855f7', 'bottom');
+      }
+
+      // 4. SIDE LABELS (Controlled by Perimeter button)
+      if (layers.perimeter) {
+        // Bottom Label
+        drawLabel('s', cx, cy + half + 20, '#3b82f6', 'top');
+        
+        // Right Label
+        drawLabel('s', cx + half + 20, cy, '#3b82f6', 'middle');
+      }
+
+      // 5. CENTROID
+      ctx.beginPath();
+      ctx.arc(cx, cy, 4, 0, Math.PI*2);
+      ctx.fillStyle = '#18181b';
+      ctx.fill();
+    }
+
+    function drawLabel(text, x, y, color, baseline='middle') {
+      ctx.save();
+      ctx.font = "bold 14px 'JetBrains Mono'";
+      ctx.textAlign = "center";
+      ctx.textBaseline = baseline;
+      
+      ctx.shadowColor = "white";
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = color;
+      
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    resetCalc();
+  </script>
+</body>
+</html>
