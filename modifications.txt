@@ -1,0 +1,8 @@
+a) on mobile it looks perfect, just one issue, when I open the keyboard and type something, then press the back button from the phone keyboard, not the button on the screen, 
+it goes back isntead of closing the keyboard, and we exit the page, this looks like a similar bug to you? can you solve it?
+
+
+e) cicle, rectangle and square solver are not fitted for mobile devices, either we add a tooltip telling it won't work or we solve the issue
+
+b) create new app for series/parallel 
+c) add proper links to other apps + contact links 

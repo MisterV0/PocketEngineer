@@ -156,7 +156,7 @@
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
     
     <!-- Left: Inputs & Formulas -->
-    <div class="lg:w-[460px] flex-none bg-white border-r border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin">
+    <div class="lg:w-[460px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin max-h-[50vh] lg:max-h-none">
       <div class="p-6 space-y-6">
         
         <!-- Standard Inputs -->
@@ -271,18 +271,18 @@
     </div>
 
     <!-- Right: Visualizer -->
-    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-3 lg:p-6 overflow-hidden min-h-[50vh] lg:min-h-0">
       
       <!-- Canvas Backdrop -->
       <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
       
       <!-- Canvas -->
-      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-6">
+      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-3 lg:mb-6 w-full max-w-[500px]">
         <canvas id="geoCanvas"></canvas>
       </div>
 
       <!-- Layer Controls -->
-      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-4">
+      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-2 lg:px-4">
         
         <button onclick="toggleLayer('radius')" id="btn-radius" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Radius
@@ -326,16 +326,36 @@
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
     
-    // Constant Display Size
-    const SIZE = 500;
-    canvas.style.width = SIZE + 'px';
-    canvas.style.height = SIZE + 'px';
-    canvas.width = SIZE * dpr;
-    canvas.height = SIZE * dpr;
-    ctx.scale(dpr, dpr);
-
-    const CENTER = SIZE / 2;
-    const VISUAL_R = 170; // Fixed radius size for drawing
+    // Responsive Display Size
+    function getCanvasSize() {
+      const isMobile = window.innerWidth < 1024;
+      return isMobile ? Math.min(350, window.innerWidth - 40) : 500;
+    }
+    
+    function resizeCanvas() {
+      const SIZE = getCanvasSize();
+      canvas.style.width = SIZE + 'px';
+      canvas.style.height = SIZE + 'px';
+      canvas.width = SIZE * dpr;
+      canvas.height = SIZE * dpr;
+      ctx.scale(dpr, dpr);
+      updateCanvasConstants();
+      draw();
+    }
+    
+    let CENTER = 250;
+    let VISUAL_R = 170; // Fixed radius size for drawing
+    
+    function updateCanvasConstants() {
+      const currentSize = getCanvasSize();
+      CENTER = currentSize / 2;
+      VISUAL_R = currentSize * 0.34; // Scale radius proportionally
+    }
+    
+    const SIZE = getCanvasSize();
+    updateCanvasConstants();
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     // --- STATE ---
     let state = {
@@ -632,6 +652,41 @@
     }
 
     resetCalc();
+
+    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
+    // Prevent browser back navigation when keyboard is open
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+
+    // Track when inputs are focused (keyboard opens)
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+
+    // Intercept back button when keyboard is open
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        // Blur active input instead of navigating
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          // Push state back to prevent navigation
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
   </script>
 </body>
 </html>

@@ -358,7 +358,13 @@
 
     function formatValue(num) {
       if (isNaN(num) || !isFinite(num)) return '';
-      return +(Math.round(num + "e+4") + "e-4");
+      // Format to up to 3 decimal places, removing trailing zeros
+      const rounded = Math.round(num * 1000) / 1000;
+      if (rounded % 1 === 0) {
+        return rounded.toString();
+      }
+      // Show up to 3 decimal places, remove trailing zeros
+      return rounded.toFixed(3).replace(/\.?0+$/, '');
     }
 
     window.resetCalc = function() {
@@ -504,8 +510,8 @@
         const pipeHeight = 150 - (rVal * 1.2); 
         const maxPipeHeight = 150 - (30 * 1.2); // approx 114
         
-        // 2. Calculate Flow Speed (I = V/R)
-        const flowSpeed = (vVal * 0.10) * (30 / (rVal || 1)); 
+        // 2. Calculate Flow Speed using proper Ohm's Law: I = V/R
+        const flowSpeed = rVal > 0 ? vVal / rVal : 0; 
 
         // 3. NEW: Calculate Volume/Density Capacity
         // Physical Constraint: A narrow pipe fits fewer particles
@@ -571,10 +577,10 @@
 
         ctx.globalAlpha = 1.0;
 
-        // Update Text
+        // Update Text with proper Ohm's Law values
         phaseBadge.textContent = phase;
         simV.textContent = Math.round(vVal) + ' V';
-        simI.textContent = flowSpeed.toFixed(1) + ' A';
+        simI.textContent = flowSpeed.toFixed(3) + ' A';
         simR.textContent = Math.round(rVal) + ' Ω';
 
         animationId = requestAnimationFrame(runSimulation);
@@ -594,6 +600,41 @@
         animationId = requestAnimationFrame(runSimulation);
       }
     }
+
+    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
+    // Prevent browser back navigation when keyboard is open
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+
+    // Track when inputs are focused (keyboard opens)
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+
+    // Intercept back button when keyboard is open
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        // Blur active input instead of navigating
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          // Push state back to prevent navigation
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
   </script>
 
 </body>

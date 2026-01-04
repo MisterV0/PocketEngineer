@@ -571,6 +571,41 @@
     resizeCanvas();
     calculate('init');
     requestAnimationFrame(animate);
+
+    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
+    // Prevent browser back navigation when keyboard is open
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+
+    // Track when inputs are focused (keyboard opens)
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+
+    // Intercept back button when keyboard is open
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        // Blur active input instead of navigating
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          // Push state back to prevent navigation
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
   </script>
 </body>
 </html>

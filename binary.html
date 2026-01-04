@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    
+    .input-card { 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      border: 1px solid #e4e4e7;
+      background-color: white;
+    }
+    .input-card:focus-within { 
+      border-color: #18181b; 
+      background-color: white; 
+      box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08);
+      transform: translateY(-1px);
+    }
+    
+    .byte-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #e4e4e7;
+      background-color: white;
+    }
+    .byte-card.selected {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      transform: scale(1.02);
+    }
+    
+    .explanation-row {
+      animation: slideIn 0.3s ease-out forwards;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Back Button Styling */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased">
+
+  <!-- Header -->
+  <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="back-button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </a>
+      
+      <div class="flex items-center gap-4">
+        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
+    
+    <!-- Left: Inputs & Explanation -->
+    <div class="lg:w-[500px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col">
+      <div class="p-6 space-y-6">
+        
+        <!-- Decimal Input -->
+        <div id="decimal-card" class="input-card rounded-xl p-5">
+          <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number</label>
+          <div class="flex items-baseline gap-2">
+            <input type="number" id="decimal-input" oninput="convertFromDecimal()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
+          </div>
+          <p class="text-xs text-zinc-400 mt-2">Enter a positive integer</p>
+        </div>
+
+        <!-- Binary Input -->
+        <div id="binary-card" class="input-card rounded-xl p-5">
+          <label class="text-[10px] font-bold text-indigo-500 uppercase mb-2 block">Binary Number</label>
+          <div class="flex items-baseline gap-2">
+            <input type="text" id="binary-input" oninput="convertFromBinary()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" pattern="[01]*">
+          </div>
+          <p class="text-xs text-zinc-400 mt-2">Enter binary digits (0 or 1)</p>
+        </div>
+
+        <!-- Bit Size Indicator -->
+        <div>
+          <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 block">Required Bits</label>
+          <div class="grid grid-cols-4 gap-2">
+            <div id="bit-8" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
+              <div class="text-xs font-bold text-zinc-900">8 bits</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">0-255</div>
+            </div>
+            <div id="bit-16" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
+              <div class="text-xs font-bold text-zinc-900">16 bits</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">0-65,535</div>
+            </div>
+            <div id="bit-32" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
+              <div class="text-xs font-bold text-zinc-900">32 bits</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">0-4.29B</div>
+            </div>
+            <div id="bit-64" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
+              <div class="text-xs font-bold text-zinc-900">64 bits</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">0-18.4Q</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- How It Works Explanation -->
+        <div id="how-it-works" class="bg-blue-50 rounded-xl p-5 border border-blue-200 hidden">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold text-blue-600 uppercase tracking-wider">How It Works</h3>
+            <span id="how-it-works-direction" class="text-xs font-bold text-blue-600 uppercase tracking-wider"></span>
+          </div>
+          <div id="how-it-works-content" class="text-sm text-blue-900 leading-relaxed space-y-3"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Visual Explanation -->
+    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+      
+      <!-- Canvas Backdrop -->
+      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+      
+      <!-- Main Visualization Card -->
+      <div class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl">
+        <div id="visualization-content">
+          <div class="text-center mb-8">
+            <div class="text-6xl font-mono font-bold text-zinc-900 mb-4" id="main-result">0</div>
+          </div>
+          
+          <!-- Power of 2 Visualization -->
+          <div id="power-visualization" class="hidden mb-6">
+            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Binary Representation</div>
+            <div id="power-note" class="text-[10px] text-zinc-500 mb-3 italic text-center"></div>
+            <div id="power-grid" class="grid grid-cols-8 gap-2"></div>
+          </div>
+
+          <!-- Step-by-Step Explanation -->
+          <div id="explanation-panel" class="hidden mt-6 pt-6 border-t border-zinc-200">
+            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Step-by-Step Calculation</h3>
+            <div id="explanation-content" class="space-y-2"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let currentBits = 8;
+
+    const decimalInput = document.getElementById('decimal-input');
+    const binaryInput = document.getElementById('binary-input');
+    const explanationPanel = document.getElementById('explanation-panel');
+    const explanationContent = document.getElementById('explanation-content');
+    const howItWorks = document.getElementById('how-it-works');
+    const howItWorksContent = document.getElementById('how-it-works-content');
+    const howItWorksDirection = document.getElementById('how-it-works-direction');
+    const mainResult = document.getElementById('main-result');
+    const powerVisualization = document.getElementById('power-visualization');
+    const powerTitle = document.getElementById('power-title');
+    const powerNote = document.getElementById('power-note');
+    const powerGrid = document.getElementById('power-grid');
+
+    function getRequiredBits(value) {
+      if (value === 0) return 8;
+      if (value <= 255) return 8;
+      if (value <= 65535) return 16;
+      if (value <= 4294967295) return 32;
+      return 64;
+    }
+
+    function updateBitIndicator(bits) {
+      currentBits = bits;
+      // Update all bit indicators
+      [8, 16, 32, 64].forEach(bitSize => {
+        const indicator = document.getElementById(`bit-${bitSize}`);
+        if (bitSize === bits) {
+          indicator.classList.add('selected');
+        } else {
+          indicator.classList.remove('selected');
+        }
+      });
+    }
+
+    function convertFromDecimal() {
+      const decimal = parseInt(decimalInput.value);
+      
+      if (isNaN(decimal) || decimal < 0 || decimalInput.value === '') {
+        if (decimalInput.value === '') {
+          binaryInput.value = '';
+        }
+        clearVisualizations();
+        return;
+      }
+
+      // Auto-determine required bits
+      const requiredBits = getRequiredBits(decimal);
+      updateBitIndicator(requiredBits);
+
+      const binary = decimalToBinary(decimal, requiredBits);
+      binaryInput.value = binary;
+      
+      updateVisualizations(decimal, binary, true);
+    }
+
+    function convertFromBinary() {
+      let binary = binaryInput.value.replace(/[^01]/g, '');
+      binaryInput.value = binary;
+      
+      if (binary === '' || binaryInput.value === '') {
+        if (binaryInput.value === '') {
+          decimalInput.value = '';
+        }
+        clearVisualizations();
+        return;
+      }
+
+      // Auto-determine required bits based on input length
+      let requiredBits = Math.max(8, Math.ceil(binary.length / 8) * 8);
+      if (requiredBits > 64) requiredBits = 64;
+      if (requiredBits < 8) requiredBits = 8;
+      
+      // Pad to required bits
+      binary = binary.padStart(requiredBits, '0');
+      updateBitIndicator(requiredBits);
+
+      const decimal = binaryToDecimal(binary);
+      decimalInput.value = decimal;
+      
+      updateVisualizations(decimal, binary, false);
+    }
+
+    function decimalToBinary(decimal, bits) {
+      if (decimal === 0) return '0'.padStart(bits, '0');
+      let binary = '';
+      while (decimal > 0) {
+        binary = (decimal % 2) + binary;
+        decimal = Math.floor(decimal / 2);
+      }
+      return binary.padStart(bits, '0');
+    }
+
+    function binaryToDecimal(binary) {
+      let decimal = 0;
+      for (let i = 0; i < binary.length; i++) {
+        if (binary[i] === '1') {
+          decimal += Math.pow(2, binary.length - 1 - i);
+        }
+      }
+      return decimal;
+    }
+
+    function updateVisualizations(decimal, binary, fromDecimal) {
+      // Update main result - show the calculated value
+      mainResult.textContent = fromDecimal ? binary : decimal.toLocaleString();
+
+      // Create "How It Works" explanation
+      howItWorksContent.innerHTML = '';
+      if (fromDecimal) {
+        howItWorksDirection.textContent = 'Decimal → Binary';
+        howItWorksContent.innerHTML = `
+          <p>We keep dividing the number by 2 and writing down the remainder. When we read the remainders from bottom to top, we get the binary number!</p>
+          <p class="text-xs text-blue-700 mt-2">Think of it like this: Each time we divide by 2, we're asking "Is this number even or odd?" The remainder (0 or 1) becomes our binary digit.</p>
+        `;
+      } else {
+        howItWorksDirection.textContent = 'Binary → Decimal';
+        howItWorksContent.innerHTML = `
+          <p>Each position in binary represents a power of 2. We multiply each "1" by its position value (2<sup>0</sup>, 2<sup>1</sup>, 2<sup>2</sup>, etc.) and add them all together!</p>
+          <p class="text-xs text-blue-700 mt-2">Think of it like this: Binary is like a light switch - each bit is either ON (1) or OFF (0). We add up the values of all the ON switches.</p>
+        `;
+      }
+      howItWorks.classList.remove('hidden');
+
+      // Create step-by-step explanation
+      explanationContent.innerHTML = '';
+      
+      if (fromDecimal) {
+        // Show decimal to binary conversion steps
+        let tempDecimal = decimal;
+        const steps = [];
+        
+        while (tempDecimal > 0) {
+          const remainder = tempDecimal % 2;
+          const quotient = Math.floor(tempDecimal / 2);
+          steps.push({ decimal: tempDecimal, remainder, quotient });
+          tempDecimal = quotient;
+        }
+        
+        // Show steps in correct order (first division at top, last at bottom)
+        steps.forEach((step, idx) => {
+          const row = document.createElement('div');
+          row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
+          row.style.animationDelay = `${idx * 50}ms`;
+          
+          row.innerHTML = `
+            <div class="flex-1">
+              <div class="text-xs font-mono text-zinc-900">${step.decimal} ÷ 2 = ${step.quotient}</div>
+              <div class="text-[10px] text-zinc-500 mt-1">Remainder: <strong class="text-blue-600">${step.remainder}</strong></div>
+            </div>
+          `;
+          
+          explanationContent.appendChild(row);
+        });
+        
+      } else {
+        // Show binary to decimal conversion steps
+        // Count from right to left (LSB to MSB)
+        const binaryArray = binary.split('');
+        let sum = 0;
+        const activeBits = [];
+        
+        // Process from right to left
+        for (let i = binaryArray.length - 1; i >= 0; i--) {
+          const bit = binaryArray[i];
+          const positionFromRight = binaryArray.length - 1 - i;
+          const power = positionFromRight;
+          
+          if (bit === '1') {
+            const value = Math.pow(2, power);
+            sum += value;
+            activeBits.push({ position: i, positionFromRight, power, value, bit });
+          }
+        }
+        
+        // Show steps for each active bit, ordered from right to left
+        activeBits.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
+          row.style.animationDelay = `${idx * 50}ms`;
+          row.innerHTML = `
+            <div class="flex-1">
+              <div class="text-xs font-mono text-zinc-900">${item.bit} × 2<sup>${item.power}</sup> = ${item.value}</div>
+              <div class="text-[10px] text-zinc-500 mt-1">Position ${item.positionFromRight} from right</div>
+            </div>
+            <div class="text-sm font-mono font-bold text-blue-600 ml-4">${item.value}</div>
+          `;
+          explanationContent.appendChild(row);
+        });
+        
+      }
+
+      explanationPanel.classList.remove('hidden');
+
+      // Update visualization based on conversion direction
+      if (fromDecimal) {
+        // Show bits table without power values for decimal to binary
+        updateBitsTable(binary);
+      } else {
+        // Show full power visualization with values for binary to decimal
+        updatePowerVisualization(binary);
+      }
+    }
+
+    function updateBitsTable(binary) {
+      powerGrid.innerHTML = '';
+      powerVisualization.classList.remove('hidden');
+      powerTitle.textContent = 'Binary Representation';
+      powerNote.textContent = 'In programming, bit positions start from the right';
+      
+      // Display bits from left to right (MSB to LSB) visually
+      const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
+      const maxBits = Math.min(16, bits.length); // Show first 16 bits
+      
+      for (let i = 0; i < maxBits; i++) {
+        const bit = bits[i];
+        
+        const cell = document.createElement('div');
+        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
+          bit === '1'
+            ? 'bg-blue-500 border-blue-600 text-white'
+            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+        }`;
+        
+        cell.innerHTML = `
+          <div class="text-xs font-bold">${bit}</div>
+        `;
+        
+        powerGrid.appendChild(cell);
+      }
+    }
+
+    function updatePowerVisualization(binary) {
+      powerGrid.innerHTML = '';
+      powerVisualization.classList.remove('hidden');
+      powerTitle.textContent = 'Power of 2 Breakdown';
+      powerNote.textContent = 'In programming, bit positions start from 0 at the right (LSB)';
+      
+      // Display bits from left to right (MSB to LSB) visually
+      // But show position numbers from right (position 0 is rightmost)
+      const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
+      const maxBits = Math.min(16, bits.length); // Show first 16 bits
+      
+      for (let i = 0; i < maxBits; i++) {
+        const bit = bits[i];
+        // Position from right: rightmost is position 0
+        const positionFromRight = (bits.length - 1) - i;
+        const power = positionFromRight;
+        const value = Math.pow(2, power);
+        
+        const cell = document.createElement('div');
+        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
+          bit === '1'
+            ? 'bg-blue-500 border-blue-600 text-white'
+            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+        }`;
+        
+        cell.innerHTML = `
+          <div class="text-xs font-bold mb-1">${bit}</div>
+          <div class="text-[10px] mb-1">2<sup>${power}</sup></div>
+          <div class="text-[10px] opacity-75">${value.toLocaleString()}</div>
+        `;
+        
+        powerGrid.appendChild(cell);
+      }
+    }
+
+    function clearVisualizations() {
+      explanationPanel.classList.add('hidden');
+      howItWorks.classList.add('hidden');
+      powerVisualization.classList.add('hidden');
+      mainResult.textContent = '0';
+      explanationContent.innerHTML = '';
+      howItWorksContent.innerHTML = '';
+      howItWorksDirection.textContent = '';
+      powerGrid.innerHTML = '';
+      // Reset bit indicator
+      [8, 16, 32, 64].forEach(bitSize => {
+        document.getElementById(`bit-${bitSize}`).classList.remove('selected');
+      });
+      currentBits = 8;
+    }
+
+    function resetCalc() {
+      decimalInput.value = '';
+      binaryInput.value = '';
+      clearVisualizations();
+    }
+
+    // Mobile keyboard back button fix
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
