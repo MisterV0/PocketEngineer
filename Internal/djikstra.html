@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijkstra Visualizer | Educational Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --bg-color: #fbfbfd;
+            --panel-bg: rgba(255, 255, 255, 0.8);
+            --accent-primary: #1d1d1f;
+            --accent-secondary: #2d2d30;
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --node-color: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            color: var(--text-main);
+            letter-spacing: -0.011em;
+        }
+
+        /* Premium paper texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #canvas {
+            display: block;
+            cursor: default;
+            background-color: var(--bg-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.08);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset;
+            pointer-events: auto;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-panel:hover {
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset;
+        }
+
+        h1 {
+            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.022em;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .instructions {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .instructions b {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .control-button {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-main);
+            padding: 14px 28px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: -0.013em;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.05),
+                0 1px 2px rgba(0, 0, 0, 0.03),
+                0 0 0 0.5px rgba(255, 255, 255, 0.9) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .control-button:hover::before {
+            left: 100%;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 8px 24px rgba(29, 29, 31, 0.15),
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                0 0 0 0.5px rgba(255, 255, 255, 1) inset,
+                0 0 0 1.5px rgba(29, 29, 31, 0.2);
+            border-width: 1.5px;
+            border-color: var(--text-main);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .control-button:active {
+            transform: translateY(-1px) scale(1.01);
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 4px 16px rgba(29, 29, 31, 0.12),
+                0 1px 2px rgba(0, 0, 0, 0.04),
+                0 0 0 0.5px rgba(255, 255, 255, 1) inset;
+        }
+
+        .control-button span {
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .control-button:hover span {
+            transform: translateX(1px);
+        }
+
+        /* Modal styling */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(30px);
+            -webkit-backdrop-filter: saturate(180%) blur(30px);
+            border: 0.5px solid rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.2),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset;
+            transform: scale(0.92) translateY(10px);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-backdrop.visible .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            letter-spacing: -0.022em;
+            line-height: 1.3;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 0.5px solid rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 24px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-main);
+            letter-spacing: -0.011em;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 
+                0 0 0 4px rgba(29, 29, 31, 0.08),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+            background: white;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-delete-button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            letter-spacing: -0.011em;
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+
+        .modal-delete-button:hover {
+            background: #ff3b30;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 12px rgba(255, 59, 48, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .modal-delete-button:active {
+            transform: translateY(0);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            letter-spacing: -0.011em;
+        }
+
+        .modal-button-primary {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 
+                0 2px 8px rgba(29, 29, 31, 0.2),
+                0 1px 0 rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .modal-button-primary:hover {
+            background: #000000;
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 12px rgba(29, 29, 31, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.3) inset;
+        }
+
+        .modal-button-primary:active {
+            transform: translateY(0);
+        }
+
+        .modal-button-secondary {
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .modal-button-secondary:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-button-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Validation Modal Styling */
+        .validation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .validation-item:last-child {
+            border-bottom: none;
+        }
+
+        .validation-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .validation-icon.valid {
+            background: rgba(52, 211, 153, 0.15);
+            color: #10b981;
+        }
+
+        .validation-icon.invalid {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .validation-icon.warning {
+            background: rgba(251, 191, 36, 0.15);
+            color: #f59e0b;
+        }
+
+        .validation-content {
+            flex: 1;
+        }
+
+        .validation-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            letter-spacing: -0.011em;
+        }
+
+        .validation-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .validation-summary {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.011em;
+        }
+
+        .validation-summary.ready {
+            background: rgba(52, 211, 153, 0.1);
+            color: #059669;
+            border: 0.5px solid rgba(52, 211, 153, 0.2);
+        }
+
+        .validation-summary.not-ready {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 0.5px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .validation-summary.warning {
+            background: rgba(251, 191, 36, 0.1);
+            color: #d97706;
+            border: 0.5px solid rgba(251, 191, 36, 0.2);
+        }
+
+        /* Dijkstra Mode Panel */
+        .dijkstra-panel {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .dijkstra-glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.08);
+            padding: 20px 24px;
+            border-radius: 20px;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                0 1px 0 rgba(255, 255, 255, 0.8) inset;
+            pointer-events: auto;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            min-width: 280px;
+        }
+
+        .dijkstra-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            letter-spacing: -0.022em;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .mode-button {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.011em;
+        }
+
+        .mode-button.active {
+            background: var(--text-main);
+            color: white;
+            border-color: var(--text-main);
+            box-shadow: 0 2px 8px rgba(29, 29, 31, 0.2);
+        }
+
+        .mode-button:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .node-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .selection-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .selection-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 60px;
+            letter-spacing: -0.011em;
+        }
+
+        .selection-button {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 0.5px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.011em;
+            text-align: center;
+        }
+
+        .selection-button:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .selection-button.active {
+            background: rgba(29, 29, 31, 0.08);
+            border-color: var(--text-main);
+            border-width: 1.5px;
+            font-weight: 600;
+        }
+
+        .selection-button.selected {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .selection-button.selected.end {
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .run-button {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            background: var(--text-main);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.011em;
+            box-shadow: 0 2px 8px rgba(29, 29, 31, 0.2);
+            margin-top: 4px;
+        }
+
+        .run-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29, 29, 31, 0.3);
+        }
+
+        .run-button:active {
+            transform: translateY(0);
+        }
+
+        .run-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Distance Panel */
+        .distance-panel {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+            display: none;
+        }
+
+        .distance-panel.visible {
+            display: block;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .distance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .distance-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .distance-value {
+            color: var(--text-main);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: -0.011em;
+        }
+
+        .distance-value.path {
+            color: #10b981;
+        }
+
+        .path-info {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.08);
+            border-radius: 10px;
+            border: 0.5px solid rgba(16, 185, 129, 0.15);
+            font-size: 12px;
+            color: #059669;
+            line-height: 1.5;
+        }
+
+        /* Step-by-step explanation panel */
+        .steps-panel {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            right: 320px;
+            max-width: 600px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .steps-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border: 0.5px solid rgba(0, 0, 0, 0.08);
+            padding: 20px 24px;
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                0 1px 0 rgba(255, 255, 255, 0.9) inset;
+            pointer-events: auto;
+            max-height: 280px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .steps-panel.visible .steps-glass {
+            display: block;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .steps-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            letter-spacing: -0.022em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-item {
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .step-item.active {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: #10b981;
+            transform: translateX(2px);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .step-item.active .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-content {
+            display: inline-block;
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.5;
+            letter-spacing: -0.011em;
+        }
+
+        .step-highlight {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .step-node {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(29, 29, 31, 0.1);
+            border-radius: 6px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            margin: 0 2px;
+        }
+
+        .step-node.start {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+
+        .step-node.end {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+
+        .step-node.visited {
+            background: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+        }
+
+        .step-node.path {
+            background: rgba(16, 185, 129, 0.2);
+            color: #059669;
+        }
+
+        .close-steps {
+            background: rgba(0, 0, 0, 0.04);
+            border: none;
+            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .close-steps:hover {
+            background: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Path visualization colors */
+        .path-color {
+            color: #10b981;
+        }
+
+        .visited-color {
+            color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ui-overlay">
+        <div class="glass-panel">
+            <h1>Graph Architect</h1>
+            <div class="instructions">
+                • <b>Click</b> empty space to add a Node<br>
+                • <b>Click</b> Node A then Node B to connect<br>
+                • <b>Click</b> a weight (number) to edit it<br>
+                • <b>Click</b> a node to select, then click X to delete
+            </div>
+        </div>
+    </div>
+
+    <div class="dijkstra-panel">
+        <div class="dijkstra-glass">
+            <div class="dijkstra-title">Dijkstra's Algorithm</div>
+            
+            <div class="mode-selector">
+                <button class="mode-button active" id="mode-build" onclick="setMode('build')">Build</button>
+                <button class="mode-button" id="mode-dijkstra" onclick="setMode('dijkstra')">Pathfind</button>
+            </div>
+
+            <div id="dijkstra-controls" style="display: none;">
+                <div class="node-selection">
+                    <div class="selection-row">
+                        <div class="selection-label">Start:</div>
+                        <button class="selection-button" id="select-start" onclick="setSelectionMode('start')">
+                            Click node
+                        </button>
+                    </div>
+                    <div class="selection-row">
+                        <div class="selection-label">End:</div>
+                        <button class="selection-button" id="select-end" onclick="setSelectionMode('end')">
+                            Click node
+                        </button>
+                    </div>
+                </div>
+
+                <button class="run-button" id="run-dijkstra" onclick="runDijkstra()" disabled>
+                    Find Shortest Path
+                </button>
+
+                <button class="run-button" id="show-steps" onclick="toggleStepsPanel()" style="margin-top: 8px; background: rgba(0,0,0,0.04); color: var(--text-main);" disabled>
+                    Show Step-by-Step
+                </button>
+
+                <div class="distance-panel" id="distance-panel">
+                    <div id="distance-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step-by-step explanation panel -->
+    <div class="steps-panel" id="steps-panel">
+        <div class="steps-glass">
+            <div class="steps-title">
+                <span>Algorithm Steps</span>
+                <button class="close-steps" onclick="toggleStepsPanel()">×</button>
+            </div>
+            <div id="steps-content"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="control-button" onclick="randomizeWeights()">
+            <span>Randomize Weights</span>
+        </button>
+        <button class="control-button" onclick="scanGraph()">
+            <span>Scan Graph</span>
+        </button>
+        <button class="control-button" onclick="clearCanvas()">
+            <span>Clear Canvas</span>
+        </button>
+    </div>
+
+    <!-- Modal for editing edge weight -->
+    <div id="weight-modal" class="modal-backdrop" onclick="event.target === this && closeWeightModal()">
+        <div class="modal-content">
+            <div class="modal-title">Edit Path Weight</div>
+            <input 
+                type="number" 
+                id="weight-input" 
+                class="modal-input" 
+                placeholder="Enter weight"
+                min="1"
+                onkeypress="if(event.key === 'Enter') saveWeight()"
+                onkeydown="if(event.key === 'Escape') closeWeightModal()"
+            >
+            <div class="modal-buttons">
+                <button class="modal-delete-button" onclick="deletePath()">
+                    Delete Path
+                </button>
+                <div class="modal-actions">
+                    <button class="modal-button modal-button-secondary" onclick="closeWeightModal()">Cancel</button>
+                    <button class="modal-button modal-button-primary" onclick="saveWeight()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for graph validation -->
+    <div id="validation-modal" class="modal-backdrop" onclick="event.target === this && closeValidationModal()">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-title">Dijkstra Algorithm Validation</div>
+            <div id="validation-results">
+                <!-- Results will be inserted here -->
+            </div>
+            <div class="modal-buttons" style="justify-content: flex-end; margin-top: 24px;">
+                <button class="modal-button modal-button-secondary" onclick="closeValidationModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let nodes = [];
+        let edges = [];
+        let selectedNode = null;
+        let hoverNode = null;
+        let editingEdge = null;
+        
+        // Dijkstra state
+        let mode = 'build'; // 'build' or 'dijkstra'
+        let selectionMode = null; // 'start', 'end', or null
+        let startNode = null;
+        let endNode = null;
+        let dijkstraResult = null;
+        let shortestPath = null;
+        let distances = {};
+        let visitedNodes = new Set();
+        let animationStep = 0;
+        let isAnimating = false;
+        let algorithmSteps = [];
+        let currentStepIndex = 0;
+        let stepsPanelVisible = false;
+
+        // Configuration
+        const NODE_RADIUS = 28;
+        const MIN_NODE_DISTANCE = NODE_RADIUS * 2.6;
+        const COLORS = {
+            node: '#ffffff',
+            nodeBorder: '#1d1d1f',
+            nodeSelected: '#2d2d30',
+            text: '#1d1d1f',
+            edge: 'rgba(0, 0, 0, 0.12)',
+            edgeHighlight: '#1d1d1f',
+            deleteButton: '#ff3b30',
+            deleteButtonHover: '#ff2d20'
+        };
+
+        function init() {
+            window.addEventListener('resize', resize);
+            resize();
+            animate();
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // Check if position is too close to existing nodes
+        function isPositionValid(x, y) {
+            for (const node of nodes) {
+                const distance = Math.hypot(node.x - x, node.y - y);
+                if (distance < MIN_NODE_DISTANCE) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // --- Interaction Logic ---
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouse = { 
+                x: (e.clientX - rect.left) * scaleX, 
+                y: (e.clientY - rect.top) * scaleY 
+            };
+            
+            // Handle Dijkstra mode
+            if (mode === 'dijkstra') {
+                if (selectionMode) {
+                    const clickedNode = nodes.find(n => Math.hypot(n.x - mouse.x, n.y - mouse.y) < NODE_RADIUS);
+                    if (clickedNode) {
+                        if (selectionMode === 'start') {
+                            startNode = clickedNode;
+                            document.getElementById('select-start').textContent = startNode.label;
+                            document.getElementById('select-start').classList.add('selected');
+                            selectionMode = null;
+                        } else if (selectionMode === 'end') {
+                            endNode = clickedNode;
+                            document.getElementById('select-end').textContent = endNode.label;
+                            document.getElementById('select-end').classList.add('selected', 'end');
+                            selectionMode = null;
+                        }
+                        updateRunButton();
+                        return;
+                    }
+                }
+                return;
+            }
+            
+            // Build mode (original behavior)
+            // Check if clicked on delete button (for selected node)
+            if (selectedNode) {
+                const deleteX = selectedNode.x + NODE_RADIUS - 8;
+                const deleteY = selectedNode.y - NODE_RADIUS - 8;
+                const distanceToDelete = Math.hypot(mouse.x - deleteX, mouse.y - deleteY);
+                
+                if (distanceToDelete < 18) {
+                    deleteNode(selectedNode);
+                    selectedNode = null;
+                    return;
+                }
+            }
+            
+            // Check if clicked on a node
+            const clickedNode = nodes.find(n => Math.hypot(n.x - mouse.x, n.y - mouse.y) < NODE_RADIUS);
+            
+            // Check if clicked on an edge weight label
+            const clickedEdge = edges.find(edge => {
+                const midX = (edge.from.x + edge.to.x) / 2;
+                const midY = (edge.from.y + edge.to.y) / 2;
+                return Math.hypot(midX - mouse.x, midY - mouse.y) < 18;
+            });
+
+            if (clickedEdge) {
+                editingEdge = clickedEdge;
+                openWeightModal(clickedEdge.weight);
+                return;
+            }
+
+            if (clickedNode) {
+                if (selectedNode && selectedNode !== clickedNode) {
+                    // Create connection
+                    addEdge(selectedNode, clickedNode);
+                    selectedNode = null;
+                } else {
+                    selectedNode = clickedNode;
+                }
+            } else {
+                // Check if position is valid before creating new node
+                if (isPositionValid(mouse.x, mouse.y)) {
+                // Create new node
+                addNode(mouse.x, mouse.y);
+                selectedNode = null;
+                }
+            }
+        });
+
+        // Hover detection for better UX
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouse = { 
+                x: (e.clientX - rect.left) * scaleX, 
+                y: (e.clientY - rect.top) * scaleY 
+            };
+            
+            const hoveredNode = nodes.find(n => Math.hypot(n.x - mouse.x, n.y - mouse.y) < NODE_RADIUS);
+            
+            if (hoveredNode !== hoverNode) {
+                hoverNode = hoveredNode;
+                if (hoverNode) {
+                    canvas.style.cursor = 'pointer';
+                } else {
+                    canvas.style.cursor = 'default';
+                }
+            }
+        });
+
+        function addNode(x, y) {
+            nodes.push({ x, y, id: nodes.length, label: String.fromCharCode(65 + nodes.length) });
+        }
+
+        function deleteNode(node) {
+            // Remove all edges connected to this node
+            edges = edges.filter(edge => edge.from !== node && edge.to !== node);
+            // Remove the node
+            nodes = nodes.filter(n => n !== node);
+            // Update IDs and labels
+            nodes.forEach((n, index) => {
+                n.id = index;
+                n.label = String.fromCharCode(65 + index);
+            });
+            selectedNode = null;
+        }
+
+        function addEdge(n1, n2) {
+            // Prevent duplicates
+            const exists = edges.find(e => (e.from === n1 && e.to === n2) || (e.from === n2 && e.to === n1));
+            if (!exists && n1 !== n2) {
+                edges.push({ from: n1, to: n2, weight: 1 });
+            }
+        }
+
+        function clearCanvas() {
+            nodes = [];
+            edges = [];
+            selectedNode = null;
+            editingEdge = null;
+            resetDijkstra();
+        }
+
+        // Dijkstra mode functions
+        function setMode(newMode) {
+            mode = newMode;
+            document.getElementById('mode-build').classList.toggle('active', mode === 'build');
+            document.getElementById('mode-dijkstra').classList.toggle('active', mode === 'dijkstra');
+            document.getElementById('dijkstra-controls').style.display = mode === 'dijkstra' ? 'block' : 'none';
+            
+            if (mode === 'dijkstra') {
+                resetDijkstra();
+            } else {
+                // Clear Dijkstra visualization
+                shortestPath = null;
+                visitedNodes.clear();
+                distances = {};
+            }
+        }
+
+        function setSelectionMode(type) {
+            if (mode !== 'dijkstra') return;
+            selectionMode = type;
+            
+            // Update button states
+            document.getElementById('select-start').classList.remove('active');
+            document.getElementById('select-end').classList.remove('active');
+            
+            if (type === 'start') {
+                document.getElementById('select-start').classList.add('active');
+            } else if (type === 'end') {
+                document.getElementById('select-end').classList.add('active');
+            }
+        }
+
+        function updateRunButton() {
+            const button = document.getElementById('run-dijkstra');
+            button.disabled = !(startNode && endNode);
+        }
+
+        function resetDijkstra() {
+            startNode = null;
+            endNode = null;
+            selectionMode = null;
+            shortestPath = null;
+            visitedNodes.clear();
+            distances = {};
+            algorithmSteps = [];
+            currentStepIndex = 0;
+            document.getElementById('select-start').textContent = 'Click node';
+            document.getElementById('select-start').classList.remove('selected', 'active');
+            document.getElementById('select-end').textContent = 'Click node';
+            document.getElementById('select-end').classList.remove('selected', 'end', 'active');
+            document.getElementById('distance-panel').classList.remove('visible');
+            document.getElementById('show-steps').disabled = true;
+            document.getElementById('steps-panel').classList.remove('visible');
+            stepsPanelVisible = false;
+            updateRunButton();
+        }
+
+        function toggleStepsPanel() {
+            stepsPanelVisible = !stepsPanelVisible;
+            const panel = document.getElementById('steps-panel');
+            panel.classList.toggle('visible', stepsPanelVisible);
+            
+            if (stepsPanelVisible && algorithmSteps.length > 0) {
+                displayAlgorithmSteps();
+            }
+        }
+
+        // Dijkstra's algorithm implementation with step-by-step tracking
+        function runDijkstra() {
+            if (!startNode || !endNode) return;
+            
+            // Reset previous results
+            shortestPath = null;
+            visitedNodes.clear();
+            distances = {};
+            algorithmSteps = [];
+            currentStepIndex = 0;
+            
+            // Build adjacency list
+            const adjacency = {};
+            const edgeMap = {};
+            
+            nodes.forEach(node => {
+                adjacency[node.id] = [];
+            });
+            
+            edges.forEach(edge => {
+                const from = edge.from;
+                const to = edge.to;
+                adjacency[from.id].push({ node: to, weight: edge.weight });
+                adjacency[to.id].push({ node: from, weight: edge.weight });
+            });
+            
+            // Initialize distances
+            nodes.forEach(node => {
+                distances[node.id] = Infinity;
+            });
+            distances[startNode.id] = 0;
+            
+            // Add initial step
+            algorithmSteps.push({
+                type: 'init',
+                message: `Initialize: Set distance of start node ${startNode.label} to 0, all others to ∞`,
+                currentNode: startNode.id,
+                distances: { ...distances }
+            });
+            
+            // Priority queue: [distance, node]
+            const queue = [[0, startNode.id]];
+            const previous = {};
+            
+            visitedNodes.clear();
+            let stepNumber = 1;
+            
+            // Dijkstra's algorithm
+            while (queue.length > 0) {
+                // Sort queue by distance (simple implementation)
+                queue.sort((a, b) => a[0] - b[0]);
+                const [currentDist, currentId] = queue.shift();
+                
+                const currentNode = nodes.find(n => n.id === currentId);
+                if (!currentNode) continue;
+                
+                if (visitedNodes.has(currentId)) continue;
+                
+                // Mark as visited
+                visitedNodes.add(currentId);
+                
+                // Add step: visiting node
+                algorithmSteps.push({
+                    type: 'visit',
+                    message: `Step ${stepNumber++}: Visit node ${currentNode.label} (distance: ${currentDist})`,
+                    currentNode: currentId,
+                    currentDistance: currentDist,
+                    distances: { ...distances },
+                    visited: new Set(visitedNodes)
+                });
+                
+                // If we reached the end node, reconstruct path
+                if (currentId === endNode.id) {
+                    // Reconstruct path
+                    shortestPath = [];
+                    let node = endNode.id;
+                    while (node !== undefined) {
+                        shortestPath.unshift(node);
+                        node = previous[node];
+                    }
+                    
+                    // Add final step
+                    algorithmSteps.push({
+                        type: 'complete',
+                        message: `Complete! Shortest path found: ${shortestPath.map(id => nodes.find(n => n.id === id).label).join(' → ')} with total distance ${currentDist}`,
+                        path: shortestPath,
+                        totalDistance: currentDist,
+                        distances: { ...distances }
+                    });
+                    break;
+                }
+                
+                // Explore neighbors
+                const neighbors = adjacency[currentId] || [];
+                const updates = [];
+                
+                for (const { node: neighbor, weight } of neighbors) {
+                    if (visitedNodes.has(neighbor.id)) continue;
+                    
+                    const newDist = currentDist + weight;
+                    const oldDist = distances[neighbor.id];
+                    
+                    if (newDist < oldDist) {
+                        distances[neighbor.id] = newDist;
+                        previous[neighbor.id] = currentId;
+                        queue.push([newDist, neighbor.id]);
+                        
+                        updates.push({
+                            node: neighbor.id,
+                            oldDistance: oldDist === Infinity ? '∞' : oldDist,
+                            newDistance: newDist,
+                            edgeWeight: weight
+                        });
+                    }
+                }
+                
+                // Add step: updating neighbors
+                if (updates.length > 0) {
+                    const updateMessages = updates.map(u => {
+                        const nodeLabel = nodes.find(n => n.id === u.node).label;
+                        return `${nodeLabel}: ${u.oldDistance} → ${u.newDistance} (via edge weight ${u.edgeWeight})`;
+                    }).join(', ');
+                    
+                    algorithmSteps.push({
+                        type: 'update',
+                        message: `Update distances: ${updateMessages}`,
+                        currentNode: currentId,
+                        updates: updates,
+                        distances: { ...distances }
+                    });
+                } else {
+                    algorithmSteps.push({
+                        type: 'no-update',
+                        message: `No distance updates needed for neighbors`,
+                        currentNode: currentId,
+                        distances: { ...distances }
+                    });
+                }
+            }
+            
+            // Enable steps button
+            document.getElementById('show-steps').disabled = false;
+            
+            // Display results
+            displayDijkstraResults();
+        }
+
+        function displayAlgorithmSteps() {
+            const content = document.getElementById('steps-content');
+            let html = '';
+            
+            algorithmSteps.forEach((step, index) => {
+                const stepClass = index === currentStepIndex ? 'active' : '';
+                let stepHTML = `<div class="step-item ${stepClass}">`;
+                stepHTML += `<span class="step-number">${index + 1}</span>`;
+                stepHTML += `<span class="step-content">`;
+                
+                // Format message with node highlights
+                let message = step.message;
+                
+                // Highlight node names
+                nodes.forEach(node => {
+                    const regex = new RegExp(`\\b${node.label}\\b`, 'g');
+                    const nodeClass = 
+                        node === startNode ? 'start' :
+                        node === endNode ? 'end' :
+                        step.visited && step.visited.has(node.id) ? 'visited' :
+                        step.path && step.path.includes(node.id) ? 'path' : '';
+                    
+                    message = message.replace(regex, `<span class="step-node ${nodeClass}">${node.label}</span>`);
+                });
+                
+                stepHTML += message;
+                stepHTML += `</span></div>`;
+                html += stepHTML;
+            });
+            
+            content.innerHTML = html;
+            
+            // Auto-scroll to current step
+            if (currentStepIndex >= 0) {
+                const steps = content.querySelectorAll('.step-item');
+                if (steps[currentStepIndex]) {
+                    steps[currentStepIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+
+        function displayDijkstraResults() {
+            const panel = document.getElementById('distance-panel');
+            const content = document.getElementById('distance-content');
+            
+            let html = '<div class="distance-item"><div class="distance-label">Shortest Distance:</div>';
+            
+            if (distances[endNode.id] !== Infinity && shortestPath) {
+                html += `<div class="distance-value path">${distances[endNode.id]}</div></div>`;
+                
+                // Path info
+                html += '<div class="path-info">';
+                html += `<strong>Shortest Path:</strong> ${shortestPath.map(id => nodes.find(n => n.id === id).label).join(' → ')}`;
+                html += `<br><small style="opacity: 0.8;">Total steps: ${algorithmSteps.length - 1}</small>`;
+                html += '</div>';
+                
+                // All distances
+                html += '<div style="margin-top: 12px; padding-top: 12px; border-top: 0.5px solid rgba(0,0,0,0.06);">';
+                html += '<div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Distances from Start:</div>';
+                
+                nodes.forEach(node => {
+                    const dist = distances[node.id];
+                    const isPath = shortestPath && shortestPath.includes(node.id);
+                    html += `<div class="distance-item">`;
+                    html += `<div class="distance-label">${node.label}:</div>`;
+                    html += `<div class="distance-value ${isPath ? 'path' : ''}">${dist === Infinity ? '∞' : dist}</div>`;
+                    html += `</div>`;
+                });
+                
+                html += '</div>';
+            } else {
+                html += `<div class="distance-value" style="color: #ef4444;">No path found</div></div>`;
+            }
+            
+            content.innerHTML = html;
+            panel.classList.add('visible');
+            
+            // Show steps panel if it was visible before
+            if (stepsPanelVisible) {
+                displayAlgorithmSteps();
+            }
+        }
+
+        function randomizeWeights() {
+            if (edges.length === 0) {
+                // Visual feedback - could add a subtle notification
+                return;
+            }
+
+            // Randomize all edge weights between 1-20
+            edges.forEach(edge => {
+                edge.weight = Math.floor(Math.random() * 20) + 1;
+            });
+
+            // Trigger a redraw
+            animate();
+        }
+
+        // Modal functions
+        function openWeightModal(currentWeight) {
+            editingEdge = editingEdge || null;
+            const modal = document.getElementById('weight-modal');
+            const input = document.getElementById('weight-input');
+            input.value = currentWeight;
+            modal.classList.add('visible');
+            setTimeout(() => {
+                input.focus();
+                input.select();
+            }, 100);
+        }
+
+        function closeWeightModal() {
+            const modal = document.getElementById('weight-modal');
+            modal.classList.remove('visible');
+            editingEdge = null;
+        }
+
+        function saveWeight() {
+            const input = document.getElementById('weight-input');
+            const value = parseInt(input.value);
+            if (editingEdge && !isNaN(value) && value > 0) {
+                editingEdge.weight = value;
+                closeWeightModal();
+            }
+        }
+
+        function deletePath() {
+            if (editingEdge) {
+                // Remove the edge from the edges array
+                edges = edges.filter(edge => edge !== editingEdge);
+                closeWeightModal();
+            }
+        }
+
+        // Validation functions for Dijkstra's algorithm
+        function scanGraph() {
+            const validation = validateGraphForDijkstra();
+            displayValidationResults(validation);
+        }
+
+        function validateGraphForDijkstra() {
+            const results = {
+                hasMinimumNodes: nodes.length >= 3,
+                hasMinimumEdges: edges.length >= 2,
+                allWeightsNonNegative: true,
+                negativeWeights: [],
+                isConnected: false,
+                isolatedNodes: [],
+                hasPathChoices: false
+            };
+
+            // Check 1: At least 3 nodes exist (need at least 3 for meaningful pathfinding)
+            results.hasMinimumNodes = nodes.length >= 3;
+
+            // Check 2: All edge weights are non-negative
+            results.allWeightsNonNegative = edges.every(edge => edge.weight >= 0);
+            results.negativeWeights = edges.filter(edge => edge.weight < 0);
+
+            // Check 3: At least 2 edges exist (for there to be path choices)
+            results.hasMinimumEdges = edges.length >= 2;
+
+            // Check 4: Graph connectivity and path choices (if there are nodes and edges)
+            if (nodes.length >= 3 && edges.length >= 2) {
+                // Build adjacency list
+                const adjacency = {};
+                nodes.forEach(node => {
+                    adjacency[node.id] = [];
+                });
+
+                edges.forEach(edge => {
+                    const fromId = nodes.indexOf(edge.from);
+                    const toId = nodes.indexOf(edge.to);
+                    if (fromId !== -1 && toId !== -1) {
+                        adjacency[edge.from.id].push(edge.to.id);
+                        adjacency[edge.to.id].push(edge.from.id);
+                    }
+                });
+
+                // Check for isolated nodes
+                results.isolatedNodes = nodes.filter(node => 
+                    adjacency[node.id].length === 0
+                );
+
+                // Check if graph is connected using BFS
+                if (nodes.length > 0) {
+                    const visited = new Set();
+                    const queue = [nodes[0].id];
+                    visited.add(nodes[0].id);
+
+                    while (queue.length > 0) {
+                        const current = queue.shift();
+                        adjacency[current].forEach(neighbor => {
+                            if (!visited.has(neighbor)) {
+                                visited.add(neighbor);
+                                queue.push(neighbor);
+                            }
+                        });
+                    }
+
+                    results.isConnected = visited.size === nodes.length;
+                }
+
+                // Check if there are path choices (multiple paths between nodes)
+                // This means there should be at least one node with degree >= 2
+                // OR multiple edges that create alternative paths
+                const nodeDegrees = nodes.map(node => adjacency[node.id].length);
+                const maxDegree = Math.max(...nodeDegrees);
+                const nodesWithMultipleConnections = nodeDegrees.filter(deg => deg >= 2).length;
+                
+                // There are path choices if:
+                // - At least one node has 2+ connections (creating branching)
+                // - OR there are cycles in the graph (which requires checking for cycles)
+                results.hasPathChoices = maxDegree >= 2 && nodesWithMultipleConnections >= 2;
+            }
+
+            return results;
+        }
+
+        function displayValidationResults(validation) {
+            const container = document.getElementById('validation-results');
+            let html = '';
+
+            // Check 1: Has minimum 3 nodes
+            const nodeStatus = validation.hasMinimumNodes ? 'valid' : 'invalid';
+            const nodeIcon = validation.hasMinimumNodes ? '✓' : '✗';
+            html += `
+                <div class="validation-item">
+                    <div class="validation-icon ${nodeStatus}">${nodeIcon}</div>
+                    <div class="validation-content">
+                        <div class="validation-title">At least 3 nodes exist</div>
+                        <div class="validation-description">
+                            ${validation.hasMinimumNodes 
+                                ? `Graph has ${nodes.length} node(s). ✓` 
+                                : `Graph has only ${nodes.length} node(s). Dijkstra's algorithm requires at least 3 nodes to find meaningful shortest paths between different routes.`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Check 2: Non-negative weights
+            const weightStatus = validation.allWeightsNonNegative ? 'valid' : 'invalid';
+            const weightIcon = validation.allWeightsNonNegative ? '✓' : '✗';
+            html += `
+                <div class="validation-item">
+                    <div class="validation-icon ${weightStatus}">${weightIcon}</div>
+                    <div class="validation-content">
+                        <div class="validation-title">All edge weights are non-negative</div>
+                        <div class="validation-description">
+                            ${validation.allWeightsNonNegative 
+                                ? `All ${edges.length} edge(s) have non-negative weights. ✓` 
+                                : `Found ${validation.negativeWeights.length} edge(s) with negative weights. Dijkstra's algorithm requires non-negative weights.`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Check 3: Has minimum 2 edges (for path choices)
+            const edgeStatus = validation.hasMinimumEdges ? 'valid' : 'invalid';
+            const edgeIcon = validation.hasMinimumEdges ? '✓' : '✗';
+            html += `
+                <div class="validation-item">
+                    <div class="validation-icon ${edgeStatus}">${edgeIcon}</div>
+                    <div class="validation-content">
+                        <div class="validation-title">At least 2 edges exist</div>
+                        <div class="validation-description">
+                            ${validation.hasMinimumEdges 
+                                ? `Graph has ${edges.length} edge(s). ✓` 
+                                : `Graph has only ${edges.length} edge(s). Need at least 2 edges to have path choices for Dijkstra's algorithm to be meaningful.`}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Check 4: Connectivity (if there are enough nodes and edges)
+            if (validation.hasMinimumNodes && validation.hasMinimumEdges) {
+                const connectStatus = validation.isConnected ? 'valid' : 'warning';
+                const connectIcon = validation.isConnected ? '✓' : '⚠';
+                html += `
+                    <div class="validation-item">
+                        <div class="validation-icon ${connectStatus}">${connectIcon}</div>
+                        <div class="validation-content">
+                            <div class="validation-title">Graph is connected</div>
+                            <div class="validation-description">
+                                ${validation.isConnected 
+                                    ? 'All nodes are reachable from each other. ✓' 
+                                    : `Graph has ${validation.isolatedNodes.length} isolated node(s). Paths may not exist between all nodes.`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Check 5: Has path choices (meaningful for Dijkstra)
+                if (validation.hasPathChoices !== undefined) {
+                    const pathChoiceStatus = validation.hasPathChoices ? 'valid' : 'warning';
+                    const pathChoiceIcon = validation.hasPathChoices ? '✓' : '⚠';
+                    html += `
+                        <div class="validation-item">
+                            <div class="validation-icon ${pathChoiceStatus}">${pathChoiceIcon}</div>
+                            <div class="validation-content">
+                                <div class="validation-title">Path choices available</div>
+                                <div class="validation-description">
+                                    ${validation.hasPathChoices 
+                                        ? 'Graph has multiple paths between nodes. Dijkstra can find shortest routes. ✓' 
+                                        : 'Graph may have limited path choices. Consider adding more connections for better pathfinding.'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Summary
+            const allCritical = validation.hasMinimumNodes && validation.allWeightsNonNegative && validation.hasMinimumEdges;
+            const summaryClass = allCritical ? (validation.isConnected && validation.hasPathChoices ? 'ready' : 'warning') : 'not-ready';
+            const summaryText = allCritical 
+                ? (validation.isConnected && validation.hasPathChoices
+                    ? 'Graph is ready for Dijkstra\'s algorithm! ✓' 
+                    : 'Graph meets minimum requirements, but connectivity and path choices could be improved.')
+                : 'Graph is not ready for Dijkstra\'s algorithm. Please fix the issues above.';
+
+            html += `<div class="validation-summary ${summaryClass}">${summaryText}</div>`;
+
+            container.innerHTML = html;
+            openValidationModal();
+        }
+
+        function openValidationModal() {
+            const modal = document.getElementById('validation-modal');
+            modal.classList.add('visible');
+        }
+
+        function closeValidationModal() {
+            const modal = document.getElementById('validation-modal');
+            modal.classList.remove('visible');
+        }
+
+        // --- Drawing Logic ---
+
+        function drawEdge(edge) {
+            const isHovered = false; // Could add hover detection for edges
+            
+            // Check if edge is part of shortest path
+            let isInPath = false;
+            if (shortestPath && shortestPath.length > 1) {
+                for (let i = 0; i < shortestPath.length - 1; i++) {
+                    const fromId = shortestPath[i];
+                    const toId = shortestPath[i + 1];
+                    if ((edge.from.id === fromId && edge.to.id === toId) ||
+                        (edge.from.id === toId && edge.to.id === fromId)) {
+                        isInPath = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Draw line
+            ctx.beginPath();
+            ctx.moveTo(edge.from.x, edge.from.y);
+            ctx.lineTo(edge.to.x, edge.to.y);
+            
+            if (isInPath) {
+                // Premium path visualization
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = 'rgba(16, 185, 129, 0.4)';
+                ctx.shadowBlur = 12;
+            } else {
+                ctx.strokeStyle = isHovered ? COLORS.edgeHighlight : COLORS.edge;
+                ctx.lineWidth = isHovered ? 2.5 : 2;
+                ctx.shadowBlur = 0;
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Draw Weight Bubble with premium styling
+            const midX = (edge.from.x + edge.to.x) / 2;
+            const midY = (edge.from.y + edge.to.y) / 2;
+            
+            // Shadow for weight bubble
+            ctx.save();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetY = 2;
+            
+            // Weight bubble with gradient effect
+            const gradient = ctx.createRadialGradient(midX, midY, 0, midX, midY, 18);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(1, '#f8f8f8');
+            
+            ctx.beginPath();
+            ctx.arc(midX, midY, 16, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            ctx.restore();
+            
+            // Border
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = COLORS.text;
+            ctx.font = '500 13px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(edge.weight, midX, midY);
+        }
+
+        function drawNode(node) {
+            const isSelected = selectedNode === node;
+            const isHovered = hoverNode === node && !isSelected;
+            
+            // Dijkstra visualization states
+            const isStart = startNode === node;
+            const isEnd = endNode === node;
+            const isVisited = visitedNodes.has(node.id);
+            const isInPath = shortestPath && shortestPath.includes(node.id);
+            
+            // Outer glow for selected node
+            if (isSelected) {
+                ctx.save();
+                ctx.shadowColor = COLORS.nodeSelected;
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+            }
+
+            // Create gradient for node based on state
+            let gradient;
+            if (isInPath) {
+                // Path nodes - green tint
+                gradient = ctx.createRadialGradient(
+                    node.x - 8, node.y - 8, 0,
+                    node.x, node.y, NODE_RADIUS
+                );
+                gradient.addColorStop(0, '#d1fae5');
+                gradient.addColorStop(1, '#a7f3d0');
+            } else if (isVisited) {
+                // Visited nodes - blue tint
+                gradient = ctx.createRadialGradient(
+                    node.x - 8, node.y - 8, 0,
+                    node.x, node.y, NODE_RADIUS
+                );
+                gradient.addColorStop(0, '#dbeafe');
+                gradient.addColorStop(1, '#bfdbfe');
+            } else {
+                // Normal nodes
+                gradient = ctx.createRadialGradient(
+                    node.x - 8, node.y - 8, 0,
+                    node.x, node.y, NODE_RADIUS
+                );
+                gradient.addColorStop(0, '#ffffff');
+                gradient.addColorStop(1, '#f5f5f7');
+            }
+
+            // Draw node circle
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            if (isSelected) {
+                ctx.restore();
+            }
+
+            // Border with premium styling based on state
+            let borderColor = COLORS.nodeBorder;
+            let borderWidth = isSelected ? 3.5 : isHovered ? 2.5 : 2;
+            
+            if (isStart || isEnd) {
+                borderWidth = 4;
+                borderColor = isStart ? '#10b981' : '#f59e0b';
+                ctx.shadowColor = isStart ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.4)';
+                ctx.shadowBlur = 16;
+            } else if (isInPath) {
+                borderWidth = 3.5;
+                borderColor = '#10b981';
+                ctx.shadowColor = 'rgba(16, 185, 129, 0.3)';
+                ctx.shadowBlur = 12;
+            } else if (isVisited) {
+                borderColor = '#3b82f6';
+            ctx.shadowBlur = 0;
+            }
+            
+            ctx.lineWidth = borderWidth;
+            ctx.strokeStyle = borderColor;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Draw delete button on canvas for selected node
+            if (isSelected) {
+                const deleteX = node.x + NODE_RADIUS - 8;
+                const deleteY = node.y - NODE_RADIUS - 8;
+                
+                // Shadow for delete button
+                ctx.save();
+                ctx.shadowColor = 'rgba(255, 59, 48, 0.4)';
+                ctx.shadowBlur = 12;
+                ctx.shadowOffsetY = 3;
+                
+                // Delete button circle with gradient
+                const deleteGradient = ctx.createRadialGradient(
+                    deleteX - 3, deleteY - 3, 0,
+                    deleteX, deleteY, 16
+                );
+                deleteGradient.addColorStop(0, '#ff6b60');
+                deleteGradient.addColorStop(1, COLORS.deleteButton);
+                
+                ctx.beginPath();
+                ctx.arc(deleteX, deleteY, 16, 0, Math.PI * 2);
+                ctx.fillStyle = deleteGradient;
+                ctx.fill();
+                
+                ctx.restore();
+                
+                // White border
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                
+                // X symbol with premium styling
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '600 20px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('×', deleteX, deleteY - 1);
+            }
+
+            // Label with premium typography
+            // Show distance on visited nodes if available
+            let labelText = node.label;
+            if (mode === 'dijkstra' && visitedNodes.has(node.id) && distances[node.id] !== undefined && distances[node.id] !== Infinity) {
+                if (node === startNode) {
+                    labelText = `${node.label} (0)`;
+                } else {
+                    labelText = `${node.label} (${distances[node.id]})`;
+                }
+            }
+            
+            ctx.fillStyle = COLORS.text;
+            ctx.font = '600 15px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(labelText, node.x, node.y);
+            
+            // Draw start/end indicators
+            if (isStart || isEnd) {
+                const indicatorY = node.y + NODE_RADIUS + 14;
+                ctx.fillStyle = isStart ? '#10b981' : '#f59e0b';
+                ctx.font = '600 11px Inter';
+                ctx.fillText(isStart ? 'START' : 'END', node.x, indicatorY);
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw edges first (so they appear behind nodes)
+            edges.forEach(drawEdge);
+            
+            // Draw nodes on top
+            nodes.forEach(drawNode);
+            
+            requestAnimationFrame(animate);
+        }
+
+        init();
+    </script>
+</body>
+</html>

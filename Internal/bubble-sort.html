@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Sort Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+          },
+          animation: {
+            'slide-in': 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'fade-in': 'fadeIn 0.3s ease-out forwards',
+            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+          },
+          keyframes: {
+            slideIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px) scale(0.95)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.7' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #fafafa; }
+    
+    /* Back Button Styling */
+    .back-button { 
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:hover::before {
+      left: 100%;
+    }
+    .back-button:hover svg {
+      transform: translateX(-2px);
+    }
+    .back-button:active { 
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .back-button svg {
+      transition: transform 0.2s ease;
+    }
+
+    /* Array Element Styling */
+    .array-element {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: slide-in;
+      animation-delay: calc(var(--index) * 0.05s);
+    }
+    
+    .array-element:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Add Button - Apple Style Squared */
+    .add-button {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 0.75rem;
+    }
+    .add-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .add-button:active {
+      transform: scale(0.95);
+    }
+    .add-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Code Box Styling */
+    .code-box {
+      background: #1e1e1e;
+      border-radius: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .code-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+      pointer-events: none;
+    }
+
+    /* Copy Button */
+    .copy-button {
+      transition: all 0.2s ease;
+    }
+    .copy-button:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .copy-button:active {
+      transform: scale(0.95);
+    }
+
+    /* Input Field */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    /* Remove Button Animation */
+    .remove-btn {
+      transition: all 0.2s ease;
+      opacity: 0;
+    }
+    .array-element:hover .remove-btn {
+      opacity: 1;
+    }
+
+    /* Generate Button */
+    .generate-button {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .generate-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+    .generate-button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .generate-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Language Toggle */
+    .language-tab {
+      color: #a1a1aa;
+      background: transparent;
+    }
+    .language-tab.active {
+      color: #ffffff;
+      background: #3f3f46;
+    }
+    .language-tab:hover:not(.active) {
+      color: #d4d4d8;
+    }
+
+    /* Refined spacing and typography */
+    body {
+      letter-spacing: -0.01em;
+    }
+
+  </style>
+</head>
+<body class="text-zinc-900 antialiased min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="flex-none bg-white/80 backdrop-blur-sm border-b border-zinc-200/50 z-50 relative sticky top-0">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="back-button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </a>
+      <h1 class="text-lg font-semibold text-zinc-900 tracking-tight">Bubble Sort Generator</h1>
+      <div class="w-20"></div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col items-center px-6 py-8 max-w-5xl mx-auto w-full">
+    
+    <!-- Input Section -->
+    <div class="w-full max-w-2xl mx-auto mb-8">
+      <div class="bg-white rounded-xl border border-zinc-200/60 p-5 shadow-sm">
+        <div class="flex items-center gap-2.5 mb-3">
+          <input 
+            type="number" 
+            id="number-input" 
+            placeholder="Enter a number"
+            class="flex-1 px-3.5 py-2.5 rounded-lg border border-zinc-200 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 transition-all font-mono text-sm"
+            onkeypress="if(event.key === 'Enter') addNumber()"
+          >
+          <button 
+            id="add-button"
+            onclick="addNumber()"
+            class="add-button w-11 h-11 bg-zinc-900 text-white flex items-center justify-center font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button 
+            id="random-button"
+            onclick="generateRandomNumbers()"
+            class="px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
+            title="Generate 20 random numbers"
+          >
+            Random
+          </button>
+          <button 
+            id="reset-button"
+            onclick="resetAll()"
+            class="px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
+            title="Clear all numbers"
+          >
+            Reset
+          </button>
+        </div>
+        <p class="text-[10px] text-zinc-400 text-center font-medium">Add 2-20 numbers, then generate your code</p>
+      </div>
+    </div>
+
+    <!-- Array Display -->
+    <div class="w-full max-w-4xl mx-auto mb-6">
+      <div id="array-container" class="flex flex-col gap-2.5 justify-center min-h-[60px] items-center">
+        <div class="text-zinc-400 text-xs font-medium animate-pulse-soft">Add numbers to see them here...</div>
+      </div>
+    </div>
+
+    <!-- Generate Button -->
+    <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+      <button 
+        id="generate-button"
+        onclick="generateCode()"
+        class="generate-button bg-zinc-900 text-white px-7 py-2.5 rounded-lg font-semibold text-xs tracking-wide disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+        disabled
+      >
+        Generate Code
+      </button>
+    </div>
+
+    <!-- Code Output -->
+    <div class="w-full max-w-4xl mx-auto">
+      <div class="code-box p-5 text-zinc-100">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+            </div>
+            <!-- Language Toggle -->
+            <div class="flex items-center gap-1 bg-zinc-800/60 rounded-md p-0.5">
+              <button 
+                id="lang-c"
+                onclick="switchLanguage('c')"
+                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab active"
+              >
+                C
+              </button>
+              <button 
+                id="lang-python"
+                onclick="switchLanguage('python')"
+                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab"
+              >
+                Python
+              </button>
+            </div>
+            <span id="filename" class="text-[10px] text-zinc-500 font-mono">bubble_sort.c</span>
+          </div>
+          <button 
+            id="copy-button"
+            onclick="copyCode()"
+            class="copy-button px-3 py-1.5 rounded-md text-[10px] font-medium text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-600 flex items-center gap-1.5"
+            style="display: none;"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy
+          </button>
+        </div>
+        <pre id="code-output" class="text-xs leading-relaxed overflow-x-auto"><code class="text-zinc-300">// Add at least 2 numbers and click "Generate Code" to see the bubble sort implementation</code></pre>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let numbers = [];
+    let currentLanguage = 'c';
+    let generatedCode = { c: '', python: '' };
+    const MAX_ELEMENTS = 20;
+    const MIN_ELEMENTS = 2;
+
+    const numberInput = document.getElementById('number-input');
+    const addButton = document.getElementById('add-button');
+    const arrayContainer = document.getElementById('array-container');
+    const codeOutput = document.getElementById('code-output');
+    const copyButton = document.getElementById('copy-button');
+
+    function addNumber() {
+      const value = numberInput.value.trim();
+      
+      if (value === '') return;
+      
+      const num = parseInt(value);
+      if (isNaN(num)) {
+        numberInput.value = '';
+        return;
+      }
+
+      if (numbers.length >= MAX_ELEMENTS) {
+        // Visual feedback for max reached
+        addButton.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          addButton.style.transform = '';
+        }, 200);
+        return;
+      }
+
+      numbers.push(num);
+      numberInput.value = '';
+      numberInput.focus();
+      
+      updateArrayDisplay();
+      updateGenerateButton();
+      updateAddButton();
+    }
+
+    function removeNumber(index) {
+      numbers.splice(index, 1);
+      updateArrayDisplay();
+      updateGenerateButton();
+      updateAddButton();
+      // Clear code if we go below minimum
+      if (numbers.length < MIN_ELEMENTS) {
+        clearCodeOutput();
+      }
+    }
+
+    function updateArrayDisplay() {
+      if (numbers.length === 0) {
+        arrayContainer.innerHTML = '<div class="text-zinc-400 text-xs font-medium animate-pulse-soft">Add numbers to see them here...</div>';
+        return;
+      }
+
+      // Organize numbers into rows of 10
+      const rows = [];
+      for (let i = 0; i < numbers.length; i += 10) {
+        rows.push(numbers.slice(i, i + 10));
+      }
+
+      arrayContainer.innerHTML = rows.map((row, rowIndex) => {
+        return `
+          <div class="flex flex-wrap gap-2.5 justify-center">
+            ${row.map((num, colIndex) => {
+              const index = rowIndex * 10 + colIndex;
+              const delay = index * 0.05;
+              return `
+                <div 
+                  class="array-element bg-white border border-zinc-200/60 rounded-lg px-4 py-2.5 flex items-center gap-2 shadow-sm relative group"
+                  style="--index: ${index}; animation-delay: ${delay}s;"
+                >
+                  <span class="text-sm font-mono font-semibold text-zinc-900">${num}</span>
+                  <button 
+                    onclick="removeNumber(${index})"
+                    class="remove-btn absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold hover:bg-red-600 transition-all shadow-md"
+                    title="Remove"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function generateCode() {
+      if (numbers.length < MIN_ELEMENTS) {
+        return;
+      }
+
+      const arrayString = numbers.join(', ');
+      const n = numbers.length;
+      
+      // Generate C code
+      generatedCode.c = `#include <stdio.h>
+
+int main() {
+    // 1. Initialize an array. 
+    int arr[${n}] = {${arrayString}};
+    int n = ${n};
+
+    // 2. Perform the Bubble Sort
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - 1; j++) {
+            
+            // If the current number is bigger than the next one...
+            if (arr[j] > arr[j + 1]) {
+                
+                // ...Swap them using a 'temp' variable (the "third cup" method)
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+
+    // 3. Print the sorted array
+    printf("Sorted array: \\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\\n");
+
+    return 0;
+}`;
+
+      // Generate Python code
+      generatedCode.python = `# 1. Initialize the list
+# In Python, we don't need to declare the size of the array
+# Lists are dynamic and can grow or shrink as needed
+arr = [${arrayString}]
+
+# 2. Get the length automatically
+# Unlike C, Python's len() function counts elements without needing
+# a separate variable declaration. The list knows its own size.
+n = len(arr)  # Automatically calculates: ${n} elements
+
+# 3. Perform the Bubble Sort
+# The outer loop: number of passes through the list
+for i in range(n):
+    
+    # The inner loop: compare adjacent elements
+    # We use n - 1 to ensure we don't go beyond the list bounds
+    for j in range(0, n - 1):
+        
+        # If the left number is bigger than the right...
+        if arr[j] > arr[j + 1]:
+            
+            # ...Swap them using a temporary variable
+            # Python allows elegant tuple unpacking, but we use temp for clarity
+            temp = arr[j]
+            arr[j] = arr[j + 1]
+            arr[j + 1] = temp
+
+# 4. Print the sorted array
+print("Sorted array:")
+print(arr)`;
+
+      // Display code based on current language
+      displayCode();
+      copyButton.style.display = 'flex';
+      
+      // Smooth scroll to code
+      codeOutput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      
+      // Update active tab
+      document.getElementById('lang-c').classList.toggle('active', lang === 'c');
+      document.getElementById('lang-python').classList.toggle('active', lang === 'python');
+      
+      // Update filename
+      const filename = document.getElementById('filename');
+      filename.textContent = lang === 'c' ? 'bubble_sort.c' : 'bubble_sort.py';
+      
+      // Display the code
+      displayCode();
+    }
+
+    function highlightComments(code, language) {
+      const escaped = escapeHtml(code);
+      
+      if (language === 'c') {
+        // Highlight C comments: // and /* */
+        return escaped
+          .replace(/(\/\/[^\n]*)/g, '<span class="text-green-400">$1</span>')
+          .replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="text-green-400">$1</span>');
+      } else if (language === 'python') {
+        // Highlight Python comments: #
+        return escaped
+          .replace(/(#[^\n]*)/g, '<span class="text-green-400">$1</span>');
+      }
+      
+      return escaped;
+    }
+
+    function displayCode() {
+      if (generatedCode[currentLanguage]) {
+        const highlighted = highlightComments(generatedCode[currentLanguage], currentLanguage);
+        codeOutput.innerHTML = `<code class="text-zinc-100">${highlighted}</code>`;
+      } else {
+        codeOutput.innerHTML = '<code class="text-zinc-300">// Add at least 2 numbers and click "Generate Code" to see the bubble sort implementation</code>';
+      }
+    }
+
+    function clearCodeOutput() {
+      generatedCode = { c: '', python: '' };
+      codeOutput.innerHTML = '<code class="text-zinc-300">// Add at least 2 numbers and click "Generate Code" to see the bubble sort implementation</code>';
+      copyButton.style.display = 'none';
+    }
+
+    function updateGenerateButton() {
+      const generateButton = document.getElementById('generate-button');
+      if (numbers.length >= MIN_ELEMENTS) {
+        generateButton.disabled = false;
+      } else {
+        generateButton.disabled = true;
+      }
+    }
+
+    function generateRandomNumbers() {
+      // Clear existing numbers
+      numbers = [];
+      
+      // Generate 20 random numbers between 1 and 100
+      for (let i = 0; i < MAX_ELEMENTS; i++) {
+        numbers.push(Math.floor(Math.random() * 100) + 1);
+      }
+      
+      updateArrayDisplay();
+      updateGenerateButton();
+      updateAddButton();
+      
+      // Clear code output since we have new numbers
+      clearCodeOutput();
+    }
+
+    function resetAll() {
+      // Clear all data
+      numbers = [];
+      numberInput.value = '';
+      generatedCode = { c: '', python: '' };
+      
+      clearCodeOutput();
+      updateArrayDisplay();
+      updateGenerateButton();
+      updateAddButton();
+      numberInput.focus();
+    }
+
+    function updateAddButton() {
+      if (numbers.length >= MAX_ELEMENTS) {
+        addButton.disabled = true;
+        addButton.title = `Maximum ${MAX_ELEMENTS} elements reached`;
+      } else {
+        addButton.disabled = false;
+        addButton.title = '';
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    async function copyCode() {
+      const code = generatedCode[currentLanguage] || codeOutput.textContent;
+      if (!code || code.includes('Add at least')) return;
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        
+        // Visual feedback
+        const originalText = copyButton.innerHTML;
+        copyButton.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied!
+        `;
+        copyButton.style.borderColor = '#22c55e';
+        copyButton.style.color = '#22c55e';
+        
+        setTimeout(() => {
+          copyButton.innerHTML = originalText;
+          copyButton.style.borderColor = '';
+          copyButton.style.color = '';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
+
+    // Make functions globally available
+    window.addNumber = addNumber;
+    window.removeNumber = removeNumber;
+    window.copyCode = copyCode;
+    window.generateCode = generateCode;
+    window.switchLanguage = switchLanguage;
+    window.generateRandomNumbers = generateRandomNumbers;
+    window.resetAll = resetAll;
+
+    // Handle Enter key
+    numberInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addNumber();
+      }
+    });
+  </script>
+
+</body>
+</html>
+
