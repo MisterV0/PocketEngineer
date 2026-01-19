@@ -254,7 +254,7 @@
     <!-- Input Section -->
     <div class="w-full max-w-2xl mx-auto mb-8">
       <div class="bg-white rounded-xl border border-zinc-200/60 p-5 shadow-sm">
-        <div class="flex items-center gap-2.5 mb-3">
+        <div class="flex flex-col md:flex-row md:items-center gap-2.5 mb-3">
           <input 
             type="number" 
             id="number-input" 
@@ -262,32 +262,34 @@
             class="flex-1 px-3.5 py-2.5 rounded-lg border border-zinc-200 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 transition-all font-mono text-sm"
             onkeypress="if(event.key === 'Enter') addNumber()"
           >
-          <button 
-            id="add-button"
-            onclick="addNumber()"
-            class="add-button w-11 h-11 bg-zinc-900 text-white flex items-center justify-center font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-          <button 
-            id="random-button"
-            onclick="generateRandomNumbers()"
-            class="px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
-            title="Generate random numbers"
-          >
-            Random
-          </button>
-          <button 
-            id="reset-button"
-            onclick="resetAll()"
-            class="px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
-            title="Clear all numbers"
-          >
-            Reset
-          </button>
+          <div class="flex items-center gap-2.5 w-full md:w-auto">
+            <button 
+              id="add-button"
+              onclick="addNumber()"
+              class="add-button w-11 h-11 bg-zinc-900 text-white flex items-center justify-center font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <button 
+              id="random-button"
+              onclick="generateRandomNumbers()"
+              class="flex-1 md:flex-none px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
+              title="Generate random numbers"
+            >
+              Random
+            </button>
+            <button 
+              id="reset-button"
+              onclick="resetAll()"
+              class="flex-1 md:flex-none px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
+              title="Clear all numbers"
+            >
+              Reset
+            </button>
+          </div>
         </div>
         <p class="text-[10px] text-zinc-400 text-center font-medium">Add 1-30 numbers, then calculate the median</p>
       </div>

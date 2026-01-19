@@ -194,7 +194,7 @@
           
           <!-- Power of 2 Visualization -->
           <div id="power-visualization" class="hidden mb-6">
-            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Binary Representation</div>
+            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-zinc-900 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span></div>
             <div id="power-note" class="text-[10px] text-zinc-500 mb-3 italic text-center"></div>
             <div id="power-grid" class="grid grid-cols-8 gap-2"></div>
           </div>
@@ -420,8 +420,8 @@
     function updateBitsTable(binary) {
       powerGrid.innerHTML = '';
       powerVisualization.classList.remove('hidden');
-      powerTitle.textContent = 'Binary Representation';
-      powerNote.textContent = 'In programming, bit positions start from the right';
+      powerTitle.innerHTML = 'Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-[10px] lg:text-xs text-white bg-zinc-900 rounded-md max-w-[100px] md:max-w-none md:whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span>';
+      powerNote.textContent = '';
       
       // Display bits from left to right (MSB to LSB) visually
       const bits = binary.split(''); // Keep original order: MSB on left, LSB on right

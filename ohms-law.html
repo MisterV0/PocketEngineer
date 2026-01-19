@@ -128,38 +128,38 @@
       <!-- Parameter Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <!-- Voltage -->
-        <div id="v-card" class="param-card p-8 rounded-[2rem] bg-white">
-          <div class="flex justify-between items-center mb-6">
+        <div id="v-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+          <div class="flex justify-between items-center mb-4 md:mb-6">
             <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Voltage</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="v-formula">V</span>
           </div>
           <div class="relative">
-            <input type="number" id="voltage" oninput="handleInput('voltage')" class="w-full bg-transparent text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
-            <span class="absolute right-0 bottom-2 text-xl font-mono text-zinc-300">V</span>
+            <input type="number" id="voltage" oninput="handleInput('voltage')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">V</span>
           </div>
         </div>
 
         <!-- Current -->
-        <div id="i-card" class="param-card p-8 rounded-[2rem] bg-white">
-          <div class="flex justify-between items-center mb-6">
+        <div id="i-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+          <div class="flex justify-between items-center mb-4 md:mb-6">
             <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Current flow</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="i-formula">I</span>
           </div>
           <div class="relative">
-            <input type="number" id="current" oninput="handleInput('current')" class="w-full bg-transparent text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
-            <span class="absolute right-0 bottom-2 text-xl font-mono text-zinc-300">A</span>
+            <input type="number" id="current" oninput="handleInput('current')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">A</span>
           </div>
         </div>
 
         <!-- Resistance -->
-        <div id="r-card" class="param-card p-8 rounded-[2rem] bg-white">
-          <div class="flex justify-between items-center mb-6">
+        <div id="r-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+          <div class="flex justify-between items-center mb-4 md:mb-6">
             <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Resistance</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="r-formula">R</span>
           </div>
           <div class="relative">
-            <input type="number" id="resistance" oninput="handleInput('resistance')" class="w-full bg-transparent text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
-            <span class="absolute right-0 bottom-2 text-xl font-mono text-zinc-300">Ω</span>
+            <input type="number" id="resistance" oninput="handleInput('resistance')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">Ω</span>
           </div>
         </div>
       </div>
@@ -203,36 +203,36 @@
         <div class="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-2 relative z-0">
             
             <!-- LEFT: Educational Content -->
-            <div class="p-8 md:p-10 pt-4 overflow-y-auto space-y-12">
-                <div class="space-y-6 pt-6">
+            <div class="p-4 md:p-10 pt-4 overflow-y-auto space-y-6 md:space-y-12">
+                <div class="space-y-4 md:space-y-6 pt-4 md:pt-6">
                     <section>
-                        <h4 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-3">Electrical Fundamentals</h4>
-                        <p class="text-base text-zinc-800 leading-relaxed font-light">
+                        <h4 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 md:mb-3">Electrical Fundamentals</h4>
+                        <p class="text-xs md:text-base text-zinc-800 leading-relaxed font-light">
                             Ohm’s Law defines the proportional relationship between <strong>Potential Difference (V)</strong> and the resulting <strong>Electron Flow (I)</strong>. In a perfect conductor, current is directly proportional to voltage and inversely proportional to its impedance.
                         </p>
                     </section>
                 </div>
 
-                <div class="bg-zinc-50/80 p-6 md:p-8 rounded-3xl space-y-6">
-                    <div class="flex gap-4">
+                <div class="bg-zinc-50/80 p-4 md:p-8 rounded-3xl space-y-4 md:space-y-6">
+                    <div class="flex gap-3 md:gap-4">
                         <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">V</div>
                         <div>
                             <p class="text-xs font-bold text-zinc-900 mb-1">Voltage (Pressure)</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed">The electromotive force pushing charge through a circuit. Higher pressure means a higher potential to do work.</p>
+                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The electromotive force pushing charge through a circuit. Higher pressure means a higher potential to do work.</p>
                         </div>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 md:gap-4">
                         <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">I</div>
                         <div>
                             <p class="text-xs font-bold text-zinc-900 mb-1">Current (Flow Rate)</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed">The actual volume of electrons (charge carriers) passing a point per second, measured in Amperes.</p>
+                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The actual volume of electrons (charge carriers) passing a point per second, measured in Amperes.</p>
                         </div>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex gap-3 md:gap-4">
                         <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">R</div>
                         <div>
                             <p class="text-xs font-bold text-zinc-900 mb-1">Resistance (Restriction)</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed">The physical opposition to flow. Like a narrowing pipe or friction that restricts the flow rate.</p>
+                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The physical opposition to flow. Like a narrowing pipe or friction that restricts the flow rate.</p>
                         </div>
                     </div>
                 </div>
@@ -242,13 +242,7 @@
             <div class="relative bg-[#f8f8f9] h-[300px] lg:h-full overflow-hidden flex flex-col border-t lg:border-t-0 lg:border-l border-zinc-100">
                 <!-- Overlay Header (Moved Here) -->
                 <div class="absolute top-0 left-0 right-0 p-8 z-20 flex flex-col items-center pointer-events-none">
-                    <div class="text-center mb-6">
-                         <h4 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">The Hydraulic Bridge</h4>
-                         <p class="text-xs font-medium text-zinc-600 leading-relaxed italic max-w-xs mx-auto">
-                             "To visualize the invisible, we compare the movement of charge to the movement of water."
-                         </p>
-                    </div>
-                    <div class="bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-zinc-200/60 shadow-sm mt-2">
+                    <div class="bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-zinc-200/60 shadow-sm">
                         <span id="phase-badge" class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Initializing...</span>
                     </div>
                 </div>

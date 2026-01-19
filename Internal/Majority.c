@@ -30,17 +30,7 @@ void SortArray_and_checkMajorityElement (int array[], int size)
 
 void findUniqueElement (int array[],int size)
 {
-    for(int i = 0; i < size; i++)
-  { 
-        if (array[i] == array[i+1])
-        {
-            array[i+1] = 0;
-        }
-}
-for(int i = 0; i < size; i++)
-    {
-        printf("%d ",array[i]);
-    }
+   
 }
 
 

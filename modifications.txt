@@ -1,7 +1,7 @@
-a) on mobile it looks perfect, just one issue, when I open the keyboard and type something, then press the back button from the phone keyboard, not the button on the screen, 
-it goes back isntead of closing the keyboard, and we exit the page, this looks like a similar bug to you? can you solve it?
-b) cicle, rectangle and square solver are not fitted for mobile devices, either we add a tooltip telling it won't work or we solve the issue
-c) create new app for series/parallel 
-d) add proper links to other apps + contact links 
-e) site map
-
+- create new app for series/parallel 
+- site map
+- Create a warning modal for circle, rectangle, and square that it's not mobile friednly with icons of dekstop tablet and phone and only phone being faded while tablet and dekstop being green
+Need to check after commit on actual phone:
+Just on mobile, ohm law calculator shall be shrinked, as some sgemnts go off screen, we need to shrink a little bit Voltage, current flow and resistance field a little bit
+also, the text on physics of Conduction, the expalinatory text, that  gos down from Electric  Fundamentals, shall be shrinked in order to amke space tot the animation and 
+to the values, and lastly, on both mobile and dekstop let's get rid of text "The hydraulic Bridge"

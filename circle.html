@@ -326,37 +326,6 @@
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
     
-    // Responsive Display Size
-    function getCanvasSize() {
-      const isMobile = window.innerWidth < 1024;
-      return isMobile ? Math.min(350, window.innerWidth - 40) : 500;
-    }
-    
-    function resizeCanvas() {
-      const SIZE = getCanvasSize();
-      canvas.style.width = SIZE + 'px';
-      canvas.style.height = SIZE + 'px';
-      canvas.width = SIZE * dpr;
-      canvas.height = SIZE * dpr;
-      ctx.scale(dpr, dpr);
-      updateCanvasConstants();
-      draw();
-    }
-    
-    let CENTER = 250;
-    let VISUAL_R = 170; // Fixed radius size for drawing
-    
-    function updateCanvasConstants() {
-      const currentSize = getCanvasSize();
-      CENTER = currentSize / 2;
-      VISUAL_R = currentSize * 0.34; // Scale radius proportionally
-    }
-    
-    const SIZE = getCanvasSize();
-    updateCanvasConstants();
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
     // --- STATE ---
     let state = {
       r: 0,
@@ -392,6 +361,18 @@
     };
     
     const formulaPanel = document.getElementById('formula-panel');
+    
+    // Fixed canvas size
+    const SIZE = 500;
+    let CENTER = 250;
+    let VISUAL_R = 170; // Fixed radius size for drawing
+    
+    // Set canvas size
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    canvas.style.width = SIZE + 'px';
+    canvas.style.height = SIZE + 'px';
+    ctx.scale(dpr, dpr);
 
     // --- LOGIC ---
     function updateLabels() {
