@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="resources/NewLogo.svg">
   <title>Square Geometry</title>
   <meta name="description" content="Calculate square area, perimeter, diagonal, and circle boundaries. Real-time visualization.">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -243,16 +245,6 @@
       
       <!-- Right controls -->
       <div class="flex items-center gap-4">
-        <!-- Unit Selector -->
-        <div class="flex items-center gap-2 bg-zinc-100 rounded-md px-3 py-1.5 border border-zinc-200">
-          <span class="text-xs font-semibold text-zinc-500 uppercase">Unit</span>
-          <select id="unitSelect" onchange="updateLabels()" class="bg-transparent text-sm font-medium text-zinc-900 outline-none cursor-pointer">
-            <option value="cm">cm</option>
-            <option value="m">m</option>
-            <option value="mm">mm</option>
-          </select>
-        </div>
-
         <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
       </div>
     </div>
@@ -277,7 +269,7 @@
               <label class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Side Length (s)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-s" oninput="calculate('s')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
-                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+                <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
 
@@ -286,7 +278,7 @@
               <label class="text-[10px] font-bold text-purple-500 uppercase mb-1 block">Diagonal (d)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-d" oninput="calculate('d')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
-                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+                <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
 
@@ -295,7 +287,7 @@
               <label class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Perimeter (P)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-p" oninput="calculate('p')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
-                <span class="text-xs text-zinc-400 font-mono unit-label">cm</span>
+                <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
 
@@ -304,7 +296,7 @@
               <label class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-a" oninput="calculate('a')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
-                <span class="text-xs text-zinc-400 font-mono unit-label-sq">cm²</span>
+                <span class="text-xs text-zinc-400 font-mono unit-label-sq">m²</span>
               </div>
             </div>
           </div>
@@ -344,17 +336,17 @@
                       <div>
                         <span class="text-[9px] text-zinc-400 uppercase block">Radius</span>
                         <span id="out-inc-r" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                        <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                        <span class="text-[9px] text-zinc-400 unit-label">m</span>
                       </div>
                       <div>
                         <span class="text-[9px] text-zinc-400 uppercase block">Circumference</span>
                         <span id="out-inc-c" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                        <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                        <span class="text-[9px] text-zinc-400 unit-label">m</span>
                       </div>
                       <div class="text-right">
                         <span class="text-[9px] text-zinc-400 uppercase block">Area</span>
                         <span id="out-inc-a" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                        <span class="text-[9px] text-zinc-400 unit-label-sq">cm²</span>
+                        <span class="text-[9px] text-zinc-400 unit-label-sq">m²</span>
                       </div>
                    </div>
                  </div>
@@ -370,17 +362,17 @@
                      <div>
                        <span class="text-[9px] text-zinc-400 uppercase block">Radius</span>
                        <span id="out-out-r" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                       <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                       <span class="text-[9px] text-zinc-400 unit-label">m</span>
                      </div>
                      <div>
                        <span class="text-[9px] text-zinc-400 uppercase block">Circumference</span>
                        <span id="out-out-c" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                       <span class="text-[9px] text-zinc-400 unit-label">cm</span>
+                       <span class="text-[9px] text-zinc-400 unit-label">m</span>
                      </div>
                      <div class="text-right">
                        <span class="text-[9px] text-zinc-400 uppercase block">Area</span>
                        <span id="out-out-a" class="font-mono font-medium text-zinc-900 text-xs">-</span>
-                       <span class="text-[9px] text-zinc-400 unit-label-sq">cm²</span>
+                       <span class="text-[9px] text-zinc-400 unit-label-sq">m²</span>
                      </div>
                   </div>
                 </div>
@@ -491,7 +483,7 @@
 
     // --- LOGIC ---
     function updateLabels() {
-      const unit = document.getElementById('unitSelect').value;
+      const unit = 'm'; // Default unit
       document.querySelectorAll('.unit-label').forEach(el => el.textContent = unit);
       document.querySelectorAll('.unit-label-sq').forEach(el => el.textContent = unit + "²");
       generateFormulas();
@@ -568,7 +560,7 @@
       if (state.s === 0) return;
       
       const m = state.activeMode;
-      const unit = document.getElementById('unitSelect').value;
+      const unit = 'm'; // Default unit
       const sStr = state.s.toFixed(2);
       
       // Base styles
@@ -727,26 +719,17 @@
     function checkMobileAndShowWarning() {
       const isMobile = window.innerWidth < 1024;
       const modal = document.getElementById('mobileWarningModal');
+      const modalShownKey = 'mobileWarningShown_square';
       
-      if (isMobile) {
+      // Only show if mobile and hasn't been shown in this session
+      if (isMobile && !sessionStorage.getItem(modalShownKey)) {
         modal.classList.add('active');
+        sessionStorage.setItem(modalShownKey, 'true');
       }
     }
 
-    // Check on load
+    // Check on load only
     window.addEventListener('load', checkMobileAndShowWarning);
-
-    // Also check on resize
-    window.addEventListener('resize', () => {
-      const isMobile = window.innerWidth < 1024;
-      const modal = document.getElementById('mobileWarningModal');
-      
-      if (isMobile) {
-        modal.classList.add('active');
-      } else if (modal.classList.contains('active')) {
-        modal.classList.remove('active');
-      }
-    });
 
     // --- MOBILE KEYBOARD BACK BUTTON FIX ---
     // Prevent browser back navigation when keyboard is open
