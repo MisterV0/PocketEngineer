@@ -90,31 +90,152 @@
     .back-button svg {
       transition: transform 0.2s ease;
     }
+
+    /* Mobile Modal Styles - Apple Style */
+    .mobile-warning-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .mobile-warning-modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      max-width: 85%;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Jakarta Sans', sans-serif;
+    }
+
+    .modal-content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-content p {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .device-icons-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0 2rem 0;
+    }
+
+    .device-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      padding: 0.5rem;
+      color: #16a34a;
+    }
+
+    .device-icon.phone {
+      opacity: 0.25;
+      color: #999;
+    }
+
+    .device-icon.tablet {
+      transform: rotate(90deg);
+    }
+
+    /* Canvas Hide on Mobile & Fill Space */
+    @media (max-width: 1024px) {
+      .canvas-container {
+        display: none !important;
+      }
+
+      .layer-controls {
+        display: none !important;
+      }
+
+      main {
+        flex-direction: column;
+      }
+
+      main > div:first-child {
+        max-height: none !important;
+        min-height: auto;
+      }
+    }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
+
+  <!-- Mobile Warning Modal -->
+  <div id="mobileWarningModal" class="mobile-warning-modal">
+    <div class="modal-content">
+      <p>This tool is optimized for desktop and tablet screens.</p>
+
+      <div class="device-icons-container">
+        <div class="device-icon desktop">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <div class="device-icon tablet">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12" y2="18"></line>
+          </svg>
+        </div>
+        <div class="device-icon phone">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="19" x2="12" y2="19"></line>
+          </svg>
+        </div>
+      </div>
+
+      <p>The visual canvas is unavailable on mobile. You can still use all input fields and see formulas. For the best experience, use a tablet or desktop.</p>
+
+      <button onclick="document.getElementById('mobileWarningModal').classList.remove('active')" class="w-full mt-5 bg-black text-white font-medium py-2.5 rounded-lg hover:bg-zinc-800 transition-colors">
+        Continue on Mobile
+      </button>
+    </div>
+  </div>
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
       
-      <!-- Left: Back Button & "What is Pi" Dropdown -->
+      <!-- Left: Back Button & Info Dropdown -->
       <div class="flex items-center gap-3">
         <a href="index.html" class="back-button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           Back
         </a>
-        <div class="w-px h-6 bg-zinc-200"></div>
-        <div class="relative z-50">
+        <div class="w-px h-6 bg-zinc-200 hidden md:block"></div>
+        <div class="relative z-50 hidden md:block">
         <details class="group">
           <summary class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
-            <span class="bg-zinc-100 text-zinc-500 font-bold font-serif italic px-2 py-0.5 rounded border border-zinc-200">π</span>
             <span>What is Pi?</span>
             <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
           
-          <!-- Dropdown Card - Enhanced -->
-          <div class="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
+          <!-- Dropdown Card -->
+          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
              <h3 class="font-bold text-zinc-900 mb-1 text-lg">π (Pi)</h3>
              <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Circle Constant</p>
              
@@ -153,10 +274,10 @@
     </div>
   </header>
 
-  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
+  <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden relative z-0">
     
     <!-- Left: Inputs & Formulas -->
-    <div class="lg:w-[460px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin max-h-[50vh] lg:max-h-none">
+    <div class="lg:w-[460px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin lg:max-h-none">
       <div class="p-6 space-y-6">
         
         <!-- Standard Inputs -->
@@ -212,7 +333,7 @@
 
         <!-- Advanced Section (Collapsible) -->
         <div class="border-t border-dashed border-zinc-200 pt-2">
-          <details open class="group">
+          <details class="group">
             <summary class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
               <h2 class="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
                 <div class="w-1.5 h-1.5 rounded-full bg-purple-500 transition-transform group-open:scale-110"></div>
@@ -271,7 +392,7 @@
     </div>
 
     <!-- Right: Visualizer -->
-    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-3 lg:p-6 overflow-hidden min-h-[50vh] lg:min-h-0">
+    <div class="canvas-container flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-3 lg:p-6 overflow-hidden min-h-[50vh] lg:min-h-0">
       
       <!-- Canvas Backdrop -->
       <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
@@ -282,7 +403,7 @@
       </div>
 
       <!-- Layer Controls -->
-      <div class="flex flex-wrap justify-center gap-2 max-w-2xl px-2 lg:px-4">
+      <div class="layer-controls flex flex-wrap justify-center gap-2 max-w-2xl px-2 lg:px-4">
         
         <button onclick="toggleLayer('radius')" id="btn-radius" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Radius
@@ -633,6 +754,31 @@
     }
 
     resetCalc();
+
+    // --- MOBILE WARNING MODAL ---
+    function checkMobileAndShowWarning() {
+      const isMobile = window.innerWidth < 1024;
+      const modal = document.getElementById('mobileWarningModal');
+      
+      if (isMobile) {
+        modal.classList.add('active');
+      }
+    }
+
+    // Check on load
+    window.addEventListener('load', checkMobileAndShowWarning);
+
+    // Also check on resize
+    window.addEventListener('resize', () => {
+      const isMobile = window.innerWidth < 1024;
+      const modal = document.getElementById('mobileWarningModal');
+      
+      if (isMobile) {
+        modal.classList.add('active');
+      } else if (modal.classList.contains('active')) {
+        modal.classList.remove('active');
+      }
+    });
 
     // --- MOBILE KEYBOARD BACK BUTTON FIX ---
     // Prevent browser back navigation when keyboard is open

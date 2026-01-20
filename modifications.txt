@@ -1,7 +1,2 @@
 - create new app for series/parallel 
-- site map
-- Create a warning modal for circle, rectangle, and square that it's not mobile friednly with icons of dekstop tablet and phone and only phone being faded while tablet and dekstop being green
-Need to check after commit on actual phone:
-Just on mobile, ohm law calculator shall be shrinked, as some sgemnts go off screen, we need to shrink a little bit Voltage, current flow and resistance field a little bit
-also, the text on physics of Conduction, the expalinatory text, that  gos down from Electric  Fundamentals, shall be shrinked in order to amke space tot the animation and 
-to the values, and lastly, on both mobile and dekstop let's get rid of text "The hydraulic Bridge"
+- create mini icons for all apps
