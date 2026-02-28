@@ -23,15 +23,12 @@ function goBackHome() {
 function initBackButtons() {
   const backButtons = document.querySelectorAll('.back-button');
   backButtons.forEach(btn => {
-    if (!btn.hasListener) {
-      btn.addEventListener('click', (e) => {
-        if (!btn.href) {
-          e.preventDefault();
-          goBackHome();
-        }
-      });
-      btn.hasListener = true;
-    }
+    btn.addEventListener('click', (e) => {
+      if (!btn.href) {
+        e.preventDefault();
+        goBackHome();
+      }
+    });
   });
 }
 

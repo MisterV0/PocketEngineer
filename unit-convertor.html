@@ -360,75 +360,70 @@
       'length': {
         title: 'Length Conversions',
         content: `
-          <p><strong>Inches ↔ Millimeters:</strong><br/> 1 Inch is exactly 25.4 Millimeters. The Inches input accepts <strong>fractions</strong> (e.g., <code>1.5</code>, <code>3/16</code>, <code>1 1/2</code>).</p>
+          <p><strong>Inches ↔ Millimeters:</strong><br/> 1 in = 25.4 mm. Inches accept <strong>fractions</strong> (e.g. <code>3/16</code>, <code>1 1/2</code>). <em>Use when:</em> drill bits, sheet metal, PCB traces, US/imperial specs.</p>
           <hr class="my-3 border-zinc-100">
-          <p><strong>Kilometers ↔ Miles:</strong><br/> 1 Kilometer is exactly 0.621371 Miles. Standard for road distances.</p>
+          <p><strong>Kilometers ↔ Miles:</strong><br/> 1 km = 0.621371 mi. <em>Use when:</em> road signs, odometers, running/cycling distances, aviation (nm is different).</p>
           <hr class="my-3 border-zinc-100">
-          <p><strong>Meters ↔ Feet:</strong><br/> 1 Meter is exactly 3.28084 Feet. Essential for construction and aviation.</p>
+          <p><strong>Meters ↔ Feet:</strong><br/> 1 m = 3.28084 ft. <em>Use when:</em> room dimensions, ceiling height, runway length, altitude in feet.</p>
         `
       },
       'area': {
         title: 'Area Conversions',
         content: `
-          <p><strong>Four-way real-time binding for Area.</strong></p>
-          <ul class="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>1 Sq Meter</strong> = 10.7639 Sq Feet</li>
-            <li><strong>1 Acre</strong> = 43,560 Sq Feet (approx 4,046 m²)</li>
-            <li><strong>1 Hectare</strong> = 10,000 m² (approx 2.47 Acres)</li>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 m²</strong> = 10.7639 sq ft</li>
+            <li><strong>1 Acre</strong> = 43,560 sq ft (≈ 4,046 m²)</li>
+            <li><strong>1 Hectare</strong> = 10,000 m² (≈ 2.47 acres)</li>
           </ul>
+          <p class="mt-3 text-zinc-600">Sq meters/feet for floors and walls; acres/hectares for land, farms, and real estate.</p>
         `
       },
       'volume': {
         title: 'Volume (Liquid)',
         content: `
-          <p><strong>Three-way liquid volume binding.</strong></p>
-          <ul class="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>1 Liter</strong> ≈ 33.814 US Fluid Ounces (fl oz)</li>
-            <li><strong>1 US Gallon</strong> = 128 US Fluid Ounces</li>
-            <li><strong>1 US Gallon</strong> ≈ 3.78541 Liters</li>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 L</strong> ≈ 33.814 US fl oz</li>
+            <li><strong>1 US gal</strong> = 128 US fl oz ≈ 3.785 L</li>
           </ul>
-          <p class="mt-2 text-xs text-zinc-400">Note: These are US fluid measurements, which differ slightly from UK Imperial measurements.</p>
+          <p class="mt-3 text-zinc-600">Liters for fuel and lab work; fl oz for drinks and recipes; gallons for tanks and fuel economy (US).</p>
+          <p class="mt-2 text-xs text-zinc-400">US fluid measures; UK Imperial differs slightly.</p>
         `
       },
       'weight': {
         title: 'Weight & Mass',
-        content: `<p><strong>1 Kilogram equals 2.20462 Pounds.</strong></p><p class="mt-2">The standard conversion for body weight, cargo shipping, gym equipment, and material mass.</p>`
+        content: `<p>1 kg = 2.20462 lbs.</p><p class="mt-2 text-zinc-600">Body weight (kg in most countries, lbs in US/UK), luggage limits, gym plates, shipping weight, and material mass in specs.</p>`
       },
       'temperature': {
         title: 'Temperature',
         content: `
-          <p><strong>Three-way temperature binding.</strong></p>
+          <p><strong>Formulas:</strong></p>
           <ul class="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>C to F:</strong> (C × 9/5) + 32</li>
-            <li><strong>F to C:</strong> (F - 32) × 5/9</li>
-            <li><strong>C to K:</strong> C + 273.15</li>
+            <li><strong>C → F:</strong> (C × 9/5) + 32</li>
+            <li><strong>F → C:</strong> (F − 32) × 5/9</li>
+            <li><strong>C → K:</strong> C + 273.15</li>
           </ul>
+          <p class="mt-3 text-zinc-600">Celsius for science and most of the world; Fahrenheit for US weather and some appliances; Kelvin for thermodynamics and absolute zero.</p>
         `
       },
       'power': {
         title: 'Power',
-        content: `<p><strong>1 Mechanical Horsepower (hp) ≈ 0.7457 Kilowatts (kW).</strong></p><p class="mt-2">Crucial for automotive specifications, electric motors, and heavy machinery.</p>`
+        content: `<p>1 hp ≈ 0.7457 kW.</p><p class="mt-2 text-zinc-600">Horsepower for cars, lawn mowers, and pumps; kilowatts for electric motors, solar panels, and grid power. Lets you compare engine specs to electrical ratings.</p>`
       },
       'pressure': {
         title: 'Pressure',
         content: `
-          <p><strong>Three-way pressure binding.</strong></p>
-          <ul class="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>1 PSI</strong> ≈ 6894.76 Pascals (Pa)</li>
-            <li><strong>1 Bar</strong> = 100,000 Pascals (Pa)</li>
-            <li><strong>1 Bar</strong> ≈ 14.5038 PSI</li>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 PSI</strong> ≈ 6894.76 Pa</li>
+            <li><strong>1 bar</strong> = 100,000 Pa ≈ 14.5 PSI</li>
           </ul>
+          <p class="mt-3 text-zinc-600">PSI for tires and US gauges; Pascals for SI and scientific; bar for European specs and compressors.</p>
         `
       },
       'numerals': {
         title: 'Roman ↔ Arabic Numerals',
         content: `
-          <p>Converts standard Roman Numerals to modern Arabic numbers.</p>
-          <p class="mt-2"><strong>Rules:</strong></p>
-          <ul class="list-disc pl-5 space-y-1 mt-1">
-            <li>Valid range is <strong>1 to 3999</strong>.</li>
-            <li>Symbols: I(1), V(5), X(10), L(50), C(100), D(500), M(1000).</li>
-          </ul>
+          <p>Same value, different notation. Range <strong>1–3999</strong>. Symbols: I(1), V(5), X(10), L(50), C(100), D(500), M(1000).</p>
+          <p class="mt-2 text-zinc-600">Roman numerals for clock faces, outlines, copyright years, and classic numbering; convert to Arabic for arithmetic and modern use.</p>
         `
       }
     };
