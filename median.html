@@ -244,7 +244,7 @@
             </button>
           </div>
         </div>
-        <p class="text-[10px] text-zinc-400 text-center font-medium">Add 1-30 numbers, then calculate the median</p>
+        <p class="text-[10px] text-zinc-400 text-center font-medium">Add 1-50 numbers, then calculate the median</p>
       </div>
     </div>
 
@@ -367,7 +367,7 @@
     let isSortedView = false;
     let currentLanguage = 'c';
     let generatedCode = { c: '', python: '' };
-    const MAX_ELEMENTS = 30;
+    const MAX_ELEMENTS = 50;
     const MIN_ELEMENTS = 1;
 
     const numberInput = document.getElementById('number-input');
@@ -863,7 +863,7 @@ print(f"Median: {median:.2f}")`;
     }
 
     function generateRandomNumbers() {
-      // Generate random count between 5 and 30
+      // Generate random count between 5 and 50
       const count = Math.floor(Math.random() * (MAX_ELEMENTS - 4)) + 5;
       
       // Clear existing numbers

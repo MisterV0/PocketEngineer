@@ -99,19 +99,32 @@
     
     <!-- Compact Popular Values Row -->
     <div class="w-full max-w-2xl mb-6">
-      <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-3 px-1">Common Values</div>
-      <div class="flex gap-2.5 overflow-x-auto hide-scroll pb-2 px-1 -mx-1 snap-x">
-        <button onclick="setPreset('red','red','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">220 Ω</button>
-        <button onclick="setPreset('orange','orange','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">330 Ω</button>
-        <button onclick="setPreset('brown','black','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 kΩ</button>
-        <button onclick="setPreset('red','red','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">2.2 kΩ</button>
-        <button onclick="setPreset('yellow','violet','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">4.7 kΩ</button>
-        <button onclick="setPreset('brown','black','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">10 kΩ</button>
-        <button onclick="setPreset('red','red','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">22 kΩ</button>
-        <button onclick="setPreset('yellow','violet','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">47 kΩ</button>
-        <button onclick="setPreset('brown','black','yellow','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">100 kΩ</button>
-        <button onclick="setPreset('brown','black','green','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 MΩ</button>
-      </div>
+        <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-3 px-1">Common Values</div>
+        <div class="flex items-center gap-2">
+            <button id="scroll-left" class="flex-none w-8 h-8 rounded-full bg-white/60 border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-500 hover:bg-white active:scale-95 transition-all" aria-label="Scroll Left">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <div id="presets-container" class="flex-1 flex gap-2.5 overflow-x-auto hide-scroll pb-2 snap-x" style="scroll-behavior: smooth;">
+                <button onclick="setPreset('brown','black','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">100 Ω</button>
+                <button onclick="setPreset('red','red','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">220 Ω</button>
+                <button onclick="setPreset('orange','orange','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">330 Ω</button>
+                <button onclick="setPreset('yellow','violet','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">470 Ω</button>
+                <button onclick="setPreset('blue','gray','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">680 Ω</button>
+                <button onclick="setPreset('brown','black','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 kΩ</button>
+                <button onclick="setPreset('brown','green','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1.5 kΩ</button>
+                <button onclick="setPreset('red','red','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">2.2 kΩ</button>
+                <button onclick="setPreset('orange','orange','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">3.3 kΩ</button>
+                <button onclick="setPreset('yellow','violet','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">4.7 kΩ</button>
+                <button onclick="setPreset('brown','black','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">10 kΩ</button>
+                <button onclick="setPreset('red','red','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">22 kΩ</button>
+                <button onclick="setPreset('yellow','violet','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">47 kΩ</button>
+                <button onclick="setPreset('brown','black','yellow','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">100 kΩ</button>
+                <button onclick="setPreset('brown','black','green','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 MΩ</button>
+            </div>
+            <button id="scroll-right" class="flex-none w-8 h-8 rounded-full bg-white/60 border border-zinc-200/80 shadow-sm flex items-center justify-center text-zinc-500 hover:bg-white active:scale-95 transition-all" aria-label="Scroll Right">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
     </div>
 
     <!-- 3D Resistor Canvas -->
@@ -251,6 +264,19 @@
       setBands(4);
       buildEduTable();
       window.addEventListener('resize', () => requestAnimationFrame(placeHitboxes));
+
+      // New scroll logic
+      const presetsContainer = document.getElementById('presets-container');
+      const scrollLeftBtn = document.getElementById('scroll-left');
+      const scrollRightBtn = document.getElementById('scroll-right');
+
+      scrollLeftBtn.addEventListener('click', () => {
+        presetsContainer.scrollBy({ left: -250, behavior: 'smooth' });
+      });
+
+      scrollRightBtn.addEventListener('click', () => {
+        presetsContainer.scrollBy({ left: 250, behavior: 'smooth' });
+      });
     }
 
     /* --- LOGIC --- */
@@ -507,36 +533,48 @@
     }
 
     function updateEduFormula(ohms, tol) {
-       const container = document.getElementById('live-formula');
-       const cols = selections.map(k => COLORS[k]);
-       
-       let html = `<div class="flex flex-wrap items-center justify-center gap-2">`;
-       
-       // Digits
-       if(bands === 4) {
-          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[0].hex}"></span><span class="font-bold">${cols[0].val}</span></div>`;
-          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[1].hex}"></span><span class="font-bold">${cols[1].val}</span></div>`;
-       } else {
-          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[0].hex}"></span><span class="font-bold">${cols[0].val}</span></div>`;
-          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[1].hex}"></span><span class="font-bold">${cols[1].val}</span></div>`;
-          html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${cols[2].hex}"></span><span class="font-bold">${cols[2].val}</span></div>`;
-       }
-       
-       // Multiplier
-       const multCol = bands === 4 ? cols[2] : cols[3];
-       html += `<span class="text-zinc-400 mx-1">×</span>`;
-       html += `<div class="flex flex-col items-center"><span class="w-3 h-3 rounded-full mb-1" style="background:${multCol.hex}"></span><span>${fmtShort(multCol.mult)}</span></div>`;
-       
-       // Result
-       html += `<span class="text-zinc-400 mx-1">=</span>`;
-       html += `<span class="font-bold text-blue-600 bg-blue-50 px-2 rounded">${fmtOhms(ohms)}</span>`;
-       
-       // Tol
-       html += `<span class="text-zinc-300 mx-1">|</span>`;
-       html += `<span class="text-zinc-500">±${tol}%</span>`;
-       html += `</div>`;
-       
-       container.innerHTML = html;
+        const container = document.getElementById('live-formula');
+        let formulaHtml = '';
+        const baseClasses = "flex items-center justify-center space-x-1 font-mono text-xs sm:text-sm flex-wrap";
+        const bandBoxBase = "px-2 py-1 rounded-md text-zinc-700";
+        const symbolBase = "text-lg sm:text-xl mx-1 text-zinc-400";
+        const pEl = container.nextElementSibling;
+
+        if (bands === 4) {
+            formulaHtml = `
+            <div class="${baseClasses}">
+                <span class="font-bold text-zinc-600">(</span>
+                <span class="${bandBoxBase} bg-red-100">Band 1</span>
+                <span class="${bandBoxBase} bg-orange-100">Band 2</span>
+                <span class="font-bold text-zinc-600">)</span>
+                <span class="${symbolBase}">×</span>
+                <span class="${bandBoxBase} bg-yellow-100">Multiplier</span>
+                <span class="${symbolBase}">=</span>
+                <span class="font-bold text-blue-600">Resistance</span>
+            </div>
+            `;
+            if (pEl && pEl.tagName === 'P') {
+              pEl.innerHTML = `For a 4-band resistor, the first 2 bands are significant digits, the 3rd is the multiplier, and the 4th is tolerance.`;
+            }
+        } else { // 5 bands
+            formulaHtml = `
+            <div class="${baseClasses}">
+                <span class="font-bold text-zinc-600">(</span>
+                <span class="${bandBoxBase} bg-red-100">Band 1</span>
+                <span class="${bandBoxBase} bg-orange-100">Band 2</span>
+                <span class="${bandBoxBase} bg-yellow-100">Band 3</span>
+                <span class="font-bold text-zinc-600">)</span>
+                <span class="${symbolBase}">×</span>
+                <span class="${bandBoxBase} bg-green-100">Multiplier</span>
+                <span class="${symbolBase}">=</span>
+                <span class="font-bold text-blue-600">Resistance</span>
+            </div>
+            `;
+            if (pEl && pEl.tagName === 'P') {
+              pEl.innerHTML = `For a 5-band resistor, the first 3 bands are significant digits, the 4th is the multiplier, and the 5th is tolerance.`;
+            }
+        }
+        container.innerHTML = formulaHtml;
     }
 
     function buildEduTable() {

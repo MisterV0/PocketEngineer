@@ -301,10 +301,6 @@
     <!-- Main App -->
     <div id="app-screen">
         <header class="top-bar" id="top-bar" style="position: relative;">
-            <a href="index.html" class="back-button" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-                Back
-            </a>
             <!-- Dynamic Top Bar injected here -->
         </header>
 
@@ -336,6 +332,11 @@
         const iconMinus = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
         // --- Initialization ---
+        function goBackToStartScreen() {
+            document.getElementById('app-screen').classList.remove('visible');
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.body.classList.remove('mode-resistors', 'mode-batteries');
+        }
         function initApp(mode) {
             appMode = mode;
             document.getElementById('start-screen').classList.add('hidden');
@@ -354,6 +355,10 @@
 
         function renderTopBarResistors() {
             document.getElementById('top-bar').innerHTML = `
+                <a onclick="goBackToStartScreen()" class="back-button" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                </a>
                 <div class="stat">
                     <label>Source Voltage (V)</label>
                     <input type="number" id="global-voltage" value="${globalVoltage}" min="0" oninput="updateGlobalVoltage(this.value)">
@@ -373,6 +378,10 @@
 
         function renderTopBarBatteries() {
             document.getElementById('top-bar').innerHTML = `
+                <a onclick="goBackToStartScreen()" class="back-button" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                </a>
                 <div class="stat">
                     <label>Total Bank Voltage</label>
                     <div class="value"><span id="stat-volts">12.0</span> V</div>
