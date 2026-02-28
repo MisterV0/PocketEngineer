@@ -1,0 +1,199 @@
+/**
+ * PocketEngineer - Common Styles
+ * Shared CSS across all calculator apps
+ * Version 1.0.0
+ */
+
+/* ============================================
+   UNIVERSAL RESETS & BASE STYLES
+   ============================================ */
+
+/* Remove number input spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ============================================
+   BACK BUTTON - UNIVERSAL STYLING
+   ============================================ */
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #71717a;
+  border: 1px solid #e4e4e7;
+  background-color: white;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.back-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.back-button:hover {
+  color: #18181b;
+  border-color: #71717a;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.back-button:hover::before {
+  left: 100%;
+}
+
+.back-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   INPUT CARD STYLING - COMMON PATTERN
+   ============================================ */
+
+.input-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e4e4e7;
+  background-color: white;
+}
+
+.input-card:focus-within {
+  border-color: #18181b;
+  background-color: white;
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   COMMON ANIMATIONS
+   ============================================ */
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.explanation-row {
+  animation: slideIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@keyframes popDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accordion transition */
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:focus {
+  outline: none;
+}
+
+details[open] summary ~ div {
+  animation: popDown 0.2s ease-out;
+}
+
+/* ============================================
+   FORMULA DISPLAY ANIMATIONS
+   ============================================ */
+
+.formula-row {
+  animation: slideIn 0.2s ease-out forwards;
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* ============================================
+   LAYER BUTTON STYLING
+   ============================================ */
+
+.layer-btn[data-active="true"] {
+  background-color: var(--active-bg);
+  color: white;
+  border-color: var(--active-bg);
+}
+
+.layer-btn[data-active="false"] {
+  background-color: white;
+  color: #71717a;
+  border-color: #e4e4e7;
+}
+
+/* ============================================
+   BYTE/CARD SELECTOR STYLING
+   ============================================ */
+
+.byte-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e4e4e7;
+  background-color: white;
+}
+
+.byte-card.selected {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: scale(1.02);
+}
+
+/* ============================================
+   DETAILS/ACCORDION MARKER REMOVAL
+   ============================================ */
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:focus {
+  outline: none;
+}

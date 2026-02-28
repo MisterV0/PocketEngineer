@@ -7,16 +7,17 @@
   <!-- ==========================================
        SEO & BRANDING
        ========================================== -->
-  <title>Engineering Companion</title>
-  <meta name="description" content="Professional engineering tools for students and pros. Includes Voltage Divider, Ohm's Law, comprehensive Geometry Solvers (Circle, Square, Rectangle), Binary Converter, Bubble Sort Generator, and Median Calculator.">
-  <meta name="keywords" content="engineering calculator, voltage divider, resistor color code, ohms law, circle geometry, square solver, rectangle calculator, physics visualizer, binary converter, bubble sort generator, median calculator">
+  <title>Your Engineering Companion</title>
+  <meta name="description" content="Professional engineering tools for students and pros. Includes Voltage Divider, Ohm's Law, comprehensive Geometry Solvers (Circle, Square, Rectangle), Binary Converter, Bubble Sort Generator, Median Calculator, Unit Converter, and Hexadecimal Converter.">
+  <meta name="keywords" content="engineering calculator, voltage divider, resistor color code, ohms law, circle geometry, square solver, rectangle calculator, physics visualizer, binary converter, bubble sort generator, median calculator, unit converter, hexadecimal converter, bitwise calculator, circuit simulator">
   <meta name="robots" content="index, follow">
   <meta name="author" content="PocketEngineer">
   <meta name="theme-color" content="#ffffff">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="resources/NewLogo.svg">
+  <!-- Favicons & Touch Icons (Resources Folder) -->
+  <link rel="icon" type="image/png" sizes="64x64" href="resources/icon_64_64.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="resources/icon_96_96.png">
+  <link rel="apple-touch-icon" sizes="256x256" href="resources/icon_256_256.png">
 
   <!-- SEO: Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -25,7 +26,7 @@
     "@type": "WebApplication",
     "name": "PocketEngineer",
     "url": "https://www.pockeng.com",
-    "image": "https://www.pockeng.com/resources/NewLogo.svg",
+    "image": "https://www.pockeng.com/resources/icon_256_256.png",
     "description": "A suite of high-fidelity calculation and visualization utilities for engineers.",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "All",
@@ -34,7 +35,7 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "Voltage Divider, Resistor Color Codes, Ohm's Law, Circle Solver, Square Solver, Rectangle Solver, Binary Converter, Bubble Sort Generator, Median Calculator"
+    "featureList": "Voltage Divider, Resistor Color Codes, Ohm's Law, Circle Solver, Square Solver, Rectangle Solver, Binary Converter, Bubble Sort Generator, Median Calculator, Unit Converter, Hexadecimal Converter, Bitwise Calculator, Circuit Canvas"
   }
   </script>
 
@@ -203,6 +204,58 @@
             <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
         </div>
         <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-teal-50 rounded-full blur-3xl group-hover:bg-teal-100 transition-colors duration-700"></div>
+      </a>
+
+      <!-- 10. Unit Converter -->
+      <a href="unit-convertor.html" class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Utilities</div>
+          <h3 class="text-xl font-medium text-zinc-900 mb-3">Unit Converter</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Convert between different units of measurement with instant calculations and comprehensive support for all common units.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+            <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-amber-50 rounded-full blur-3xl group-hover:bg-amber-100 transition-colors duration-700"></div>
+      </a>
+
+      <!-- 11. Hexadecimal Converter -->
+      <a href="hexa.html" class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
+          <h3 class="text-xl font-medium text-zinc-900 mb-3">Hexadecimal Converter</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Convert seamlessly between hexadecimal, binary, decimal, and octal number systems with real-time visualization.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+            <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-purple-50 rounded-full blur-3xl group-hover:bg-purple-100 transition-colors duration-700"></div>
+      </a>
+
+      <!-- 12. Bitwise Calculator -->
+      <a href="bitoperaitons.html" class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
+          <h3 class="text-xl font-medium text-zinc-900 mb-3">Bitwise Calculator</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Perform bitwise operations (AND, OR, XOR, NOT) with visual representation and detailed step-by-step explanations.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+            <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-50 rounded-full blur-3xl group-hover:bg-orange-100 transition-colors duration-700"></div>
+      </a>
+
+      <!-- 13. Circuit & Battery Canvas -->
+      <a href="grid.html" class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
+          <h3 class="text-xl font-medium text-zinc-900 mb-3">Circuit Canvas</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Design and visualize circuits on an interactive grid with batteries, resistors, and real-time simulation.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+            <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-lime-50 rounded-full blur-3xl group-hover:bg-lime-100 transition-colors duration-700"></div>
       </a>
 
     </div>

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
+  <link rel="stylesheet" href="resources/common.css">
   <title>Resistor Calculator</title>
+  <script src="resources/app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <script>
@@ -19,14 +21,9 @@
           },
           animation: {
             'pop-in': 'popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-            'shimmer': 'shimmer 4s infinite',
           },
           keyframes: {
-            popIn: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
-            shimmer: {
-              '0%': { backgroundPosition: '-100% 0' },
-              '100%': { backgroundPosition: '200% 0' }
-            }
+            popIn: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
           }
         }
       }
@@ -58,63 +55,6 @@
         transform: scale(0.98);
     }
 
-    /* Premium Button Shimmer */
-    .btn-shine {
-      background: linear-gradient(110deg, #ffffff 30%, #f4f4f5 45%, #ffffff 60%);
-      background-size: 200% 100%;
-    }
-
-    /* Back Button Styling - Enhanced */
-    .back-button { 
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.875rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #71717a;
-      border: 1px solid #e4e4e7;
-      background-color: white;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
-    .back-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s ease;
-    }
-    .back-button:hover {
-      color: #18181b;
-      border-color: #71717a;
-      background-color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transform: translateY(-2px);
-    }
-    .back-button:hover::before {
-      left: 100%;
-    }
-    .back-button:hover svg {
-      transform: translateX(-2px);
-    }
-    .back-button:active { 
-      transform: scale(0.96);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .back-button svg {
-      transition: transform 0.2s ease;
-    }
-
     /* Hint Text Animation */
     @keyframes fadeInShow {
       0% { opacity: 0; }
@@ -129,23 +69,51 @@
 </head>
 <body class="bg-[#F5F5F7] text-zinc-900 min-h-screen font-sans flex flex-col overflow-hidden">
 
-  <!-- Header: Toggle & Back Button -->
+  <!-- Header: Toggle & Buttons -->
   <header class="flex-none h-16 px-6 flex items-center justify-between z-10 bg-white/70 backdrop-blur-md border-b border-black/5 sticky top-0">
+    <!-- Back Button -->
     <a href="index.html" class="back-button">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
       Back
     </a>
+    
+    <!-- Band Toggle -->
     <div class="bg-zinc-200/60 p-1 rounded-lg flex relative h-9 w-[160px]">
       <div id="toggle-indicator" class="absolute left-1 top-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-[6px] shadow-sm transition-transform duration-300"></div>
       <button onclick="setBands(4)" class="relative z-10 w-1/2 text-xs font-semibold transition-colors duration-200" id="btn-4">4 Bands</button>
       <button onclick="setBands(5)" class="relative z-10 w-1/2 text-xs font-semibold text-zinc-500 transition-colors duration-200" id="btn-5">5 Bands</button>
     </div>
-    <div></div>
+
+    <!-- Info Button -->
+    <button onclick="toggleEdu(true)" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm active:scale-95" aria-label="How it works">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </button>
   </header>
 
   <!-- Main Workspace -->
   <main class="flex-1 overflow-y-auto hide-scroll w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
     
+    <!-- Compact Popular Values Row -->
+    <div class="w-full max-w-2xl mb-6">
+      <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-3 px-1">Common Values</div>
+      <div class="flex gap-2.5 overflow-x-auto hide-scroll pb-2 px-1 -mx-1 snap-x">
+        <button onclick="setPreset('red','red','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">220 Ω</button>
+        <button onclick="setPreset('orange','orange','brown','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">330 Ω</button>
+        <button onclick="setPreset('brown','black','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 kΩ</button>
+        <button onclick="setPreset('red','red','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">2.2 kΩ</button>
+        <button onclick="setPreset('yellow','violet','red','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">4.7 kΩ</button>
+        <button onclick="setPreset('brown','black','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">10 kΩ</button>
+        <button onclick="setPreset('red','red','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">22 kΩ</button>
+        <button onclick="setPreset('yellow','violet','orange','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">47 kΩ</button>
+        <button onclick="setPreset('brown','black','yellow','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">100 kΩ</button>
+        <button onclick="setPreset('brown','black','green','gold')" class="snap-start flex-none px-4 py-2 rounded-xl bg-white border border-zinc-200 shadow-sm text-sm font-semibold text-zinc-700 hover:text-zinc-900 hover:border-zinc-300 hover:shadow-md transition-all active:scale-95">1 MΩ</button>
+      </div>
+    </div>
+
     <!-- 3D Resistor Canvas -->
     <div class="relative w-full max-w-2xl aspect-[2.6/1] mb-16 group perspective-1000">
       <div class="absolute inset-10 bg-gradient-to-tr from-amber-100/40 to-orange-100/40 blur-3xl rounded-full opacity-60 pointer-events-none"></div>
@@ -163,7 +131,6 @@
     <div class="w-full max-w-xl bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-glass p-8 flex flex-col items-center text-center transition-all mb-10">
       <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Total Resistance</div>
       <div class="flex items-baseline gap-2 mb-4">
-        <!-- Added word-break to prevent overflow on mobile -->
         <span class="font-mono text-6xl font-bold tracking-tighter text-zinc-900 drop-shadow-sm break-all" id="result-val">--</span>
       </div>
       <div class="grid grid-cols-2 gap-3 w-full">
@@ -177,11 +144,6 @@
         </div>
       </div>
     </div>
-
-    <!-- "Understand the conversion" Button (Shimmer Effect) -->
-    <button onclick="toggleEdu(true)" class="animate-shimmer btn-shine relative overflow-hidden px-8 py-4 rounded-full bg-white border border-black/5 shadow-sm hover:shadow-md hover:border-black/10 transition-all text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-600 active:scale-95">
-      Understand the conversion
-    </button>
 
   </main>
 
@@ -208,11 +170,9 @@
     <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 pointer-events-none">
       <div class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300" id="edu-panel">
         
-        <!-- Header (Refined) -->
+        <!-- Header -->
         <div class="px-6 py-5 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
-          <!-- Text Only, No Icon -->
           <h2 class="text-lg font-bold text-zinc-900">Calculation breakdown</h2>
-          
           <button onclick="toggleEdu(false)" class="w-8 h-8 rounded-full bg-zinc-200/50 hover:bg-zinc-300/50 flex items-center justify-center text-zinc-500 transition-colors">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </button>
@@ -316,6 +276,13 @@
       update();
     }
 
+    // Direct assignment for foolproof presets
+    window.setPreset = function(c1, c2, c3, c4) {
+      // 5th band defaults to brown (±1%) in case user toggles to 5-band mode later
+      selections = [c1, c2, c3, c4, 'brown'];
+      setBands(4);
+    }
+
     // Floating point fix helper
     function stripFloat(num) {
         return parseFloat(num.toPrecision(12));
@@ -327,12 +294,10 @@
       
       if(bands === 4) {
         digits = `${c[0].val}${c[1].val}`;
-        // Apply stripFloat to multiplication result
         ohms = stripFloat(parseInt(digits) * c[2].mult);
         tol = c[3].tol;
       } else {
         digits = `${c[0].val}${c[1].val}${c[2].val}`;
-        // Apply stripFloat to multiplication result
         ohms = stripFloat(parseInt(digits) * c[3].mult);
         tol = c[4].tol;
       }
@@ -599,9 +564,9 @@
       return 'digit';
     }
     
-    // Updated Formatter with StripFloat
+    // Formatter with StripFloat
     function fmtOhms(n) {
-      n = stripFloat(n); // Ensure incoming is clean
+      n = stripFloat(n); 
       if(n >= 1e9) return stripFloat(n/1e9) + " GΩ";
       if(n >= 1e6) return stripFloat(n/1e6) + " MΩ";
       if(n >= 1e3) return stripFloat(n/1e3) + " kΩ";

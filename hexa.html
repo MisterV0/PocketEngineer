@@ -6,10 +6,10 @@
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
   <link rel="stylesheet" href="resources/common.css">
-  <title>Binary Converter</title>
+  <title>Hexadecimal Converter</title>
   <script src="resources/app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -41,9 +41,9 @@
       background-color: white;
     }
     .byte-card.selected {
-      border-color: #3b82f6;
-      background-color: #eff6ff;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: #8b5cf6; /* Violet for Hex */
+      background-color: #f5f3ff;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
       transform: scale(1.02);
     }
     
@@ -81,52 +81,53 @@
         
         <!-- Decimal Input -->
         <div id="decimal-card" class="input-card rounded-xl p-5">
-          <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number</label>
+          <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number (Base 10)</label>
           <div class="flex items-baseline gap-2">
             <input type="number" id="decimal-input" oninput="convertFromDecimal()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
           </div>
           <p class="text-xs text-zinc-400 mt-2">Enter a positive integer</p>
         </div>
 
-        <!-- Binary Input -->
-        <div id="binary-card" class="input-card rounded-xl p-5">
-          <label class="text-[10px] font-bold text-indigo-500 uppercase mb-2 block">Binary Number</label>
+        <!-- Hexadecimal Input -->
+        <div id="hex-card" class="input-card rounded-xl p-5">
+          <label class="text-[10px] font-bold text-violet-500 uppercase mb-2 block">Hexadecimal Number (Base 16)</label>
           <div class="flex items-baseline gap-2">
-            <input type="text" id="binary-input" oninput="convertFromBinary()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" pattern="[01]*">
+            <span class="text-2xl font-mono text-zinc-400 font-bold">0x</span>
+            <input type="text" id="hex-input" oninput="convertFromHex()" class="w-full bg-transparent font-mono text-3xl outline-none uppercase" placeholder="00" pattern="[0-9A-Fa-f]*" spellcheck="false">
           </div>
-          <p class="text-xs text-zinc-400 mt-2">Enter binary digits (0 or 1)</p>
+          <p class="text-xs text-zinc-400 mt-2">Enter hex digits (0-9, A-F)</p>
         </div>
 
         <!-- Bit Size Indicator -->
         <div>
-          <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 block">Required Bits</label>
+          <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 block">Required Size</label>
           <div class="grid grid-cols-4 gap-2">
             <div id="bit-8" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
               <div class="text-xs font-bold text-zinc-900">8 bits</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">0-255</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">2 Hex Digits</div>
             </div>
             <div id="bit-16" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
               <div class="text-xs font-bold text-zinc-900">16 bits</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">0-65,535</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">4 Hex Digits</div>
             </div>
             <div id="bit-32" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
               <div class="text-xs font-bold text-zinc-900">32 bits</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">0-4.29B</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">8 Hex Digits</div>
             </div>
             <div id="bit-64" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
               <div class="text-xs font-bold text-zinc-900">64 bits</div>
-              <div class="text-[10px] text-zinc-500 mt-0.5">0-18.4Q</div>
+              <div class="text-[10px] text-zinc-500 mt-0.5">16 Hex Digits</div>
             </div>
           </div>
         </div>
 
         <!-- How It Works Explanation -->
-        <div id="how-it-works" class="bg-blue-50 rounded-xl p-5 border border-blue-200 hidden">
+        <div id="how-it-works" class="bg-violet-50 rounded-xl p-5 border border-violet-200 hidden">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-xs font-bold text-blue-600 uppercase tracking-wider">How It Works</h3>
-            <span id="how-it-works-direction" class="text-xs font-bold text-blue-600 uppercase tracking-wider"></span>
+            <h3 class="text-xs font-bold text-violet-600 uppercase tracking-wider">How It Works</h3>
+            <span id="how-it-works-direction" class="text-xs font-bold text-violet-600 uppercase tracking-wider"></span>
           </div>
-          <div id="how-it-works-content" class="text-sm text-blue-900 leading-relaxed space-y-3"></div>
+          <div id="how-it-works-content" class="text-sm text-violet-900 leading-relaxed space-y-3"></div>
         </div>
 
       </div>
@@ -139,17 +140,17 @@
       <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
       
       <!-- Main Visualization Card -->
-      <div class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl">
+      <div class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl max-h-full overflow-y-auto">
         <div id="visualization-content">
           <div class="text-center mb-8">
-            <div class="text-6xl font-mono font-bold text-zinc-900 mb-4" id="main-result">0</div>
+            <div class="text-5xl md:text-6xl font-mono font-bold text-zinc-900 mb-4 break-all" id="main-result">0</div>
           </div>
           
-          <!-- Power of 2 Visualization -->
+          <!-- Power of 16 Visualization -->
           <div id="power-visualization" class="hidden mb-6">
-            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-zinc-900 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span></div>
+            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Hexadecimal Representation</div>
             <div id="power-note" class="text-[10px] text-zinc-500 mb-3 italic text-center"></div>
-            <div id="power-grid" class="grid grid-cols-8 gap-2"></div>
+            <div id="power-grid" class="grid grid-cols-4 md:grid-cols-8 gap-2"></div>
           </div>
 
           <!-- Step-by-Step Explanation -->
@@ -168,7 +169,7 @@
     let currentBits = 8;
 
     const decimalInput = document.getElementById('decimal-input');
-    const binaryInput = document.getElementById('binary-input');
+    const hexInput = document.getElementById('hex-input');
     const explanationPanel = document.getElementById('explanation-panel');
     const explanationContent = document.getElementById('explanation-content');
     const howItWorks = document.getElementById('how-it-works');
@@ -180,17 +181,18 @@
     const powerNote = document.getElementById('power-note');
     const powerGrid = document.getElementById('power-grid');
 
-    function getRequiredBits(value) {
-      if (value === 0) return 8;
-      if (value <= 255) return 8;
-      if (value <= 65535) return 16;
-      if (value <= 4294967295) return 32;
+    const hexChars = "0123456789ABCDEF";
+
+    function getRequiredBits(bigIntValue) {
+      if (bigIntValue === 0n) return 8;
+      if (bigIntValue <= 255n) return 8;
+      if (bigIntValue <= 65535n) return 16;
+      if (bigIntValue <= 4294967295n) return 32;
       return 64;
     }
 
     function updateBitIndicator(bits) {
       currentBits = bits;
-      // Update all bit indicators
       [8, 16, 32, 64].forEach(bitSize => {
         const indicator = document.getElementById(`bit-${bitSize}`);
         if (bitSize === bits) {
@@ -202,90 +204,90 @@
     }
 
     function convertFromDecimal() {
-      const decimal = parseInt(decimalInput.value);
+      const rawVal = decimalInput.value.trim();
       
-      if (isNaN(decimal) || decimal < 0 || decimalInput.value === '') {
-        if (decimalInput.value === '') {
-          binaryInput.value = '';
-        }
+      if (rawVal === '' || isNaN(Number(rawVal)) || Number(rawVal) < 0) {
+        if (rawVal === '') hexInput.value = '';
         clearVisualizations();
         return;
       }
 
-      // Auto-determine required bits
-      const requiredBits = getRequiredBits(decimal);
-      updateBitIndicator(requiredBits);
+      try {
+        const decimalBig = BigInt(rawVal);
+        
+        // Auto-determine required bits
+        const requiredBits = getRequiredBits(decimalBig);
+        updateBitIndicator(requiredBits);
 
-      const binary = decimalToBinary(decimal, requiredBits);
-      binaryInput.value = binary;
-      
-      updateVisualizations(decimal, binary, true);
+        // Convert to hex and pad
+        let hex = decimalBig.toString(16).toUpperCase();
+        const requiredHexDigits = requiredBits / 4;
+        hex = hex.padStart(requiredHexDigits, '0');
+        
+        hexInput.value = hex;
+        updateVisualizations(decimalBig, hex, true);
+      } catch (e) {
+        clearVisualizations();
+      }
     }
 
-    function convertFromBinary() {
-      let binary = binaryInput.value.replace(/[^01]/g, '');
-      binaryInput.value = binary;
+    function convertFromHex() {
+      let hex = hexInput.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
       
-      if (binary === '' || binaryInput.value === '') {
-        if (binaryInput.value === '') {
-          decimalInput.value = '';
-        }
+      // Preserve cursor position by updating value only if it changed invalid chars
+      if (hexInput.value !== hex) {
+          hexInput.value = hex;
+      }
+      
+      if (hex === '') {
+        decimalInput.value = '';
         clearVisualizations();
         return;
       }
 
-      // Auto-determine required bits based on input length
-      let requiredBits = Math.max(8, Math.ceil(binary.length / 8) * 8);
-      if (requiredBits > 64) requiredBits = 64;
-      if (requiredBits < 8) requiredBits = 8;
-      
-      // Pad to required bits
-      binary = binary.padStart(requiredBits, '0');
-      updateBitIndicator(requiredBits);
+      try {
+        // Auto-determine required bits based on hex length
+        let requiredBits = Math.max(8, Math.ceil(hex.length / 2) * 8);
+        if (requiredBits > 64) requiredBits = 64;
+        if (requiredBits < 8) requiredBits = 8;
+        
+        // Pad hex string to match byte boundaries
+        const paddedHex = hex.padStart(requiredBits / 4, '0');
+        updateBitIndicator(requiredBits);
 
-      const decimal = binaryToDecimal(binary);
-      decimalInput.value = decimal;
-      
-      updateVisualizations(decimal, binary, false);
-    }
-
-    function decimalToBinary(decimal, bits) {
-      if (decimal === 0) return '0'.padStart(bits, '0');
-      let binary = '';
-      while (decimal > 0) {
-        binary = (decimal % 2) + binary;
-        decimal = Math.floor(decimal / 2);
+        const decimalBig = BigInt('0x' + paddedHex);
+        decimalInput.value = decimalBig.toString();
+        
+        updateVisualizations(decimalBig, paddedHex, false);
+      } catch (e) {
+        clearVisualizations();
       }
-      return binary.padStart(bits, '0');
     }
 
-    function binaryToDecimal(binary) {
-      let decimal = 0;
-      for (let i = 0; i < binary.length; i++) {
-        if (binary[i] === '1') {
-          decimal += Math.pow(2, binary.length - 1 - i);
-        }
-      }
-      return decimal;
-    }
-
-    function updateVisualizations(decimal, binary, fromDecimal) {
-      // Update main result - show the calculated value
-      mainResult.textContent = fromDecimal ? binary : decimal.toLocaleString();
+    function updateVisualizations(decimalBig, hex, fromDecimal) {
+      // Update main result
+      mainResult.innerHTML = fromDecimal 
+        ? `<span class="text-zinc-400">0x</span>${hex}` 
+        : decimalBig.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
       // Create "How It Works" explanation
       howItWorksContent.innerHTML = '';
       if (fromDecimal) {
-        howItWorksDirection.textContent = 'Decimal → Binary';
+        howItWorksDirection.textContent = 'Decimal → Hex';
         howItWorksContent.innerHTML = `
-          <p>We keep dividing the number by 2 and writing down the remainder. When we read the remainders from bottom to top, we get the binary number!</p>
-          <p class="text-xs text-blue-700 mt-2">Think of it like this: Each time we divide by 2, we're asking "Is this number even or odd?" The remainder (0 or 1) becomes our binary digit.</p>
+          <p>We divide the number by <strong>16</strong> and write down the remainder. If the remainder is 10-15, we use letters <strong>A-F</strong>.</p>
+          <div class="bg-white/60 p-2 rounded text-xs font-mono grid grid-cols-6 gap-1 text-center mt-2 border border-violet-200">
+            <div>10=A</div><div>11=B</div><div>12=C</div><div>13=D</div><div>14=E</div><div>15=F</div>
+          </div>
+          <p class="text-xs text-violet-700 mt-2">Read the remainders from bottom to top to get your hex number!</p>
         `;
       } else {
-        howItWorksDirection.textContent = 'Binary → Decimal';
+        howItWorksDirection.textContent = 'Hex → Decimal';
         howItWorksContent.innerHTML = `
-          <p>Each position in binary represents a power of 2. We multiply each "1" by its position value (2<sup>0</sup>, 2<sup>1</sup>, 2<sup>2</sup>, etc.) and add them all together!</p>
-          <p class="text-xs text-blue-700 mt-2">Think of it like this: Binary is like a light switch - each bit is either ON (1) or OFF (0). We add up the values of all the ON switches.</p>
+          <p>Each position in hexadecimal represents a power of <strong>16</strong>. We multiply each digit's decimal value by its position value (16<sup>0</sup>, 16<sup>1</sup>, etc.) and add them together.</p>
+          <div class="bg-white/60 p-2 rounded text-xs font-mono grid grid-cols-6 gap-1 text-center mt-2 border border-violet-200">
+            <div>A=10</div><div>B=11</div><div>C=12</div><div>D=13</div><div>E=14</div><div>F=15</div>
+          </div>
         `;
       }
       howItWorks.classList.remove('hidden');
@@ -294,139 +296,136 @@
       explanationContent.innerHTML = '';
       
       if (fromDecimal) {
-        // Show decimal to binary conversion steps
-        let tempDecimal = decimal;
+        // Show decimal to hex conversion steps
+        let tempDecimal = decimalBig;
         const steps = [];
         
-        while (tempDecimal > 0) {
-          const remainder = tempDecimal % 2;
-          const quotient = Math.floor(tempDecimal / 2);
-          steps.push({ decimal: tempDecimal, remainder, quotient });
-          tempDecimal = quotient;
+        if (tempDecimal === 0n) {
+            steps.push({ decimal: 0n, remainder: 0n, hexChar: '0', quotient: 0n });
+        } else {
+            while (tempDecimal > 0n) {
+              const remainder = tempDecimal % 16n;
+              const quotient = tempDecimal / 16n;
+              steps.push({ decimal: tempDecimal, remainder, hexChar: hexChars[Number(remainder)], quotient });
+              tempDecimal = quotient;
+            }
         }
         
-        // Show steps in correct order (first division at top, last at bottom)
         steps.forEach((step, idx) => {
           const row = document.createElement('div');
           row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
           row.style.animationDelay = `${idx * 50}ms`;
           
+          let remText = step.remainder >= 10n 
+            ? `${step.remainder} → <strong class="text-violet-600 text-base">${step.hexChar}</strong>` 
+            : `<strong class="text-violet-600 text-base">${step.hexChar}</strong>`;
+
           row.innerHTML = `
             <div class="flex-1">
-              <div class="text-xs font-mono text-zinc-900">${step.decimal} ÷ 2 = ${step.quotient}</div>
-              <div class="text-[10px] text-zinc-500 mt-1">Remainder: <strong class="text-blue-600">${step.remainder}</strong></div>
+              <div class="text-xs font-mono text-zinc-900">${step.decimal} ÷ 16 = ${step.quotient}</div>
+              <div class="text-[10px] text-zinc-500 mt-1">Remainder: ${remText}</div>
             </div>
           `;
-          
           explanationContent.appendChild(row);
         });
         
+        updateBitsTable(hex);
+
       } else {
-        // Show binary to decimal conversion steps
-        // Count from right to left (LSB to MSB)
-        const binaryArray = binary.split('');
-        let sum = 0;
+        // Show hex to decimal conversion steps
+        const hexArray = hex.split('');
         const activeBits = [];
         
-        // Process from right to left
-        for (let i = binaryArray.length - 1; i >= 0; i--) {
-          const bit = binaryArray[i];
-          const positionFromRight = binaryArray.length - 1 - i;
-          const power = positionFromRight;
+        for (let i = hexArray.length - 1; i >= 0; i--) {
+          const char = hexArray[i];
+          const decValue = BigInt('0x' + char);
+          const power = BigInt(hexArray.length - 1 - i);
           
-          if (bit === '1') {
-            const value = Math.pow(2, power);
-            sum += value;
-            activeBits.push({ position: i, positionFromRight, power, value, bit });
+          // Only show steps for non-zero values to keep it clean, unless it's the only digit
+          if (decValue > 0n || hexArray.length === 1) {
+            const multiplier = 16n ** power;
+            const value = decValue * multiplier;
+            activeBits.push({ positionFromRight: power, char, decValue, multiplier, value });
           }
         }
         
-        // Show steps for each active bit, ordered from right to left
         activeBits.forEach((item, idx) => {
           const row = document.createElement('div');
           row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
           row.style.animationDelay = `${idx * 50}ms`;
+          
+          let charDisplay = item.decValue >= 10n ? `${item.char} (${item.decValue})` : item.char;
+
           row.innerHTML = `
             <div class="flex-1">
-              <div class="text-xs font-mono text-zinc-900">${item.bit} × 2<sup>${item.power}</sup> = ${item.value}</div>
-              <div class="text-[10px] text-zinc-500 mt-1">Position ${item.positionFromRight} from right</div>
+              <div class="text-xs font-mono text-zinc-900">${charDisplay} × 16<sup>${item.positionFromRight}</sup></div>
+              <div class="text-[10px] text-zinc-500 mt-1">16<sup>${item.positionFromRight}</sup> = ${item.multiplier.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
             </div>
-            <div class="text-sm font-mono font-bold text-blue-600 ml-4">${item.value}</div>
+            <div class="text-sm font-mono font-bold text-violet-600 ml-4">+ ${item.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
           `;
           explanationContent.appendChild(row);
         });
-        
+
+        updatePowerVisualization(hex);
       }
 
       explanationPanel.classList.remove('hidden');
-
-      // Update visualization based on conversion direction
-      if (fromDecimal) {
-        // Show bits table without power values for decimal to binary
-        updateBitsTable(binary);
-      } else {
-        // Show full power visualization with values for binary to decimal
-        updatePowerVisualization(binary);
-      }
     }
 
-    function updateBitsTable(binary) {
+    function updateBitsTable(hex) {
       powerGrid.innerHTML = '';
       powerVisualization.classList.remove('hidden');
-      powerTitle.innerHTML = 'Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-[10px] lg:text-xs text-white bg-zinc-900 rounded-md max-w-[100px] md:max-w-none md:whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span>';
-      powerNote.textContent = '';
+      powerTitle.innerHTML = 'Hexadecimal Digits';
+      powerNote.textContent = 'Read the remainders from bottom to top to form this string';
       
-      // Display bits from left to right (MSB to LSB) visually
-      const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
-      const maxBits = Math.min(16, bits.length); // Show first 16 bits
+      const digits = hex.split('');
+      const maxDigits = Math.min(16, digits.length); 
       
-      for (let i = 0; i < maxBits; i++) {
-        const bit = bits[i];
+      for (let i = 0; i < maxDigits; i++) {
+        const char = digits[i];
         
         const cell = document.createElement('div');
-        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
-          bit === '1'
-            ? 'bg-blue-500 border-blue-600 text-white'
-            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-        }`;
+        cell.className = `p-3 rounded-lg border-2 text-center transition-all bg-violet-500 border-violet-600 text-white shadow-sm`;
         
         cell.innerHTML = `
-          <div class="text-xs font-bold">${bit}</div>
+          <div class="text-lg font-mono font-bold">${char}</div>
         `;
         
         powerGrid.appendChild(cell);
       }
     }
 
-    function updatePowerVisualization(binary) {
+    function updatePowerVisualization(hex) {
       powerGrid.innerHTML = '';
       powerVisualization.classList.remove('hidden');
-      powerTitle.textContent = 'Power of 2 Breakdown';
-      powerNote.textContent = 'In programming, bit positions start from 0 at the right (LSB)';
+      powerTitle.textContent = 'Power of 16 Breakdown';
+      powerNote.textContent = 'Positions start from 0 at the right';
       
-      // Display bits from left to right (MSB to LSB) visually
-      // But show position numbers from right (position 0 is rightmost)
-      const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
-      const maxBits = Math.min(16, bits.length); // Show first 16 bits
+      const digits = hex.split('');
+      const maxDigits = Math.min(16, digits.length); 
       
-      for (let i = 0; i < maxBits; i++) {
-        const bit = bits[i];
-        // Position from right: rightmost is position 0
-        const positionFromRight = (bits.length - 1) - i;
-        const power = positionFromRight;
-        const value = Math.pow(2, power);
+      for (let i = 0; i < maxDigits; i++) {
+        const char = digits[i];
+        const decValue = parseInt(char, 16);
+        const power = (digits.length - 1) - i;
         
         const cell = document.createElement('div');
-        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
-          bit === '1'
-            ? 'bg-blue-500 border-blue-600 text-white'
+        cell.className = `p-2 rounded-lg border-2 text-center transition-all ${
+          decValue > 0
+            ? 'bg-violet-500 border-violet-600 text-white shadow-sm'
             : 'bg-zinc-50 border-zinc-200 text-zinc-400'
         }`;
         
+        // Format large multipliers nicely, or use scientific notation if too big for UI box
+        let multiplierStr = (16 ** power).toString();
+        if (multiplierStr.length > 6) {
+            multiplierStr = `16^${power}`;
+        }
+
         cell.innerHTML = `
-          <div class="text-xs font-bold mb-1">${bit}</div>
-          <div class="text-[10px] mb-1">2<sup>${power}</sup></div>
-          <div class="text-[10px] opacity-75">${value.toLocaleString()}</div>
+          <div class="text-base font-mono font-bold mb-1">${char}</div>
+          <div class="text-[10px] mb-1 opacity-90">16<sup>${power}</sup></div>
+          <div class="text-[9px] opacity-75 font-mono break-all">${multiplierStr}</div>
         `;
         
         powerGrid.appendChild(cell);
@@ -442,7 +441,6 @@
       howItWorksContent.innerHTML = '';
       howItWorksDirection.textContent = '';
       powerGrid.innerHTML = '';
-      // Reset bit indicator
       [8, 16, 32, 64].forEach(bitSize => {
         document.getElementById(`bit-${bitSize}`).classList.remove('selected');
       });
@@ -451,7 +449,7 @@
 
     function resetCalc() {
       decimalInput.value = '';
-      binaryInput.value = '';
+      hexInput.value = '';
       clearVisualizations();
     }
 
@@ -487,4 +485,3 @@
   </script>
 </body>
 </html>
-

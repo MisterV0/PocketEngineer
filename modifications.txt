@@ -1,2 +1,6 @@
-- create new app for series/parallel 
+
 - create mini icons for all apps
+
+easy changes
+- Resistor.html FInd the 10 or 20 most popular resistor values and add them so the user can select them and see the colors
+Repair this shit, make as a dropdown, make it look cooler, smaller, and a better UI to choose a default values

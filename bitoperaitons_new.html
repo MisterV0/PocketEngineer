@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Style Bitwise Calculator</title>
+    <style>
+        /* Classic Serif for UI, Typewriter Monospace for Math */
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+        :root {
+            --paper-bg: #f4eee1;
+            --sheet-bg: #fdfcfa;
+            --ink-main: #362e25;
+            --ink-faded: #a89f91;
+            --accent: #8b6e4e;
+            --console-bg: #ebe5d8;
+            --lines: #d9d0c1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--paper-bg);
+            color: var(--ink-main);
+            font-family: 'Lora', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(var(--lines) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .sheet {
+            background-color: var(--sheet-bg);
+            max-width: 650px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(45, 35, 25, 0.08), 
+                        0 1px 3px rgba(45, 35, 25, 0.05);
+            border: 1px solid var(--lines);
+            border-radius: 4px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--ink-main);
+            border-bottom: 2px solid var(--ink-main);
+            padding-bottom: 10px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .operand-row {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+            overflow: hidden;
+            max-height: 100px;
+        }
+
+        .operand-row.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--ink-faded);
+            color: var(--ink-main);
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            padding: 8px 4px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-bottom: 2px solid var(--ink-main);
+        }
+
+        input[readonly] {
+            border-bottom: 1px solid var(--ink-main);
+            font-weight: 700;
+        }
+
+        .operators-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 35px 0;
+            padding: 20px 0;
+            border-top: 1px solid var(--lines);
+            border-bottom: 1px solid var(--lines);
+        }
+
+        .op-btn {
+            background: transparent;
+            border: 1px solid var(--ink-main);
+            color: var(--ink-main);
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.25; 
+        }
+
+        .op-btn:hover {
+            opacity: 0.6;
+        }
+
+        .op-btn.active {
+            opacity: 1;
+            background: var(--ink-main);
+            color: var(--sheet-bg);
+            transform: scale(1.05);
+            box-shadow: 2px 2px 0px var(--accent);
+        }
+
+        .console {
+            background-color: var(--console-bg);
+            border-left: 4px solid var(--accent);
+            padding: 25px;
+            font-family: 'Space Mono', monospace;
+            color: var(--ink-main);
+            margin-top: 20px;
+        }
+
+        .console-header {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--lines);
+            padding-bottom: 5px;
+        }
+
+        .rule-text {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-family: 'Lora', serif;
+        }
+
+        .visual-math {
+            white-space: pre;
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 500px) {
+            .operand-row {
+                flex-direction: column;
+                gap: 15px;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sheet">
+    <h1>Bitwise Operations</h1>
+    
+    <!-- Operand A -->
+    <div class="operand-row">
+        <div class="input-group">
+            <label>Operand A (Decimal)</label>
+            <input type="number" id="decA" value="12" oninput="sync('dec', 'A')">
+        </div>
+        <div class="input-group">
+            <label>Operand A (Binary)</label>
+            <input type="text" id="binA" value="00001100" oninput="sync('bin', 'A')">
+        </div>
+    </div>
+
+    <!-- Operand B -->
+    <div class="operand-row" id="operandB-container">
+        <div class="input-group">
+            <label>Operand B (Decimal)</label>
+            <input type="number" id="decB" value="5" oninput="sync('dec', 'B')">
+        </div>
+        <div class="input-group">
+            <label>Operand B (Binary)</label>
+            <input type="text" id="binB" value="00000101" oninput="sync('bin', 'B')">
+        </div>
+    </div>
+
+    <!-- Operators -->
+    <div class="operators-container" id="operator-container">
+        <button class="op-btn active" data-op="&">AND &</button>
+        <button class="op-btn" data-op="|">OR |</button>
+        <button class="op-btn" data-op="^">XOR ^</button>
+        <button class="op-btn" data-op="~">NOT ~</button>
+        <button class="op-btn" data-op="<<">SHL <<</button>
+        <button class="op-btn" data-op=">>">SHR >></button>
+    </div>
+
+    <!-- Final Result Inputs -->
+    <div class="operand-row" style="margin-bottom: 0;">
+        <div class="input-group">
+            <label>Result (Decimal)</label>
+            <input type="text" id="decRes" readonly>
+        </div>
+        <div class="input-group">
+            <label>Result (Binary)</label>
+            <input type="text" id="binRes" readonly>
+        </div>
+    </div>
+
+    <!-- Result Console -->
+    <div class="console">
+        <div class="console-header">System Output & Explanation</div>
+        <div class="rule-text" id="ruleText"></div>
+        <div class="visual-math" id="visualMath"></div>
+    </div>
+</div>
+
+<script>
+    let currentOp = "&"; 
+
+    const rules = {
+        "&": "AND (&) operation: Yields 1 only if both corresponding bits are 1.",
+        "|": "OR (|) operation: Yields 1 if at least one of the corresponding bits is 1.",
+        "^": "XOR (^) operation: Yields 1 if the corresponding bits are different.",
+        "~": "NOT (~) operation: Inverts all bits visually present.",
+        "<<": "Left Shift (<<): Shifts bits to the left, pushing zeros in from the right.",
+        ">>": "Right Shift (>>): Shifts bits to the right."
+    };
+
+    // Operator Button Clicking Logic
+    document.querySelectorAll('.op-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentOp = e.target.getAttribute('data-op');
+            calculate();
+        });
+    });
+
+    // Converts decimal to Unsigned Binary String
+    function toBinaryString(num, minLen = 8) {
+        let bin = (num >>> 0).toString(2); // >>> 0 forces it to act as an unsigned integer
+        return bin.padStart(minLen, '0');
+    }
+
+    // Sync Decimal and Binary inputs smoothly
+    function sync(type, operand) {
+        const decInput = document.getElementById(`dec${operand}`);
+        const binInput = document.getElementById(`bin${operand}`);
+
+        if (type === 'dec') {
+            let val = parseInt(decInput.value, 10);
+            if (isNaN(val)) val = 0;
+            // Retain the current bit length dynamically
+            let currentLen = Math.max(binInput.value.length, 8);
+            binInput.value = toBinaryString(val, currentLen);
+        } else {
+            let cleanedBin = binInput.value.replace(/[^01]/g, '');
+            binInput.value = cleanedBin; 
+            let val = parseInt(cleanedBin, 2);
+            if (isNaN(val)) val = 0;
+            decInput.value = val;
+        }
+        calculate();
+    }
+
+    // Main calculation logic
+    function calculate() {
+        let a = parseInt(document.getElementById("decA").value, 10) || 0;
+        let b = parseInt(document.getElementById("decB").value, 10) || 0;
+        let res = 0;
+
+        let bContainer = document.getElementById("operandB-container");
+        if (currentOp === "~") {
+            bContainer.classList.add("hidden");
+        } else {
+            bContainer.classList.remove("hidden");
+        }
+
+        // Determine visual padding based on Operand A's length
+        let binAStr = document.getElementById("binA").value.replace(/[^01]/g, '');
+        let visualBitLen = Math.max(binAStr.length, 8);
+
+        if (currentOp === "~") {
+            // FIX: Manually flip the exact bit-length string to prevent the 32-bit signed explosion (-13)
+            let paddedA = toBinaryString(a, visualBitLen);
+            let flipped = paddedA.split('').map(bit => bit === '1' ? '0' : '1').join('');
+            res = parseInt(flipped, 2);
+        } else {
+            // ">>> 0" is added to standard operations to prevent negative numbers on 32nd bit rollovers
+            switch (currentOp) {
+                case "&": res = (a & b) >>> 0; break;
+                case "|": res = (a | b) >>> 0; break;
+                case "^": res = (a ^ b) >>> 0; break;
+                case "<<": res = (a << b) >>> 0; break;
+                case ">>": res = (a >> b) >>> 0; break;
+            }
+        }
+
+        document.getElementById("decRes").value = res;
+        document.getElementById("binRes").value = toBinaryString(res, visualBitLen);
+
+        generateExplanation(a, b, res, currentOp, visualBitLen);
+    }
+
+    // Visual formatting
+    function generateExplanation(a, b, res, op, bitLen) {
+        document.getElementById("ruleText").innerText = rules[op];
+
+        let strA = toBinaryString(a, bitLen);
+        let strB = toBinaryString(b, bitLen);
+        let strRes = toBinaryString(res, bitLen);
+        
+        let maxLen = Math.max(strA.length, strB.length, strRes.length, bitLen);
+        
+        strA = strA.padStart(maxLen, '0');
+        strB = strB.padStart(maxLen, '0');
+        strRes = strRes.padStart(maxLen, '0');
+
+        let visualText = "";
+        let opSpacing = op.length === 1 ? `  ${op} ` : `${op} `;
+
+        if (op === "~") {
+            visualText = `    ${strA}  [${a}]\n`;
+            visualText += `~`.repeat(maxLen + 15) + `\n`;
+            visualText += `(~) ${strRes}  [${res}]`;
+        } 
+        else if (op === "<<" || op === ">>") {
+            visualText = `    ${strA}  [${a}]\n`;
+            visualText += `    Shifted by ${b}...\n`;
+            visualText += `-`.repeat(maxLen + 15) + `\n`;
+            visualText += `    ${strRes}  [${res}]`;
+        }
+        else {
+            visualText = `    ${strA}  [${a}]\n`;
+            visualText += `${opSpacing}${strB}  [${b}]\n`;
+            visualText += `-`.repeat(maxLen + 15) + `\n`;
+            visualText += `    ${strRes}  [${res}]`;
+        }
+
+        document.getElementById("visualMath").innerText = visualText;
+    }
+
+    window.onload = calculate;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="resources/common.css">
+    <title>Circuit & Battery Canvas</title>
+    <script src="resources/app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-canvas: #f8fafc;
+            --grid-color: #cbd5e1;
+            --wire-color: #64748b;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* --- Global Input Arrow Removal --- */
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* --- Start Screen --- */
+        #start-screen {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-canvas);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #start-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .start-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: var(--text-main);
+        }
+
+        .mode-cards {
+            display: flex;
+            gap: 24px;
+        }
+
+        .mode-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            width: 280px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-card.battery:hover { border-color: var(--success); }
+
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .mode-card h3 { font-size: 20px; margin-bottom: 8px; }
+        .mode-card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+        /* --- Main App UI --- */
+        #app-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease 0.2s;
+        }
+
+        #app-screen.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Top Bar Stats */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px 40px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            min-height: 85px;
+        }
+
+        .stat { display: flex; flex-direction: column; align-items: center; }
+        .stat label {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+            color: var(--text-muted); margin-bottom: 4px; font-weight: 600;
+        }
+        .stat .value { font-size: 24px; font-weight: 700; color: var(--text-main); transition: color 0.2s; }
+        .stat .value.error { color: var(--danger); font-size: 20px; }
+        
+        .stat input {
+            font-size: 22px; /* Shrunk slightly */
+            font-weight: 700; color: var(--text-main);
+            border: none; border-bottom: 2px solid var(--grid-color);
+            width: 90px; /* Widened slightly */
+            text-align: center; outline: none;
+            transition: border-color 0.2s; background: transparent;
+        }
+        .stat input:focus { border-color: var(--primary); }
+        .divider { width: 1px; height: 40px; background: var(--border); }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex-grow: 1; 
+            padding: 60px; 
+            overflow: auto; /* Allows scrolling */
+            background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Wrapper to prevent terminals from disappearing */
+        .circuit-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: max-content; /* Forces it to stretch instead of squish */
+            min-height: 100%;
+        }
+
+        .terminal {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--surface);
+            border: 2px solid var(--wire-color); display: flex; align-items: center;
+            justify-content: center; font-weight: 700; color: var(--text-main);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0; z-index: 2;
+            font-size: 14px;
+        }
+        .terminal.positive { border-color: var(--danger); color: var(--danger); }
+        .terminal.negative { border-color: var(--primary); color: var(--primary); }
+
+        /* Circuit Layout & Wires */
+        .series-container { display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap; }
+        .wire { width: 20px; height: 2px; background-color: var(--wire-color); flex-shrink: 0; z-index: 1; }
+        .wire-fill { flex-grow: 1; height: 2px; background-color: var(--wire-color); min-width: 12px; z-index: 1; }
+        
+        .parallel-block { display: flex; flex-direction: column; align-items: stretch; }
+        .branch { display: flex; flex-direction: row; align-items: center; position: relative; padding: 10px 0; }
+
+        .vert-left, .vert-right { position: absolute; width: 2px; background-color: var(--wire-color); z-index: 1; top: 0; bottom: 0; }
+        .vert-left { left: 0; }
+        .vert-right { right: 0; }
+        .branch:first-child .vert-left, .branch:first-child .vert-right { top: calc(50% - 1px); }
+        .branch:last-child .vert-left, .branch:last-child .vert-right { bottom: calc(50% - 1px); }
+        .branch:first-child:last-child .vert-left, .branch:first-child:last-child .vert-right { top: calc(50% - 1px); bottom: calc(50% - 1px); }
+
+        /* --- Components --- */
+        .circuit-element { position: relative; flex-shrink: 0; z-index: 10; }
+
+        /* Resistor Component */
+        .resistor-box {
+            display: flex; align-items: center; background: var(--surface);
+            border: 2px solid var(--grid-color); border-radius: 6px;
+            padding: 8px 12px; color: var(--text-main);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;
+        }
+        .resistor-box:hover { border-color: var(--wire-color); }
+        .resistor-box input {
+            width: 55px; /* Widened */
+            border: none; outline: none; font-family: inherit;
+            font-size: 12px; /* Shrunk */
+            font-weight: 600; color: var(--text-main);
+            text-align: right; margin-right: 4px; background: transparent;
+        }
+        .resistor-box span {
+            font-size: 14px;
+        }
+
+        /* Battery Component */
+        .battery-box {
+            display: flex; align-items: center; background: #1e293b;
+            border-radius: 6px; padding: 4px 10px; color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;
+            border: 2px solid #334155; transition: border-color 0.2s;
+            margin-left: 6px; /* Alignment fix for the terminal bump */
+        }
+        .battery-box:hover { border-color: var(--success); }
+        
+        /* The positive terminal bump on the battery */
+        .battery-box::before {
+            content: ''; position: absolute; left: -6px; top: 50%;
+            transform: translateY(-50%); width: 6px; height: 16px;
+            background: var(--wire-color); /* Matches the wire color for a seamless connection */
+            border-radius: 4px 0 0 4px;
+        }
+
+        .battery-inputs { display: flex; flex-direction: column; gap: 2px; }
+        .battery-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 600; color: #94a3b8;}
+        .battery-row input {
+            width: 44px; /* Widened */
+            background: transparent; border: none; color: white;
+            font-weight: 700; font-size: 11.5px; /* Shrunk */
+            outline: none; text-align: right;
+            border-bottom: 1px solid #475569; margin-right: 4px; font-family: inherit;
+        }
+        .battery-row input:focus { border-color: var(--success); }
+
+        /* Parallel Wrapper */
+        .parallel-wrapper { display: flex; align-items: center; }
+
+        /* Action Buttons */
+        .action-btn {
+            position: absolute; display: flex; align-items: center; justify-content: center;
+            width: 24px; height: 24px; border-radius: 50%; border: none; cursor: pointer;
+            color: white; z-index: 20; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: opacity 0.2s, transform 0.1s; opacity: 0; pointer-events: none;
+        }
+        .action-btn:hover { transform: scale(1.15); }
+        .circuit-element:hover > .action-btn { opacity: 1; pointer-events: auto; }
+        .circuit-element:hover:has(.circuit-element:hover) > .action-btn { opacity: 0; pointer-events: none; }
+
+        .btn-add-right { background: var(--primary); right: -12px; top: 50%; margin-top: -12px; }
+        .btn-add-below { background: var(--primary); bottom: -12px; left: 50%; margin-left: -12px; }
+        .btn-remove { background: var(--danger); top: -12px; left: -12px; }
+        
+        /* Battery specific button colors */
+        .mode-batteries .btn-add-right, .mode-batteries .btn-add-below { background: var(--success); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <a href="index.html" class="back-button" style="position: absolute; top: 20px; left: 20px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            Back
+        </a>
+        <div class="start-title">What do you want to build?</div>
+        <div class="mode-cards">
+            <div class="mode-card" onclick="initApp('resistors')">
+                <div class="mode-icon">⚡</div>
+                <h3>Resistor Circuit</h3>
+                <p>Calculate Equivalent Resistance and Current using Ohm's Law.</p>
+            </div>
+            <div class="mode-card battery" onclick="initApp('batteries')">
+                <div class="mode-icon">🔋</div>
+                <h3>Battery Bank</h3>
+                <p>Combine batteries to calculate Total Voltage and Capacity (Ah).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-screen">
+        <header class="top-bar" id="top-bar" style="position: relative;">
+            <a href="index.html" class="back-button" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                Back
+            </a>
+            <!-- Dynamic Top Bar injected here -->
+        </header>
+
+        <main class="canvas-area">
+            <div class="circuit-wrapper">
+                <div class="terminal positive">V+</div>
+                <div class="wire"></div>
+                
+                <div id="circuit-container" class="series-container">
+                    <!-- Circuit renders here -->
+                </div>
+                
+                <div class="wire"></div>
+                <div class="terminal negative">V-</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Global State ---
+        let appMode = 'resistors'; // 'resistors' | 'batteries'
+        let globalVoltage = 12; // Used only in resistor mode
+        let circuit = [];
+
+        // --- Utilities ---
+        function generateId() { return Math.random().toString(36).substr(2, 9); }
+
+        const iconPlus = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+        const iconMinus = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+        // --- Initialization ---
+        function initApp(mode) {
+            appMode = mode;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.add('visible');
+            document.body.classList.add(`mode-${mode}`);
+
+            if (mode === 'resistors') {
+                circuit = [{ id: generateId(), type: 'resistor', value: 100 }];
+                renderTopBarResistors();
+            } else {
+                circuit = [{ id: generateId(), type: 'battery', v: 12, ah: 100 }];
+                renderTopBarBatteries();
+            }
+            render();
+        }
+
+        function renderTopBarResistors() {
+            document.getElementById('top-bar').innerHTML = `
+                <div class="stat">
+                    <label>Source Voltage (V)</label>
+                    <input type="number" id="global-voltage" value="${globalVoltage}" min="0" oninput="updateGlobalVoltage(this.value)">
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <label>Equivalent Resistance</label>
+                    <div class="value"><span id="stat-req">100.00</span> Ω</div>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <label>Total Current</label>
+                    <div class="value"><span id="stat-current">0.120</span> A</div>
+                </div>
+            `;
+        }
+
+        function renderTopBarBatteries() {
+            document.getElementById('top-bar').innerHTML = `
+                <div class="stat">
+                    <label>Total Bank Voltage</label>
+                    <div class="value"><span id="stat-volts">12.0</span> V</div>
+                </div>
+                <div class="divider"></div>
+                <div class="stat" style="position: relative;">
+                    <label>Usable Capacity</label>
+                    <div class="value" id="stat-ah-container"><span id="stat-ah">100</span> Ah</div>
+                    <div id="stat-warning" style="position: absolute; top: 100%; width: max-content; color: var(--warning); font-size: 11px; font-weight: 700; margin-top: 4px; display: none;"></div>
+                </div>
+                <div class="divider"></div>
+                <div class="stat">
+                    <label>Total Energy</label>
+                    <div class="value"><span id="stat-wh">1200</span> Wh</div>
+                </div>
+            `;
+        }
+
+        // --- Node Operations ---
+        function findNode(arr, id, parent = null) {
+            for (let i = 0; i < arr.length; i++) {
+                let el = arr[i];
+                if (el.id === id) return { array: arr, index: i, element: el, parent: parent };
+                if (el.type === 'parallel') {
+                    for (let branch of el.branches) {
+                        let res = findNode(branch, id, el);
+                        if (res) return res;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function getNewNode() {
+            return appMode === 'resistors' 
+                ? { id: generateId(), type: 'resistor', value: 100 }
+                : { id: generateId(), type: 'battery', v: 12, ah: 100 };
+        }
+
+        function addRight(id) {
+            let { array, index } = findNode(circuit, id);
+            array.splice(index + 1, 0, getNewNode());
+            render();
+        }
+
+        function addBelow(id) {
+            let { array, index, element, parent } = findNode(circuit, id);
+            let newNode = getNewNode();
+            
+            if (element.type === 'parallel') {
+                element.branches.push([newNode]);
+            } else if (parent && parent.type === 'parallel' && array.length === 1) {
+                let branchIndex = parent.branches.indexOf(array);
+                parent.branches.splice(branchIndex + 1, 0, [newNode]);
+            } else {
+                let pBlock = { id: generateId(), type: 'parallel', branches: [[element], [newNode]] };
+                array[index] = pBlock;
+            }
+            render();
+        }
+
+        function removeNode(id) {
+            let { array, index } = findNode(circuit, id);
+            array.splice(index, 1);
+            cleanUp(circuit);
+            if (circuit.length === 0) circuit.push(getNewNode());
+            render();
+        }
+
+        function cleanUp(arr) {
+            for (let i = arr.length - 1; i >= 0; i--) {
+                let el = arr[i];
+                if (el.type === 'parallel') {
+                    el.branches.forEach(b => cleanUp(b));
+                    el.branches = el.branches.filter(b => b.length > 0);
+                    if (el.branches.length === 1) arr.splice(i, 1, ...el.branches[0]);
+                    else if (el.branches.length === 0) arr.splice(i, 1);
+                }
+            }
+        }
+
+        function updateValue(id, key, val) {
+            let node = findNode(circuit, id);
+            if (node) {
+                node.element[key] = Math.max(0, parseFloat(val) || 0);
+                updateStats();
+            }
+        }
+
+        function updateGlobalVoltage(val) {
+            globalVoltage = Math.max(0, parseFloat(val) || 0);
+            updateStats();
+        }
+
+        // --- Resistor Physics ---
+        function calcResistorSeries(arr) {
+            return arr.reduce((sum, el) => sum + calcResistorElement(el), 0);
+        }
+
+        function calcResistorElement(el) {
+            if (el.type === 'resistor') return el.value;
+            if (el.type === 'parallel') {
+                let branchResistances = el.branches.map(b => calcResistorSeries(b));
+                if (branchResistances.some(r => r === 0)) return 0; // Short circuit fix
+                let invSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
+                return invSum === 0 ? 0 : 1 / invSum;
+            }
+            return 0;
+        }
+
+        // --- Battery Physics ---
+        function calcBatterySeries(arr) {
+            if (arr.length === 0) return { v: 0, ah: 0, error: null, warning: null };
+            let totalV = 0;
+            let minAh = Infinity;
+            let maxAh = 0; // Track the max to check for mismatches
+            let propagatedWarning = null;
+
+            for (let el of arr) {
+                let res = calcBatteryElement(el);
+                if (res.error) return { v: 0, ah: 0, error: res.error, warning: null };
+                if (res.warning) propagatedWarning = res.warning; // Capture nested warnings
+                
+                totalV += res.v;
+                if (res.ah < minAh) minAh = res.ah;
+                if (res.ah > maxAh) maxAh = res.ah;
+            }
+            
+            // PHYSICS WARNING: If capacities in series don't match, it creates a bottleneck
+            let warning = propagatedWarning;
+            if (minAh !== maxAh && minAh !== Infinity) {
+                warning = `Bottleneck! Limited to ${minAh}Ah`;
+            }
+
+            return { v: totalV, ah: minAh === Infinity ? 0 : minAh, error: null, warning: warning };
+        }
+
+        function calcBatteryElement(el) {
+            if (el.type === 'battery') return { v: el.v, ah: el.ah, error: null, warning: null };
+            
+            if (el.type === 'parallel') {
+                let branchResults = el.branches.map(b => calcBatterySeries(b));
+                if (branchResults.length === 0) return { v: 0, ah: 0, error: null, warning: null };
+                
+                // Propagate nested errors
+                let errBranch = branchResults.find(r => r.error);
+                if (errBranch) return { v: 0, ah: 0, error: errBranch.error, warning: null };
+
+                // Physics Rule: Parallel branches MUST have the same voltage
+                let targetV = branchResults[0].v;
+                let isMismatch = branchResults.some(r => Math.abs(r.v - targetV) > 0.01);
+                
+                if (isMismatch) return { v: 0, ah: 0, error: "Voltage Mismatch! (Short Circuit)", warning: null };
+
+                // Physics Rule: Parallel capacities add up
+                let totalAh = branchResults.reduce((sum, r) => sum + r.ah, 0);
+                
+                // Check if any branch had a warning to pass up
+                let warnBranch = branchResults.find(r => r.warning);
+                
+                return { v: targetV, ah: totalAh, error: null, warning: warnBranch ? warnBranch.warning : null };
+            }
+            return { v: 0, ah: 0, error: null, warning: null };
+        }
+
+        // --- Update UI Stats ---
+        function updateStats() {
+            if (appMode === 'resistors') {
+                let req = calcResistorSeries(circuit);
+                let currentText = req === 0 ? (globalVoltage > 0 ? "Infinity" : "0.000") : (globalVoltage / req).toFixed(3);
+                
+                document.getElementById('stat-req').innerText = req.toFixed(2);
+                document.getElementById('stat-current').innerText = currentText;
+                document.getElementById('stat-current').className = req === 0 && globalVoltage > 0 ? "value error" : "value";
+            } else {
+                let result = calcBatterySeries(circuit);
+                let elVolts = document.getElementById('stat-volts');
+                let elAhContainer = document.getElementById('stat-ah-container');
+                let elAh = document.getElementById('stat-ah');
+                let elWh = document.getElementById('stat-wh');
+                let elWarning = document.getElementById('stat-warning');
+
+                if (result.error) {
+                    elVolts.innerHTML = `<span style="font-size:16px;">${result.error}</span>`;
+                    elVolts.className = "value error";
+                    elAh.innerText = "---";
+                    elWh.innerText = "---";
+                    if(elWarning) elWarning.style.display = 'none';
+                    if(elAhContainer) elAhContainer.style.color = 'var(--text-main)';
+                } else {
+                    elVolts.innerText = result.v.toFixed(1);
+                    elVolts.className = "value";
+                    elAh.innerText = result.ah.toFixed(1);
+                    elWh.innerText = (result.v * result.ah).toFixed(1);
+                    
+                    // Show or hide the bottleneck warning
+                    if (result.warning && elWarning && elAhContainer) {
+                        elWarning.innerText = result.warning;
+                        elWarning.style.display = 'block';
+                        elAhContainer.style.color = 'var(--warning)';
+                    } else if (elWarning && elAhContainer) {
+                        elWarning.style.display = 'none';
+                        elAhContainer.style.color = 'var(--text-main)';
+                    }
+                }
+            }
+        }
+
+        // --- Rendering ---
+        function renderNode(el) {
+            if (el.type === 'resistor') {
+                return `
+                    <div class="resistor-box circuit-element">
+                        <input type="number" value="${el.value}" min="0" onchange="updateValue('${el.id}', 'value', this.value)">
+                        <span>Ω</span>
+                        <button class="action-btn btn-remove" onclick="removeNode('${el.id}')">${iconMinus}</button>
+                        <button class="action-btn btn-add-right" onclick="addRight('${el.id}')">${iconPlus}</button>
+                        <button class="action-btn btn-add-below" onclick="addBelow('${el.id}')">${iconPlus}</button>
+                    </div>
+                `;
+            } else if (el.type === 'battery') {
+                return `
+                    <div class="battery-box circuit-element">
+                        <div class="battery-inputs">
+                            <div class="battery-row">
+                                <input type="number" value="${el.v}" min="0" step="0.1" onchange="updateValue('${el.id}', 'v', this.value)"> V
+                            </div>
+                            <div class="battery-row">
+                                <input type="number" value="${el.ah}" min="0" step="1" onchange="updateValue('${el.id}', 'ah', this.value)"> Ah
+                            </div>
+                        </div>
+                        <button class="action-btn btn-remove" onclick="removeNode('${el.id}')">${iconMinus}</button>
+                        <button class="action-btn btn-add-right" onclick="addRight('${el.id}')">${iconPlus}</button>
+                        <button class="action-btn btn-add-below" onclick="addBelow('${el.id}')">${iconPlus}</button>
+                    </div>
+                `;
+            } else if (el.type === 'parallel') {
+                let branchesHtml = el.branches.map(b => `
+                    <div class="branch">
+                        <div class="vert-left"></div>
+                        <div class="wire-fill"></div>
+                        <div class="series-container">${renderSeries(b)}</div>
+                        <div class="wire-fill"></div>
+                        <div class="vert-right"></div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="parallel-wrapper circuit-element">
+                        <div class="parallel-block">${branchesHtml}</div>
+                        <button class="action-btn btn-remove" onclick="removeNode('${el.id}')">${iconMinus}</button>
+                        <button class="action-btn btn-add-right" onclick="addRight('${el.id}')">${iconPlus}</button>
+                        <button class="action-btn btn-add-below" onclick="addBelow('${el.id}')">${iconPlus}</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderSeries(arr) {
+            if (arr.length === 0) return '';
+            return arr.map(el => renderNode(el)).join('<div class="wire"></div>');
+        }
+
+        function render() {
+            document.getElementById('circuit-container').innerHTML = renderSeries(circuit);
+            updateStats();
+        }
+
+    </script>
+</body>
+</html>
