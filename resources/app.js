@@ -1,14 +1,4 @@
 /**
- * PocketEngineer - Common Application Utilities
- * Shared functionality across all calculator apps
- * Version 1.0.0
- */
-
-// ============================================
-// BACK BUTTON NAVIGATION
-// ============================================
-
-/**
  * Handles back button click to return to index page
  * Can be called from any app
  */
@@ -31,10 +21,6 @@ function initBackButtons() {
     });
   });
 }
-
-// ============================================
-// INPUT SANITIZATION & VALIDATION
-// ============================================
 
 /**
  * Validate positive number
@@ -82,10 +68,6 @@ function formatWithSeparators(value, decimals = 2) {
     maximumFractionDigits: decimals
   });
 }
-
-// ============================================
-// CONVERSION UTILITIES
-// ============================================
 
 /**
  * Convert decimal to binary
@@ -185,12 +167,70 @@ function clearAppState(appName) {
   }
 }
 
-// ============================================
-// INITIALIZATION
-// ============================================
-
 // Auto-initialize back buttons on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initBackButtons();
 });
 
+// ============================================
+// SHARED MOBILE WARNING MODAL
+// ============================================
+
+/**
+ * Checks if the user is on mobile and displays a shared warning modal
+ * if they haven't seen it yet during this session.
+ */
+function checkMobileWarning() {
+  const isMobile = window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const modalShownKey = 'pe_mobile_warning_accepted';
+
+  if (isMobile && !sessionStorage.getItem(modalShownKey)) {
+    // Create the modal container
+    const modalContainer = document.createElement('div');
+    modalContainer.id = 'sharedMobileWarningModal';
+    modalContainer.className = 'mobile-warning-modal active';
+
+    // Build the beautiful, simplified text HTML
+    modalContainer.innerHTML = `
+      <div class="modal-content">
+        <p>This tool is reliant on a visual canvas and is not built for small screens.</p>
+
+        <div class="device-icons-container">
+          <div class="device-icon desktop">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <div class="device-icon tablet">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12" y2="18"></line>
+            </svg>
+          </div>
+          <div class="device-icon phone">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="19" x2="12" y2="19"></line>
+            </svg>
+          </div>
+        </div>
+
+        <p>You can experience a degraded layout. Apologies for the inconvenience, recommend switching to a tablet or PC.</p>
+        
+        <button id="sharedMobileWarningBtn" class="w-full mt-5 bg-[#18181b] text-white font-medium py-3 rounded-xl hover:bg-[#27272a] transition-colors shadow-md">
+          I Understand, Continue
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(modalContainer);
+
+    // Add close logic
+    document.getElementById('sharedMobileWarningBtn').addEventListener('click', () => {
+      document.getElementById('sharedMobileWarningModal').classList.remove('active');
+      sessionStorage.setItem(modalShownKey, 'true');
+    });
+  }
+}

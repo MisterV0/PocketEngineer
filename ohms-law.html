@@ -1,64 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Ohm's Law Solver & Visualizer</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-        }
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Ohm's Law Calculator & Visualizer — PocketEngineer</title>
+  <meta name="description"
+    content="Interactive Ohm's Law calculator — enter any two of Voltage (V), Current (I), and Resistance (R) to solve for the third. Includes wattage calculation and animated physics visualization.">
+  <link rel="canonical" href="https://www.pockeng.com/ohms-law.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/ohms-law.html">
+  <meta property="og:title" content="Ohm's Law Calculator & Visualizer — PocketEngineer">
+  <meta property="og:description"
+    content="Enter any two values to solve Ohm's Law instantly. Visual fluid-dynamics simulation shows how voltage, current, and resistance relate.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
+  <style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .param-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #f1f1f4;
+    }
+
+    .is-input {
+      border-color: #18181b;
+      background-color: white;
+      box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.05);
+    }
+
+    .is-output {
+      background-color: #fafafa;
+      border-style: dashed;
+      border-color: #e4e4e7;
+    }
+
+    .is-output input {
+      color: #0ea5e9;
+      pointer-events: none;
+    }
+
+    #modal {
+      display: none;
+    }
+
+    #modal.active {
+      display: flex;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
       }
     }
-  </script>
-  <style>
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type=number] { -moz-appearance: textfield; }
-    
-    .param-card { 
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-        border: 1px solid #f1f1f4;
-    }
-    .is-input { 
-        border-color: #18181b; 
-        background-color: white; 
-        box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.05);
-    }
-    .is-output { 
-        background-color: #fafafa; 
-        border-style: dashed;
-        border-color: #e4e4e7;
-    }
-    .is-output input { 
-        color: #0ea5e9; 
-        pointer-events: none; 
-    }
-    
-    #modal { display: none; }
-    #modal.active { display: flex; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
     /* Custom Apple-style "Pulp" Breathe Effect */
     @keyframes breathe {
-        0% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0); }
-        50% { transform: scale(1.02); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        100% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0); }
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      }
+
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      }
+
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      }
     }
-    
+
     .btn-breathe {
-        animation: breathe 4s ease-in-out infinite;
+      animation: breathe 4s ease-in-out infinite;
     }
 
     /* Back Button Styling - Enhanced */
-    .back-button { 
+    .back-button {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -72,11 +111,12 @@
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       text-decoration: none;
       cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       letter-spacing: 0.5px;
       position: relative;
       overflow: hidden;
     }
+
     .back-button::before {
       content: '';
       position: absolute;
@@ -84,48 +124,57 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s ease;
     }
+
     .back-button:hover {
       color: #18181b;
       border-color: #71717a;
       background-color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transform: translateY(-2px);
     }
+
     .back-button:hover::before {
       left: 100%;
     }
+
     .back-button:hover svg {
       transform: translateX(-2px);
     }
-    .back-button:active { 
-      transform: scale(0.96);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
 
+    .back-button:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
-<body class="bg-[#fcfcfc] text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-black">
+
+<body
+  class="bg-[#fcfcfc] text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-black">
 
   <!-- Pure Minimal Header -->
   <header class="flex-none">
     <div class="max-w-4xl mx-auto px-6 h-24 flex items-center justify-between">
       <a href="index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
         Back
       </a>
-      <button onclick="toggleModal()" class="btn-breathe px-6 py-3 rounded-full bg-white border border-zinc-200 hover:border-zinc-400 text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-600 hover:text-zinc-900 transition-colors">
+      <button onclick="toggleModal()"
+        class="btn-breathe px-6 py-3 rounded-full bg-white border border-zinc-200 hover:border-zinc-400 text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-600 hover:text-zinc-900 transition-colors">
         Understand the Physics
       </button>
     </div>
   </header>
+  <h1 class="sr-only">Ohm's Law Calculator & Visualizer</h1>
 
   <!-- Main Content -->
   <main class="flex-1 flex items-center justify-center w-full px-6 -mt-12">
     <div class="w-full max-w-4xl mx-auto">
-      
+
       <!-- Parameter Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <!-- Voltage -->
@@ -135,7 +184,9 @@
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="v-formula">V</span>
           </div>
           <div class="relative">
-            <input type="number" id="voltage" oninput="handleInput('voltage')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <input type="number" id="voltage" oninput="handleInput('voltage')"
+              class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12"
+              placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">V</span>
           </div>
         </div>
@@ -147,7 +198,9 @@
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="i-formula">I</span>
           </div>
           <div class="relative">
-            <input type="number" id="current" oninput="handleInput('current')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <input type="number" id="current" oninput="handleInput('current')"
+              class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12"
+              placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">A</span>
           </div>
         </div>
@@ -159,7 +212,9 @@
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="r-formula">R</span>
           </div>
           <div class="relative">
-            <input type="number" id="resistance" oninput="handleInput('resistance')" class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12" placeholder="0">
+            <input type="number" id="resistance" oninput="handleInput('resistance')"
+              class="w-full bg-transparent text-3xl md:text-5xl font-mono font-medium outline-none pr-12"
+              placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">Ω</span>
           </div>
         </div>
@@ -167,7 +222,8 @@
 
       <!-- Action Area -->
       <div class="flex flex-col md:flex-row gap-6 items-stretch">
-        <div class="flex-1 bg-zinc-900 text-white rounded-[2rem] p-8 flex items-center justify-between shadow-2xl shadow-zinc-200/50">
+        <div
+          class="flex-1 bg-zinc-900 text-white rounded-[2rem] p-8 flex items-center justify-between shadow-2xl shadow-zinc-200/50">
           <div>
             <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Wattage (Power)</p>
             <div class="flex items-baseline gap-3">
@@ -180,10 +236,12 @@
             <div class="h-1 w-12 bg-zinc-800 ml-auto rounded-full"></div>
           </div>
         </div>
-        
+
         <div class="flex justify-center w-full sm:w-auto">
-          <button onclick="resetCalc()" class="bg-white border border-zinc-200 hover:border-zinc-900 px-10 rounded-[2rem] group transition-all duration-500 flex items-center justify-center gap-3 shadow-sm hover:shadow-lg w-1/3 sm:w-auto">
-              <span class="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-900 transition-colors">Reset</span>
+          <button onclick="resetCalc()"
+            class="bg-white border border-zinc-200 hover:border-zinc-900 px-10 rounded-[2rem] group transition-all duration-500 flex items-center justify-center gap-3 shadow-sm hover:shadow-lg w-1/3 sm:w-auto">
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-900 transition-colors">Reset</span>
           </button>
         </div>
       </div>
@@ -191,84 +249,102 @@
   </main>
 
   <!-- Engineering Briefing Modal -->
-  <div id="modal" class="fixed inset-0 bg-white/60 backdrop-blur-xl z-50 items-center justify-center p-4 md:p-8 overflow-hidden transition-all duration-300">
-    <div class="max-w-6xl w-full bg-white border border-zinc-100 rounded-[3rem] shadow-2xl shadow-zinc-200/50 overflow-hidden flex flex-col h-[90vh] md:h-[800px]">
-        
-        <!-- Modal Header -->
-        <div class="flex justify-between items-center p-8 md:p-10 pb-0 shrink-0 z-10 relative">
-            <h2 class="text-2xl md:text-3xl font-light tracking-tight text-zinc-900">Physics of <span class="font-bold">Conduction</span></h2>
-            <button onclick="toggleModal()" class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition-colors">
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" class="text-zinc-500"><path d="M1 1l12 12M13 1L1 13"/></svg>
-            </button>
+  <div id="modal"
+    class="fixed inset-0 bg-white/60 backdrop-blur-xl z-50 items-center justify-center p-4 md:p-8 overflow-hidden transition-all duration-300">
+    <div
+      class="max-w-6xl w-full bg-white border border-zinc-100 rounded-[3rem] shadow-2xl shadow-zinc-200/50 overflow-hidden flex flex-col h-[90vh] md:h-[800px]">
+
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-8 md:p-10 pb-0 shrink-0 z-10 relative">
+        <h2 class="text-2xl md:text-3xl font-light tracking-tight text-zinc-900">Physics of <span
+            class="font-bold">Conduction</span></h2>
+        <button onclick="toggleModal()" aria-label="Close"
+          class="w-10 h-10 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition-colors">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"
+            class="text-zinc-500">
+            <path d="M1 1l12 12M13 1L1 13" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-2 relative z-0">
+
+        <!-- LEFT: Educational Content -->
+        <div class="p-4 md:p-10 pt-4 overflow-y-auto space-y-6 md:space-y-12">
+          <div class="space-y-4 md:space-y-6 pt-4 md:pt-6">
+            <section>
+              <h3 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 md:mb-3">Electrical
+                Fundamentals</h3>
+              <p class="text-xs md:text-base text-zinc-800 leading-relaxed font-light">
+                Ohm’s Law defines the proportional relationship between <strong>Potential Difference (V)</strong> and
+                the resulting <strong>Electron Flow (I)</strong>. In a perfect conductor, current is directly
+                proportional to voltage and inversely proportional to its impedance.
+              </p>
+            </section>
+          </div>
+
+          <div class="bg-zinc-50/80 p-4 md:p-8 rounded-3xl space-y-4 md:space-y-6">
+            <div class="flex gap-3 md:gap-4">
+              <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">V</div>
+              <div>
+                <p class="text-xs font-bold text-zinc-900 mb-1">Voltage (Pressure)</p>
+                <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The electromotive force pushing charge
+                  through a circuit. Higher pressure means a higher potential to do work.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 md:gap-4">
+              <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">I</div>
+              <div>
+                <p class="text-xs font-bold text-zinc-900 mb-1">Current (Flow Rate)</p>
+                <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The actual volume of electrons (charge
+                  carriers) passing a point per second, measured in Amperes.</p>
+              </div>
+            </div>
+            <div class="flex gap-3 md:gap-4">
+              <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">R</div>
+              <div>
+                <p class="text-xs font-bold text-zinc-900 mb-1">Resistance (Restriction)</p>
+                <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The physical opposition to flow. Like a
+                  narrowing pipe or friction that restricts the flow rate.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-2 relative z-0">
-            
-            <!-- LEFT: Educational Content -->
-            <div class="p-4 md:p-10 pt-4 overflow-y-auto space-y-6 md:space-y-12">
-                <div class="space-y-4 md:space-y-6 pt-4 md:pt-6">
-                    <section>
-                        <h4 class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 md:mb-3">Electrical Fundamentals</h4>
-                        <p class="text-xs md:text-base text-zinc-800 leading-relaxed font-light">
-                            Ohm’s Law defines the proportional relationship between <strong>Potential Difference (V)</strong> and the resulting <strong>Electron Flow (I)</strong>. In a perfect conductor, current is directly proportional to voltage and inversely proportional to its impedance.
-                        </p>
-                    </section>
-                </div>
-
-                <div class="bg-zinc-50/80 p-4 md:p-8 rounded-3xl space-y-4 md:space-y-6">
-                    <div class="flex gap-3 md:gap-4">
-                        <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">V</div>
-                        <div>
-                            <p class="text-xs font-bold text-zinc-900 mb-1">Voltage (Pressure)</p>
-                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The electromotive force pushing charge through a circuit. Higher pressure means a higher potential to do work.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 md:gap-4">
-                        <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">I</div>
-                        <div>
-                            <p class="text-xs font-bold text-zinc-900 mb-1">Current (Flow Rate)</p>
-                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The actual volume of electrons (charge carriers) passing a point per second, measured in Amperes.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 md:gap-4">
-                        <div class="text-xs font-mono font-bold text-zinc-400 w-4 pt-1">R</div>
-                        <div>
-                            <p class="text-xs font-bold text-zinc-900 mb-1">Resistance (Restriction)</p>
-                            <p class="text-[11px] md:text-xs text-zinc-500 leading-relaxed">The physical opposition to flow. Like a narrowing pipe or friction that restricts the flow rate.</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- RIGHT: Animation Pipeline -->
+        <div
+          class="relative bg-[#f8f8f9] h-[300px] lg:h-full overflow-hidden flex flex-col border-t lg:border-t-0 lg:border-l border-zinc-100">
+          <!-- Overlay Header (Moved Here) -->
+          <div class="absolute top-0 left-0 right-0 p-8 z-20 flex flex-col items-center pointer-events-none">
+            <div class="bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-zinc-200/60 shadow-sm">
+              <span id="phase-badge"
+                class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Initializing...</span>
             </div>
+          </div>
 
-            <!-- RIGHT: Animation Pipeline -->
-            <div class="relative bg-[#f8f8f9] h-[300px] lg:h-full overflow-hidden flex flex-col border-t lg:border-t-0 lg:border-l border-zinc-100">
-                <!-- Overlay Header (Moved Here) -->
-                <div class="absolute top-0 left-0 right-0 p-8 z-20 flex flex-col items-center pointer-events-none">
-                    <div class="bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-zinc-200/60 shadow-sm">
-                        <span id="phase-badge" class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Initializing...</span>
-                    </div>
-                </div>
+          <!-- Canvas Layer -->
+          <canvas id="ohmCanvas" class="absolute inset-0 w-full h-full block"></canvas>
 
-                <!-- Canvas Layer -->
-                <canvas id="ohmCanvas" class="absolute inset-0 w-full h-full block"></canvas>
-
-                <!-- Dynamic Readout Overlays -->
-                <div class="absolute bottom-8 left-8 right-8 grid grid-cols-3 gap-3 pointer-events-none z-20">
-                     <div class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
-                         <div class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Pressure (V)</div>
-                         <div id="sim-v" class="font-mono font-medium text-zinc-900">0 V</div>
-                     </div>
-                     <div class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
-                         <div class="text-[9px] font-bold text-sky-500 uppercase tracking-widest mb-1">Flow (I)</div>
-                         <div id="sim-i" class="font-mono font-medium text-sky-600">0 A</div>
-                     </div>
-                     <div class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
-                         <div class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Pipe (R)</div>
-                         <div id="sim-r" class="font-mono font-medium text-zinc-900">0 Ω</div>
-                     </div>
-                </div>
+          <!-- Dynamic Readout Overlays -->
+          <div class="absolute bottom-8 left-8 right-8 grid grid-cols-3 gap-3 pointer-events-none z-20">
+            <div
+              class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
+              <div class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Pressure (V)</div>
+              <div id="sim-v" class="font-mono font-medium text-zinc-900">0 V</div>
             </div>
+            <div
+              class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
+              <div class="text-[9px] font-bold text-sky-500 uppercase tracking-widest mb-1">Flow (I)</div>
+              <div id="sim-i" class="font-mono font-medium text-sky-600">0 A</div>
+            </div>
+            <div
+              class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] text-center">
+              <div class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Pipe (R)</div>
+              <div id="sim-r" class="font-mono font-medium text-zinc-900">0 Ω</div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
   </div>
 
@@ -363,7 +439,7 @@
       return rounded.toFixed(3).replace(/\.?0+$/, '');
     }
 
-    window.resetCalc = function() {
+    window.resetCalc = function () {
       inputs = [];
       ['voltage', 'current', 'resistance'].forEach(id => { els[id].value = ''; });
       calculate();
@@ -376,7 +452,7 @@
     let startTime;
     const canvas = document.getElementById('ohmCanvas');
     const ctx = canvas.getContext('2d');
-    
+
     // UI Elements for Simulation
     const simV = document.getElementById('sim-v');
     const simI = document.getElementById('sim-i');
@@ -393,199 +469,199 @@
     const MAX_PARTICLES = 140; // Increased base slightly so density looks good when full
 
     class Particle {
-        constructor(w, h) {
-            this.reset(w, h);
-            this.x = Math.random() * w; 
-        }
+      constructor(w, h) {
+        this.reset(w, h);
+        this.x = Math.random() * w;
+      }
 
-        reset(w, h) {
-            this.x = -10;
-            // Spread slightly wider for better distribution, clamp in Update
-            this.y = (h/2) + (Math.random() * 60 - 30); 
-            this.size = Math.random() * 1.5 + 2;
-            this.speedOffset = Math.random() * 0.5;
-        }
+      reset(w, h) {
+        this.x = -10;
+        // Spread slightly wider for better distribution, clamp in Update
+        this.y = (h / 2) + (Math.random() * 60 - 30);
+        this.size = Math.random() * 1.5 + 2;
+        this.speedOffset = Math.random() * 0.5;
+      }
 
-        update(w, h, speed, pipeHeight) {
-            this.x += (speed + this.speedOffset);
-            
-            const topWall = (h/2) - (pipeHeight/2);
-            const bottomWall = (h/2) + (pipeHeight/2);
-            
-            this.y += (Math.random() - 0.5) * 0.4; // Softer turbulence
-            
-            // Constrain nicely inside pipe
-            const padding = 5;
-            if (this.y < topWall + padding) this.y = topWall + padding + (Math.random());
-            if (this.y > bottomWall - padding) this.y = bottomWall - padding - (Math.random());
-            
-            if (this.x > w + 10) this.reset(w, h);
-        }
+      update(w, h, speed, pipeHeight) {
+        this.x += (speed + this.speedOffset);
 
-        draw(ctx) {
-            ctx.fillStyle = '#38bdf8'; 
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        const topWall = (h / 2) - (pipeHeight / 2);
+        const bottomWall = (h / 2) + (pipeHeight / 2);
+
+        this.y += (Math.random() - 0.5) * 0.4; // Softer turbulence
+
+        // Constrain nicely inside pipe
+        const padding = 5;
+        if (this.y < topWall + padding) this.y = topWall + padding + (Math.random());
+        if (this.y > bottomWall - padding) this.y = bottomWall - padding - (Math.random());
+
+        if (this.x > w + 10) this.reset(w, h);
+      }
+
+      draw(ctx) {
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     function initParticles() {
-        particles = [];
-        for(let i=0; i<MAX_PARTICLES; i++) {
-            particles.push(new Particle(canvas.width, canvas.height));
-        }
+      particles = [];
+      for (let i = 0; i < MAX_PARTICLES; i++) {
+        particles.push(new Particle(canvas.width, canvas.height));
+      }
     }
 
     function resizeCanvas() {
-        const parent = canvas.parentElement;
-        canvas.width = parent.clientWidth;
-        canvas.height = parent.clientHeight;
-        initParticles();
+      const parent = canvas.parentElement;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+      initParticles();
     }
 
     window.addEventListener('resize', resizeCanvas);
 
     function runSimulation(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = (timestamp - startTime) % TOTAL_CYCLE;
+      if (!startTime) startTime = timestamp;
+      const elapsed = (timestamp - startTime) % TOTAL_CYCLE;
 
-        let phase = ''; 
-        let vVal = 0; 
-        let rVal = 0; 
-        let opacity = 1;
-        let showGauge = false; 
+      let phase = '';
+      let vVal = 0;
+      let rVal = 0;
+      let opacity = 1;
+      let showGauge = false;
 
-        // -- LOGIC BLOCK --
+      // -- LOGIC BLOCK --
 
-        // Phase 1: Voltage Change
-        if (elapsed < LOOP_TIME) {
-            phase = 'Experiment 1: Increasing Pressure';
-            showGauge = true; 
-            const progress = elapsed / LOOP_TIME;
-            
-            vVal = 20 + (Math.sin(progress * Math.PI) * 80); 
-            rVal = 30; // Constant open pipe
-            
-            phaseBadge.className = "text-[10px] font-bold uppercase tracking-widest text-indigo-500";
-        } 
-        // Transition 1
-        else if (elapsed < LOOP_TIME + TRANSITION_TIME) {
-            phase = 'Resetting...';
-            // Fade gauge out if it was on
-            if(elapsed < LOOP_TIME + (TRANSITION_TIME/2)) showGauge = true; 
-            
-            opacity = 1 - ((elapsed - LOOP_TIME) / TRANSITION_TIME);
-            vVal = 20; rVal = 30; 
+      // Phase 1: Voltage Change
+      if (elapsed < LOOP_TIME) {
+        phase = 'Experiment 1: Increasing Pressure';
+        showGauge = true;
+        const progress = elapsed / LOOP_TIME;
+
+        vVal = 20 + (Math.sin(progress * Math.PI) * 80);
+        rVal = 30; // Constant open pipe
+
+        phaseBadge.className = "text-[10px] font-bold uppercase tracking-widest text-indigo-500";
+      }
+      // Transition 1
+      else if (elapsed < LOOP_TIME + TRANSITION_TIME) {
+        phase = 'Resetting...';
+        // Fade gauge out if it was on
+        if (elapsed < LOOP_TIME + (TRANSITION_TIME / 2)) showGauge = true;
+
+        opacity = 1 - ((elapsed - LOOP_TIME) / TRANSITION_TIME);
+        vVal = 20; rVal = 30;
+      }
+      // Phase 2: Resistance Change (Narrowing Pipe)
+      else if (elapsed < (LOOP_TIME * 2) + TRANSITION_TIME) {
+        phase = 'Experiment 2: Narrowing Pipe';
+        showGauge = false;
+
+        const localTime = elapsed - (LOOP_TIME + TRANSITION_TIME);
+        const progress = localTime / LOOP_TIME;
+
+        vVal = 80;
+        // R goes from low (30) to high (90) back to low
+        rVal = 30 + (Math.sin(progress * Math.PI) * 60);
+
+        phaseBadge.className = "text-[10px] font-bold uppercase tracking-widest text-orange-500";
+        opacity = 1;
+      }
+      // Transition 2
+      else {
+        phase = 'Resetting...';
+        opacity = 1 - ((elapsed - ((LOOP_TIME * 2) + TRANSITION_TIME)) / TRANSITION_TIME);
+        vVal = 80; rVal = 30;
+      }
+
+      // --- PHYSICS MATH ---
+      // 1. Calculate Pipe Dimensions
+      // R (30-90) maps to height
+      const pipeHeight = 150 - (rVal * 1.2);
+      const maxPipeHeight = 150 - (30 * 1.2); // approx 114
+
+      // 2. Calculate Flow Speed using proper Ohm's Law: I = V/R
+      const flowSpeed = rVal > 0 ? vVal / rVal : 0;
+
+      // 3. NEW: Calculate Volume/Density Capacity
+      // Physical Constraint: A narrow pipe fits fewer particles
+      const capacityRatio = Math.max(0.2, pipeHeight / maxPipeHeight);
+      const visibleParticleCount = Math.floor(MAX_PARTICLES * capacityRatio);
+
+      // --- RENDER ---
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.globalAlpha = opacity < 0 ? 0 : opacity;
+      const w = canvas.width;
+      const h = canvas.height;
+      const cy = h / 2;
+
+      // 1. Draw Pipe
+      ctx.fillStyle = '#f1f1f4';
+      ctx.fillRect(0, cy - pipeHeight / 2, w, pipeHeight);
+
+      // Pipe Walls (Subtle)
+      ctx.fillStyle = '#d4d4d8';
+      ctx.fillRect(0, cy - pipeHeight / 2 - 2, w, 2);
+      ctx.fillRect(0, cy + pipeHeight / 2, w, 2);
+
+      // 2. Draw Gauge (Only in Exp 1)
+      if (showGauge) {
+        // Arc
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(w / 2, cy - pipeHeight / 2 - 40, 20, Math.PI, 0);
+        ctx.stroke();
+
+        // Needle
+        const angle = Math.PI + ((vVal / 100) * Math.PI);
+        const nx = (w / 2) + Math.cos(angle) * 15;
+        const ny = (cy - pipeHeight / 2 - 40) + Math.sin(angle) * 15;
+
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(w / 2, cy - pipeHeight / 2 - 40);
+        ctx.lineTo(nx, ny);
+        ctx.stroke();
+
+        // Base dot
+        ctx.fillStyle = '#d4d4d8';
+        ctx.beginPath();
+        ctx.arc(w / 2, cy - pipeHeight / 2 - 40, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 3. Draw Particles (Filtered by Volume)
+      particles.forEach((p, index) => {
+        // We ALWAYS update position, even if invisible, so they don't visually "jump" when the pipe expands
+        p.update(w, h, flowSpeed, pipeHeight);
+
+        // But we ONLY draw them if they fit in the "physical volume" of the pipe
+        if (index < visibleParticleCount) {
+          p.draw(ctx);
         }
-        // Phase 2: Resistance Change (Narrowing Pipe)
-        else if (elapsed < (LOOP_TIME * 2) + TRANSITION_TIME) {
-            phase = 'Experiment 2: Narrowing Pipe';
-            showGauge = false; 
-            
-            const localTime = elapsed - (LOOP_TIME + TRANSITION_TIME);
-            const progress = localTime / LOOP_TIME;
-            
-            vVal = 80; 
-            // R goes from low (30) to high (90) back to low
-            rVal = 30 + (Math.sin(progress * Math.PI) * 60);
-            
-            phaseBadge.className = "text-[10px] font-bold uppercase tracking-widest text-orange-500";
-            opacity = 1;
-        }
-        // Transition 2
-        else {
-            phase = 'Resetting...';
-            opacity = 1 - ((elapsed - ((LOOP_TIME * 2) + TRANSITION_TIME)) / TRANSITION_TIME);
-            vVal = 80; rVal = 30;
-        }
+      });
 
-        // --- PHYSICS MATH ---
-        // 1. Calculate Pipe Dimensions
-        // R (30-90) maps to height
-        const pipeHeight = 150 - (rVal * 1.2); 
-        const maxPipeHeight = 150 - (30 * 1.2); // approx 114
-        
-        // 2. Calculate Flow Speed using proper Ohm's Law: I = V/R
-        const flowSpeed = rVal > 0 ? vVal / rVal : 0; 
+      ctx.globalAlpha = 1.0;
 
-        // 3. NEW: Calculate Volume/Density Capacity
-        // Physical Constraint: A narrow pipe fits fewer particles
-        const capacityRatio = Math.max(0.2, pipeHeight / maxPipeHeight); 
-        const visibleParticleCount = Math.floor(MAX_PARTICLES * capacityRatio);
+      // Update Text with proper Ohm's Law values
+      phaseBadge.textContent = phase;
+      simV.textContent = Math.round(vVal) + ' V';
+      simI.textContent = flowSpeed.toFixed(3) + ' A';
+      simR.textContent = Math.round(rVal) + ' Ω';
 
-        // --- RENDER ---
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.globalAlpha = opacity < 0 ? 0 : opacity;
-        const w = canvas.width;
-        const h = canvas.height;
-        const cy = h / 2;
-
-        // 1. Draw Pipe
-        ctx.fillStyle = '#f1f1f4'; 
-        ctx.fillRect(0, cy - pipeHeight/2, w, pipeHeight);
-        
-        // Pipe Walls (Subtle)
-        ctx.fillStyle = '#d4d4d8'; 
-        ctx.fillRect(0, cy - pipeHeight/2 - 2, w, 2); 
-        ctx.fillRect(0, cy + pipeHeight/2, w, 2);
-
-        // 2. Draw Gauge (Only in Exp 1)
-        if (showGauge) {
-            // Arc
-            ctx.strokeStyle = '#e4e4e7';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(w/2, cy - pipeHeight/2 - 40, 20, Math.PI, 0); 
-            ctx.stroke();
-            
-            // Needle
-            const angle = Math.PI + ( (vVal/100) * Math.PI );
-            const nx = (w/2) + Math.cos(angle) * 15;
-            const ny = (cy - pipeHeight/2 - 40) + Math.sin(angle) * 15;
-            
-            ctx.strokeStyle = '#ef4444'; 
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.moveTo(w/2, cy - pipeHeight/2 - 40);
-            ctx.lineTo(nx, ny);
-            ctx.stroke();
-            
-            // Base dot
-            ctx.fillStyle = '#d4d4d8';
-            ctx.beginPath();
-            ctx.arc(w/2, cy - pipeHeight/2 - 40, 3, 0, Math.PI*2);
-            ctx.fill();
-        }
-
-        // 3. Draw Particles (Filtered by Volume)
-        particles.forEach((p, index) => {
-            // We ALWAYS update position, even if invisible, so they don't visually "jump" when the pipe expands
-            p.update(w, h, flowSpeed, pipeHeight);
-            
-            // But we ONLY draw them if they fit in the "physical volume" of the pipe
-            if (index < visibleParticleCount) {
-                p.draw(ctx);
-            }
-        });
-
-        ctx.globalAlpha = 1.0;
-
-        // Update Text with proper Ohm's Law values
-        phaseBadge.textContent = phase;
-        simV.textContent = Math.round(vVal) + ' V';
-        simI.textContent = flowSpeed.toFixed(3) + ' A';
-        simR.textContent = Math.round(rVal) + ' Ω';
-
-        animationId = requestAnimationFrame(runSimulation);
+      animationId = requestAnimationFrame(runSimulation);
     }
 
     function toggleModal() {
       const modal = document.getElementById('modal');
       const isOpen = modal.classList.contains('active');
-      
+
       if (isOpen) {
         modal.classList.remove('active');
         cancelAnimationFrame(animationId);
@@ -634,4 +710,5 @@
   </script>
 
 </body>
+
 </html>

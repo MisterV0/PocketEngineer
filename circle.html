@@ -1,114 +1,105 @@
 <!-- --- START OF FILE circle.html --- -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Circle Geometry</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Circle Geometry Calculator & Visualizer — PocketEngineer</title>
+  <meta name="description"
+    content="Calculate circle radius, diameter, circumference, and area from any single input. Advanced sector, arc length, and chord calculations with real-time interactive visualization.">
+  <link rel="canonical" href="https://www.pockeng.com/circle.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/circle.html">
+  <meta property="og:title" content="Circle Geometry Calculator — PocketEngineer">
+  <meta property="og:description"
+    content="Enter any circle measurement and instantly get all properties — radius, diameter, circumference, area, sector, arc length, and chord.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
   <style>
     /* Remove input spinners */
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
-    
-    .input-card { transition: all 0.2s ease-out; }
-    .input-card:focus-within { border-color: #71717a; background-color: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
-    
-    .layer-btn[data-active="true"] { background-color: var(--active-bg); color: white; border-color: var(--active-bg); }
-    .layer-btn[data-active="false"] { background-color: white; color: #71717a; border-color: #e4e4e7; }
-    
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .input-card {
+      transition: all 0.2s ease-out;
+    }
+
+    .input-card:focus-within {
+      border-color: #71717a;
+      background-color: white;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+    }
+
+    .layer-btn[data-active="true"] {
+      background-color: var(--active-bg);
+      color: white;
+      border-color: var(--active-bg);
+    }
+
+    .layer-btn[data-active="false"] {
+      background-color: white;
+      color: #71717a;
+      border-color: #e4e4e7;
+    }
+
     /* Clean details marker */
-    details > summary { list-style: none; cursor: pointer; user-select: none; }
-    details > summary::-webkit-details-marker { display: none; }
-    details > summary:focus { outline: none; }
-    
+    details>summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    details>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details>summary:focus {
+      outline: none;
+    }
+
     /* Animations */
-    .formula-row { animation: slideIn 0.2s ease-out forwards; opacity: 0; transform: translateY(4px); }
-    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+    .formula-row {
+      animation: slideIn 0.2s ease-out forwards;
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     /* Dropdown Animation */
-    details[open] summary ~ div { animation: popDown 0.2s ease-out; }
-    @keyframes popDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Mobile Modal Styles - Apple Style */
-    .mobile-warning-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.4);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(2px);
+    details[open] summary~div {
+      animation: popDown 0.2s ease-out;
     }
 
-    .mobile-warning-modal.active {
-      display: flex;
-    }
+    @keyframes popDown {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
 
-    .modal-content {
-      background: white;
-      border-radius: 2rem;
-      padding: 2.5rem 2rem;
-      max-width: 85%;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.3);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Jakarta Sans', sans-serif;
-    }
-
-    .modal-content h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.75rem;
-    }
-
-    .modal-content p {
-      color: #666;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .device-icons-container {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1.5rem 0 2rem 0;
-    }
-
-    .device-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 3rem;
-      height: 3rem;
-      padding: 0.5rem;
-      color: #16a34a;
-    }
-
-    .device-icon.phone {
-      opacity: 0.25;
-      color: #999;
-    }
-
-    .device-icon.tablet {
-      transform: rotate(90deg);
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Canvas Hide on Mobile & Fill Space */
@@ -125,117 +116,96 @@
         flex-direction: column;
       }
 
-      main > div:first-child {
+      main>div:first-child {
         max-height: none !important;
         min-height: auto;
       }
     }
   </style>
 </head>
+
 <body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
-
-  <!-- Mobile Warning Modal -->
-  <div id="mobileWarningModal" class="mobile-warning-modal">
-    <div class="modal-content">
-      <p>This tool is optimized for desktop and tablet screens.</p>
-
-      <div class="device-icons-container">
-        <div class="device-icon desktop">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
-          </svg>
-        </div>
-        <div class="device-icon tablet">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="18" x2="12" y2="18"></line>
-          </svg>
-        </div>
-        <div class="device-icon phone">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="19" x2="12" y2="19"></line>
-          </svg>
-        </div>
-      </div>
-
-      <p>The visual canvas is unavailable on mobile. You can still use all input fields and see formulas. For the best experience, use a tablet or desktop.</p>
-
-      <button onclick="document.getElementById('mobileWarningModal').classList.remove('active')" class="w-full mt-5 bg-black text-white font-medium py-2.5 rounded-lg hover:bg-zinc-800 transition-colors">
-        Continue on Mobile
-      </button>
-    </div>
-  </div>
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
-      
+
       <!-- Left: Back Button & Info Dropdown -->
       <div class="flex items-center gap-3">
         <a href="index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
           Back
         </a>
         <div class="w-px h-6 bg-zinc-200 hidden md:block"></div>
         <div class="relative z-50 hidden md:block">
-        <details class="group">
-          <summary class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
-            <span>What is Pi?</span>
-            <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          
-          <!-- Dropdown Card -->
-          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
-             <h3 class="font-bold text-zinc-900 mb-1 text-lg">π (Pi)</h3>
-             <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Circle Constant</p>
-             
-             <p class="text-sm text-zinc-700 mb-4 leading-relaxed">
-               The ratio of any circle's circumference to its diameter. Regardless of size, this ratio is always π ≈ 3.14159...
-             </p>
-             
-             <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-4">
-               <p class="text-xs text-blue-900 font-medium">
-                 <strong>If diameter = 1</strong>, then the perimeter = π
-               </p>
-             </div>
-             
-             <p class="text-[10px] text-zinc-500 leading-relaxed">
-               An irrational number — its decimals never end or repeat. Ancient mathematicians discovered this constant appears universally in all circles, nature, and physics.
-             </p>
-          </div>
-        </details>
+          <details class="group">
+            <summary
+              class="flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm transition-colors py-2 rounded-lg">
+              <span>What is Pi?</span>
+              <svg class="text-zinc-400 group-open:rotate-180 transition-transform" width="16" height="16"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </summary>
+
+            <!-- Dropdown Card -->
+            <div
+              class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-zinc-200 p-6 z-50">
+              <h2 class="font-bold text-zinc-900 mb-1 text-lg">π (Pi)</h2>
+              <p class="text-xs text-zinc-400 mb-4 uppercase tracking-wide font-semibold">The Circle Constant</p>
+
+              <p class="text-sm text-zinc-700 mb-4 leading-relaxed">
+                The ratio of any circle's circumference to its diameter. Regardless of size, this ratio is always π ≈
+                3.14159...
+              </p>
+
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-4">
+                <p class="text-xs text-blue-900 font-medium">
+                  <strong>If diameter = 1</strong>, then the perimeter = π
+                </p>
+              </div>
+
+              <p class="text-[10px] text-zinc-500 leading-relaxed">
+                An irrational number — its decimals never end or repeat. Ancient mathematicians discovered this constant
+                appears universally in all circles, nature, and physics.
+              </p>
+            </div>
+          </details>
         </div>
       </div>
-      
+
       <!-- Right controls -->
       <div class="flex items-center gap-4">
-        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+        <button onclick="resetCalc()"
+          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
       </div>
     </div>
   </header>
+  <h1 class="sr-only">Circle Geometry Calculator & Visualizer</h1>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden relative z-0">
-    
+
     <!-- Left: Inputs & Formulas -->
-    <div class="lg:w-[460px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin lg:max-h-none">
+    <div
+      class="lg:w-[460px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col scrollbar-thin lg:max-h-none">
       <div class="p-6 space-y-6">
-        
+
         <!-- Standard Inputs -->
         <div>
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Standard Dimensions
             <span class="h-px bg-zinc-100 flex-1"></span>
           </h2>
-          
+
           <div class="grid grid-cols-2 gap-3">
             <!-- Radius -->
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
               <label class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Radius (r)</label>
               <div class="flex items-baseline gap-1">
-                <input type="number" id="in-r" oninput="calculate('r')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="in-r" oninput="calculate('r')"
+                  class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
                 <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
@@ -244,7 +214,8 @@
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
               <label class="text-[10px] font-bold text-indigo-500 uppercase mb-1 block">Diameter (d)</label>
               <div class="flex items-baseline gap-1">
-                <input type="number" id="in-d" oninput="calculate('d')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="in-d" oninput="calculate('d')"
+                  class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
                 <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
@@ -253,7 +224,8 @@
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
               <label class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Circumference (C)</label>
               <div class="flex items-baseline gap-1">
-                <input type="number" id="in-c" oninput="calculate('c')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="in-c" oninput="calculate('c')"
+                  class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
                 <span class="text-xs text-zinc-400 font-mono unit-label">m</span>
               </div>
             </div>
@@ -262,7 +234,8 @@
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
               <label class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
               <div class="flex items-baseline gap-1">
-                <input type="number" id="in-a" oninput="calculate('a')" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="in-a" oninput="calculate('a')"
+                  class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
                 <span class="text-xs text-zinc-400 font-mono unit-label-sq">m²</span>
               </div>
             </div>
@@ -270,43 +243,52 @@
         </div>
 
         <!-- Formulas Panel -->
-        <div id="formula-panel" class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
+        <div id="formula-panel"
+          class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
           <p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>
         </div>
 
         <!-- Advanced Section (Collapsible) -->
         <div class="border-t border-dashed border-zinc-200 pt-2">
           <details class="group">
-            <summary class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
+            <summary
+              class="flex items-center justify-between py-4 group-hover:bg-zinc-50 rounded-lg px-2 -mx-2 transition-colors">
               <h2 class="text-xs font-bold text-zinc-900 uppercase tracking-wider flex items-center gap-2">
                 <div class="w-1.5 h-1.5 rounded-full bg-purple-500 transition-transform group-open:scale-110"></div>
                 Sector & Arc
               </h2>
               <div class="flex items-center gap-2">
-                 <span class="text-[10px] bg-purple-50 text-purple-600 font-medium px-2 py-0.5 rounded border border-purple-100 uppercase tracking-wide">Advanced</span>
-                 <svg class="text-zinc-400 transform transition-transform duration-200 group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span
+                  class="text-[10px] bg-purple-50 text-purple-600 font-medium px-2 py-0.5 rounded border border-purple-100 uppercase tracking-wide">Advanced</span>
+                <svg class="text-zinc-400 transform transition-transform duration-200 group-open:rotate-180" width="16"
+                  height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </div>
             </summary>
 
             <div class="pb-2 pl-2 border-l-2 border-zinc-100 ml-1 space-y-4">
-               <!-- Angle Input -->
-               <div class="input-card bg-white border border-zinc-200 rounded-lg p-3 shadow-sm ring-1 ring-transparent focus-within:ring-purple-200 focus-within:border-purple-300">
+              <!-- Angle Input -->
+              <div
+                class="input-card bg-white border border-zinc-200 rounded-lg p-3 shadow-sm ring-1 ring-transparent focus-within:ring-purple-200 focus-within:border-purple-300">
                 <label class="text-[10px] font-bold text-zinc-500 uppercase mb-1 block flex justify-between">
                   <span>Sector Angle (θ)</span>
                 </label>
                 <div class="flex items-baseline gap-1">
-                  <input type="number" id="in-angle" oninput="calculate('angle')" class="w-full bg-transparent font-mono text-lg outline-none text-purple-900" placeholder="e.g. 60">
+                  <input type="number" id="in-angle" oninput="calculate('angle')"
+                    class="w-full bg-transparent font-mono text-lg outline-none text-purple-900" placeholder="e.g. 60">
                   <span class="text-xs text-zinc-400 font-mono">deg</span>
                 </div>
               </div>
 
               <!-- Advanced Results -->
               <div class="grid grid-cols-1 gap-1 text-sm bg-zinc-50/50 rounded-lg border border-zinc-100 p-2">
-                 
-                 <div class="flex justify-between items-center p-2 border-b border-dashed border-zinc-200">
-                   <span class="text-zinc-500 text-xs font-medium uppercase tracking-wide">Arc Length (s)</span>
-                   <div class="text-right">
-                     <span id="out-arc" class="font-mono font-medium text-zinc-900">-</span>
+
+                <div class="flex justify-between items-center p-2 border-b border-dashed border-zinc-200">
+                  <span class="text-zinc-500 text-xs font-medium uppercase tracking-wide">Arc Length (s)</span>
+                  <div class="text-right">
+                    <span id="out-arc" class="font-mono font-medium text-zinc-900">-</span>
                     <span class="text-[10px] text-zinc-400 unit-label">m</span>
                   </div>
                 </div>
@@ -335,46 +317,63 @@
     </div>
 
     <!-- Right: Visualizer -->
-    <div class="canvas-container flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-3 lg:p-6 overflow-hidden min-h-[50vh] lg:min-h-0">
-      
+    <div
+      class="canvas-container flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-3 lg:p-6 overflow-hidden min-h-[50vh] lg:min-h-0">
+
       <!-- Canvas Backdrop -->
-      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
-      
+      <div class="absolute inset-0 pointer-events-none opacity-40"
+        style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+
       <!-- Canvas -->
-      <div class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-3 lg:mb-6 w-full max-w-[500px]">
+      <div
+        class="relative bg-white p-2 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 mb-3 lg:mb-6 w-full max-w-[500px]">
         <canvas id="geoCanvas"></canvas>
       </div>
 
       <!-- Layer Controls -->
       <div class="layer-controls flex flex-wrap justify-center gap-2 max-w-2xl px-2 lg:px-4">
-        
-        <button onclick="toggleLayer('radius')" id="btn-radius" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #3b82f6">
+
+        <button onclick="toggleLayer('radius')" id="btn-radius"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="true" style="--active-bg: #3b82f6">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Radius
         </button>
 
-        <button onclick="toggleLayer('diameter')" id="btn-diameter" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #6366f1">
+        <button onclick="toggleLayer('diameter')" id="btn-diameter"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="true" style="--active-bg: #6366f1">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Diameter
         </button>
-        
-        <button onclick="toggleLayer('circumference')" id="btn-circumference" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="true" style="--active-bg: #10b981">
+
+        <button onclick="toggleLayer('circumference')" id="btn-circumference"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="true" style="--active-bg: #10b981">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Perimeter
         </button>
 
-        <button onclick="toggleLayer('area')" id="btn-area" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #f43f5e">
+        <button onclick="toggleLayer('area')" id="btn-area"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="false" style="--active-bg: #f43f5e">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Area
         </button>
 
         <div class="w-px h-6 bg-zinc-200 mx-1"></div>
 
-        <button onclick="toggleLayer('sector')" id="btn-sector" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #a855f7">
+        <button onclick="toggleLayer('sector')" id="btn-sector"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="false" style="--active-bg: #a855f7">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Sector
         </button>
 
-        <button onclick="toggleLayer('arc')" id="btn-arc" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #d946ef">
+        <button onclick="toggleLayer('arc')" id="btn-arc"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="false" style="--active-bg: #d946ef">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Arc
         </button>
 
-        <button onclick="toggleLayer('chord')" id="btn-chord" class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2" data-active="false" style="--active-bg: #ea580c">
+        <button onclick="toggleLayer('chord')" id="btn-chord"
+          class="layer-btn px-3 py-1.5 text-[11px] font-bold tracking-wide uppercase rounded-lg border shadow-sm transition-all flex items-center gap-2"
+          data-active="false" style="--active-bg: #ea580c">
           <div class="w-2 h-2 rounded-full bg-current opacity-50"></div> Chord
         </button>
 
@@ -389,7 +388,7 @@
     const canvas = document.getElementById('geoCanvas');
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
-    
+
     // --- STATE ---
     let state = {
       r: 0,
@@ -402,7 +401,7 @@
 
     let layers = {
       radius: true,
-      diameter: true, 
+      diameter: true,
       circumference: true,
       area: false,
       sector: true,
@@ -417,20 +416,20 @@
       a: document.getElementById('in-a'),
       angle: document.getElementById('in-angle')
     };
-    
+
     const outputs = {
       arc: document.getElementById('out-arc'),
       chord: document.getElementById('out-chord'),
       sector: document.getElementById('out-sector')
     };
-    
+
     const formulaPanel = document.getElementById('formula-panel');
-    
+
     // Fixed canvas size
     const SIZE = 500;
     let CENTER = 250;
     let VISUAL_R = 170; // Fixed radius size for drawing
-    
+
     // Set canvas size
     canvas.width = SIZE * dpr;
     canvas.height = SIZE * dpr;
@@ -456,9 +455,9 @@
       Object.values(inputs).forEach(i => i.value = '');
       Object.values(outputs).forEach(i => i.innerText = '-');
       state = { r: 0, d: 0, c: 0, a: 0, angle: 0, activeMode: null };
-      
+
       formulaPanel.innerHTML = '<p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>';
-      
+
       draw();
     }
 
@@ -479,10 +478,10 @@
       else if (source === 'd') r = val / 2;
       else if (source === 'c') r = val / (2 * Math.PI);
       else if (source === 'a') r = Math.sqrt(val / Math.PI);
-      else { r = parseFloat(inputs.r.value) || 0; } 
+      else { r = parseFloat(inputs.r.value) || 0; }
 
       if (source === 'angle') state.angle = val;
-      else { state.r = r; } 
+      else { state.r = r; }
 
       // 2. Derive Standard
       state.r = r;
@@ -499,18 +498,18 @@
       // 4. Advanced Math
       if (state.angle > 0 && state.r > 0) {
         const thetaRad = state.angle * (Math.PI / 180);
-        
+
         const arc = thetaRad * state.r;
         outputs.arc.innerText = Number(arc.toPrecision(5));
-        
-        const chord = 2 * state.r * Math.sin(thetaRad/2);
+
+        const chord = 2 * state.r * Math.sin(thetaRad / 2);
         outputs.chord.innerText = Number(chord.toPrecision(5));
 
         const sect = 0.5 * state.r * state.r * thetaRad;
         outputs.sector.innerText = Number(sect.toPrecision(5));
-        
+
         if (source === 'angle') {
-            if(!layers.sector) toggleLayer('sector');
+          if (!layers.sector) toggleLayer('sector');
         }
       }
 
@@ -521,37 +520,37 @@
 
     function generateFormulas() {
       if (state.r === 0) return;
-      
+
       const m = state.activeMode;
       const unit = 'm'; // Default unit
       const rStr = state.r.toFixed(2);
-      
+
       // Base styles
       const lineClass = "formula-row flex justify-between items-center font-mono text-xs lg:text-sm h-6";
       const lbl = "text-zinc-500";
       const val = "text-zinc-200 font-medium";
 
       let html = `<div class="space-y-1">`;
-      
+
       if (m === 'r' || !m || m === 'angle') {
-         html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given Radius</span> <span class="${val}">r = ${rStr}</span></div>`;
-         html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-indigo-400">d = 2·r</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
-         html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-emerald-400">C = 2·π·r</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
-         html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-rose-400">A = π·r²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
-      } 
+        html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given Radius</span> <span class="${val}">r = ${rStr}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-indigo-400">d = 2·r</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-emerald-400">C = 2·π·r</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-rose-400">A = π·r²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+      }
       else if (m === 'd') {
-         html += `<div class="${lineClass}"><span class="${lbl}">Given Diam</span> <span class="${val}">d = ${state.d.toFixed(2)}</span></div>`;
-         html += `<div class="${lineClass}"><span class="text-blue-400">r = d / 2</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
-         html += `<div class="${lineClass}"><span class="text-emerald-400">C = π·d</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
-         html += `<div class="${lineClass}"><span class="text-rose-400">A = π(d/2)²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Diam</span> <span class="${val}">d = ${state.d.toFixed(2)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">r = d / 2</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-emerald-400">C = π·d</span> <span class="${val}">${state.c.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-rose-400">A = π(d/2)²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
       }
       else if (m === 'c') {
-         html += `<div class="${lineClass}"><span class="${lbl}">Given Circ</span> <span class="${val}">C = ${state.c.toFixed(2)}</span></div>`;
-         html += `<div class="${lineClass}"><span class="text-blue-400">r = C/2π</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Circ</span> <span class="${val}">C = ${state.c.toFixed(2)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">r = C/2π</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
       }
       else if (m === 'a') {
-         html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${state.a.toFixed(2)}</span></div>`;
-         html += `<div class="${lineClass}"><span class="text-blue-400">r = √(A/π)</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${state.a.toFixed(2)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">r = √(A/π)</span> <span class="${val}">${state.r.toFixed(2)} ${unit}</span></div>`;
       }
 
       if (state.angle > 0) {
@@ -593,7 +592,7 @@
       if (layers.area) {
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(244, 63, 94, 0.08)'; 
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.08)';
         ctx.fill();
       }
 
@@ -601,9 +600,9 @@
       if (layers.sector && state.angle > 0) {
         ctx.beginPath();
         ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, r, 0, -thetaRad, true); 
+        ctx.arc(cx, cy, r, 0, -thetaRad, true);
         ctx.lineTo(cx, cy);
-        ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'; 
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.2)';
         ctx.fill();
         ctx.lineWidth = 1;
         ctx.strokeStyle = 'rgba(168, 85, 247, 0.5)';
@@ -623,27 +622,27 @@
         ctx.moveTo(cx - r, cy);
         ctx.lineTo(cx + r, cy);
         ctx.lineWidth = 3;
-        ctx.strokeStyle = '#6366f1'; 
+        ctx.strokeStyle = '#6366f1';
         ctx.stroke();
-        drawLabel('d', cx, cy + 15, '#6366f1', 'top'); 
+        drawLabel('d', cx, cy + 15, '#6366f1', 'top');
       }
 
       // 4. RADIUS (Diagonal - FIX SCRIBBLE)
       if (layers.radius) {
         const radAngle = -Math.PI / 4; // -45 degrees
-        
+
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         const rx = cx + r * Math.cos(radAngle);
         const ry = cy + r * Math.sin(radAngle);
         ctx.lineTo(rx, ry);
-        
+
         ctx.lineWidth = 3;
         ctx.strokeStyle = '#3b82f6';
         ctx.stroke();
 
-        const lx = cx + (r/2) * Math.cos(radAngle);
-        const ly = cy + (r/2) * Math.sin(radAngle);
+        const lx = cx + (r / 2) * Math.cos(radAngle);
+        const ly = cy + (r / 2) * Math.sin(radAngle);
         drawLabel('r', lx - 8, ly - 8, '#3b82f6', 'middle');
       }
 
@@ -657,62 +656,49 @@
           ctx.arc(cx, cy, r, 0, -thetaRad, true);
           ctx.lineWidth = 5;
           ctx.lineCap = 'round';
-          ctx.strokeStyle = '#d946ef'; 
+          ctx.strokeStyle = '#d946ef';
           ctx.stroke();
         }
 
         if (layers.chord) {
           ctx.beginPath();
-          const sx = cx + r; 
+          const sx = cx + r;
           const sy = cy;
           ctx.moveTo(sx, sy);
           ctx.lineTo(ex, ey);
-          
+
           ctx.lineWidth = 3;
-          ctx.strokeStyle = '#ea580c'; 
+          ctx.strokeStyle = '#ea580c';
           ctx.stroke();
         }
       }
-      
+
       // Center dot
       ctx.beginPath();
-      ctx.arc(cx, cy, 4, 0, Math.PI*2);
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
       ctx.fillStyle = '#18181b';
       ctx.fill();
     }
 
-    function drawLabel(text, x, y, color, baseline='middle') {
+    function drawLabel(text, x, y, color, baseline = 'middle') {
       ctx.save();
       ctx.font = "bold 14px 'JetBrains Mono'";
       ctx.textAlign = "center";
       ctx.textBaseline = baseline;
-      
+
       ctx.shadowColor = "white";
       ctx.shadowBlur = 4;
       ctx.fillStyle = color;
-      
+
       ctx.fillText(text, x, y);
-      ctx.fillText(text, x, y); 
+      ctx.fillText(text, x, y);
       ctx.restore();
     }
 
     resetCalc();
 
     // --- MOBILE WARNING MODAL ---
-    function checkMobileAndShowWarning() {
-      const isMobile = window.innerWidth < 1024;
-      const modal = document.getElementById('mobileWarningModal');
-      const modalShownKey = 'mobileWarningShown_circle';
-      
-      // Only show if mobile and hasn't been shown in this session
-      if (isMobile && !sessionStorage.getItem(modalShownKey)) {
-        modal.classList.add('active');
-        sessionStorage.setItem(modalShownKey, 'true');
-      }
-    }
-
-    // Check on load only
-    window.addEventListener('load', checkMobileAndShowWarning);
+    window.addEventListener('load', checkMobileWarning);
 
     // --- MOBILE KEYBOARD BACK BUTTON FIX ---
     // Prevent browser back navigation when keyboard is open
@@ -750,4 +736,5 @@
     });
   </script>
 </body>
+
 </html>

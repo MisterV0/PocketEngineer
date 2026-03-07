@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
     <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-    <link rel="stylesheet" href="resources/common.css">
-    <title>Bitwise calculator explained</title>
-    <script src="resources/app.js"></script>
+    <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+    <title>Bitwise Operations Calculator & Explainer — PocketEngineer</title>
+    <meta name="description"
+        content="Interactive bitwise operations calculator — AND, OR, XOR, NOT, left shift, and right shift explained visually. See binary alignment, step-by-step results, and auto-generated C code examples.">
+    <link rel="canonical" href="https://www.pockeng.com/bitoperaitons.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.pockeng.com/bitoperaitons.html">
+    <meta property="og:title" content="Bitwise Operations Calculator — PocketEngineer">
+    <meta property="og:description"
+        content="Visualize AND, OR, XOR, NOT, and shift operations with binary alignment and C code generation.">
+    <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+    <script src="resources/app.js?v=1.2.0"></script>
     <style>
         /* Classic Serif for UI, Typewriter Monospace for Math */
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
@@ -47,8 +57,8 @@
             max-width: 650px;
             width: 100%;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(45, 35, 25, 0.08), 
-                        0 1px 3px rgba(45, 35, 25, 0.05);
+            box-shadow: 0 10px 30px rgba(45, 35, 25, 0.08),
+                0 1px 3px rgba(45, 35, 25, 0.05);
             border: 1px solid var(--lines);
             border-radius: 4px;
             position: relative;
@@ -135,7 +145,7 @@
             padding: 10px 15px;
             cursor: pointer;
             transition: all 0.3s ease;
-            opacity: 0.25; 
+            opacity: 0.25;
         }
 
         .op-btn:hover {
@@ -189,14 +199,14 @@
             border-radius: 12px;
             font-family: 'JetBrains Mono', monospace;
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .code-box.visible {
             display: block;
             opacity: 1;
@@ -215,14 +225,24 @@
             display: flex;
             gap: 6px;
         }
+
         .window-dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
         }
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
+
+        .dot-red {
+            background: #ff5f56;
+        }
+
+        .dot-yellow {
+            background: #ffbd2e;
+        }
+
+        .dot-green {
+            background: #27c93f;
+        }
 
         .filename {
             font-size: 12px;
@@ -246,7 +266,7 @@
         }
 
         .copy-btn:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border-color: #666;
         }
@@ -262,13 +282,42 @@
         }
 
         /* Syntax Highlighting Classes */
-        .hl-keyword { color: #569cd6; font-weight: bold; } /* int, void, return, if, for */
-        .hl-type { color: #4ec9b0; } /* unsigned char */
-        .hl-fn { color: #dcdcaa; } /* printf, main */
-        .hl-num { color: #b5cea8; } /* numbers */
-        .hl-str { color: #ce9178; } /* strings */
-        .hl-comment { color: #6a9955; } /* comments */
-        .hl-op { color: #d4d4d4; } /* operators */
+        .hl-keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+
+        /* int, void, return, if, for */
+        .hl-type {
+            color: #4ec9b0;
+        }
+
+        /* unsigned char */
+        .hl-fn {
+            color: #dcdcaa;
+        }
+
+        /* printf, main */
+        .hl-num {
+            color: #b5cea8;
+        }
+
+        /* numbers */
+        .hl-str {
+            color: #ce9178;
+        }
+
+        /* strings */
+        .hl-comment {
+            color: #6a9955;
+        }
+
+        /* comments */
+        .hl-op {
+            color: #d4d4d4;
+        }
+
+        /* operators */
 
         @media (max-width: 500px) {
             .operand-row {
@@ -279,349 +328,354 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="sheet">
-    <a href="index.html" class="back-button" style="position: absolute; top: 15px; left: 20px; z-index: 10;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
-        Back
-    </a>
+    <div class="sheet">
+        <a href="index.html" class="back-button" style="position: absolute; top: 15px; left: 20px; z-index: 10;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+        </a>
 
-    <h1>Bitwise Operations</h1>
-    
-    <!-- Operand A -->
-    <div class="operand-row">
-        <div class="input-group">
-            <label>Operand A (Decimal)</label>
-            <input type="number" id="decA" value="12" oninput="sync('dec', 'A')">
-        </div>
-        <div class="input-group">
-            <label>Operand A (Binary)</label>
-            <input type="text" id="binA" value="00001100" oninput="sync('bin', 'A')">
-        </div>
-    </div>
+        <h1>Bitwise Operations</h1>
 
-    <!-- Operand B -->
-    <div class="operand-row" id="operandB-container">
-        <div class="input-group">
-            <label>Operand B (Decimal)</label>
-            <input type="number" id="decB" value="5" oninput="sync('dec', 'B')">
-        </div>
-        <div class="input-group">
-            <label>Operand B (Binary)</label>
-            <input type="text" id="binB" value="00000101" oninput="sync('bin', 'B')">
-        </div>
-    </div>
-
-    <!-- Operators -->
-    <div class="operators-container" id="operator-container">
-        <button class="op-btn active" data-op="&">AND &</button>
-        <button class="op-btn" data-op="|">OR |</button>
-        <button class="op-btn" data-op="^">XOR ^</button>
-        <button class="op-btn" data-op="~">NOT ~</button>
-        <button class="op-btn" data-op="<<">SHL <<</button>
-        <button class="op-btn" data-op=">>">SHR >></button>
-    </div>
-
-    <!-- Final Result Inputs -->
-    <div class="operand-row" style="margin-bottom: 0;">
-        <div class="input-group">
-            <label>Result (Decimal)</label>
-            <input type="text" id="decRes" readonly>
-        </div>
-        <div class="input-group">
-            <label>Result (Binary)</label>
-            <input type="text" id="binRes" readonly>
-        </div>
-    </div>
-
-    <!-- Result Console -->
-    <div class="console">
-        <div class="console-header">System Output & Explanation</div>
-        <div class="rule-text" id="ruleText"></div>
-        <div class="visual-math" id="visualMath"></div>
-        <div style="margin-top: 16px; text-align: center;">
-            <button type="button" id="show-code-btn" onclick="toggleCodeExample()" class="op-btn" style="opacity: 1; padding: 8px 16px; font-size: 14px;">
-                Show C code example
-            </button>
-        </div>
-    </div>
-
-    <!-- Improved C Code Example Box -->
-    <div id="code-example-box" class="code-box">
-        <div class="code-header">
-            <div style="display: flex; align-items: center;">
-                <div class="window-controls">
-                    <div class="window-dot dot-red"></div>
-                    <div class="window-dot dot-yellow"></div>
-                    <div class="window-dot dot-green"></div>
-                </div>
-                <span class="filename">bitwise.c</span>
+        <!-- Operand A -->
+        <div class="operand-row">
+            <div class="input-group">
+                <label>Operand A (Decimal)</label>
+                <input type="number" id="decA" value="12" oninput="sync('dec', 'A')">
             </div>
-            <button class="copy-btn" onclick="copyCode(this)">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                Copy
-            </button>
+            <div class="input-group">
+                <label>Operand A (Binary)</label>
+                <input type="text" id="binA" value="00001100" oninput="sync('bin', 'A')">
+            </div>
         </div>
-        <pre class="code-content" id="code-display"></pre>
+
+        <!-- Operand B -->
+        <div class="operand-row" id="operandB-container">
+            <div class="input-group">
+                <label>Operand B (Decimal)</label>
+                <input type="number" id="decB" value="5" oninput="sync('dec', 'B')">
+            </div>
+            <div class="input-group">
+                <label>Operand B (Binary)</label>
+                <input type="text" id="binB" value="00000101" oninput="sync('bin', 'B')">
+            </div>
+        </div>
+
+        <!-- Operators -->
+        <div class="operators-container" id="operator-container">
+            <button class="op-btn active" data-op="&">AND &</button>
+            <button class="op-btn" data-op="|">OR |</button>
+            <button class="op-btn" data-op="^">XOR ^</button>
+            <button class="op-btn" data-op="~">NOT ~</button>
+            <button class="op-btn" data-op="<<">SHL <<< /button>
+                    <button class="op-btn" data-op=">>">SHR >></button>
+        </div>
+
+        <!-- Final Result Inputs -->
+        <div class="operand-row" style="margin-bottom: 0;">
+            <div class="input-group">
+                <label>Result (Decimal)</label>
+                <input type="text" id="decRes" readonly>
+            </div>
+            <div class="input-group">
+                <label>Result (Binary)</label>
+                <input type="text" id="binRes" readonly>
+            </div>
+        </div>
+
+        <!-- Result Console -->
+        <div class="console">
+            <div class="console-header">System Output & Explanation</div>
+            <div class="rule-text" id="ruleText"></div>
+            <div class="visual-math" id="visualMath"></div>
+            <div style="margin-top: 16px; text-align: center;">
+                <button type="button" id="show-code-btn" onclick="toggleCodeExample()" class="op-btn"
+                    style="opacity: 1; padding: 8px 16px; font-size: 14px;">
+                    Show C code example
+                </button>
+            </div>
+        </div>
+
+        <!-- Improved C Code Example Box -->
+        <div id="code-example-box" class="code-box">
+            <div class="code-header">
+                <div style="display: flex; align-items: center;">
+                    <div class="window-controls">
+                        <div class="window-dot dot-red"></div>
+                        <div class="window-dot dot-yellow"></div>
+                        <div class="window-dot dot-green"></div>
+                    </div>
+                    <span class="filename">bitwise.c</span>
+                </div>
+                <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy
+                </button>
+            </div>
+            <pre class="code-content" id="code-display"></pre>
+        </div>
     </div>
-</div>
 
-<script>
-    let currentOp = "&"; 
-    let generatedRawCode = ""; // Stores plain text for copying
+    <script>
+        let currentOp = "&";
+        let generatedRawCode = ""; // Stores plain text for copying
 
-    const rules = {
-        "&": "AND (&) operation: Yields 1 only if both corresponding bits are 1.",
-        "|": "OR (|) operation: Yields 1 if at least one of the corresponding bits is 1.",
-        "^": "XOR (^) operation: Yields 1 if the corresponding bits are different.",
-        "~": "NOT (~) operation: Inverts all bits visually present.",
-        "<<": "Left Shift (<<): Shifts bits to the left, pushing zeros in from the right.",
-        ">>": "Right Shift (>>): Shifts bits to the right."
-    };
+        const rules = {
+            "&": "AND (&) operation: Yields 1 only if both corresponding bits are 1.",
+            "|": "OR (|) operation: Yields 1 if at least one of the corresponding bits is 1.",
+            "^": "XOR (^) operation: Yields 1 if the corresponding bits are different.",
+            "~": "NOT (~) operation: Inverts all bits visually present.",
+            "<<": "Left Shift (<<): Shifts bits to the left, pushing zeros in from the right.",
+            ">>": "Right Shift (>>): Shifts bits to the right."
+        };
 
-    // Operator Button Clicking Logic
-    document.querySelectorAll('.op-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            currentOp = e.target.getAttribute('data-op');
-            calculate();
+        // Operator Button Clicking Logic
+        document.querySelectorAll('.op-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentOp = e.target.getAttribute('data-op');
+                calculate();
+            });
         });
-    });
 
-    // Converts decimal to Unsigned Binary String
-    function toBinaryString(num, minLen = 8) {
-        let bin = (num >>> 0).toString(2); 
-        return bin.padStart(minLen, '0');
-    }
-
-    // Sync Decimal and Binary inputs smoothly
-    function sync(type, operand) {
-        const decInput = document.getElementById(`dec${operand}`);
-        const binInput = document.getElementById(`bin${operand}`);
-
-        if (type === 'dec') {
-            let val = parseInt(decInput.value, 10);
-            if (isNaN(val)) val = 0;
-            let currentLen = Math.max(binInput.value.length, 8);
-            binInput.value = toBinaryString(val, currentLen);
-        } else {
-            let cleanedBin = binInput.value.replace(/[^01]/g, '');
-            binInput.value = cleanedBin; 
-            let val = parseInt(cleanedBin, 2);
-            if (isNaN(val)) val = 0;
-            decInput.value = val;
-        }
-        calculate();
-    }
-
-    // Main calculation logic
-    function calculate() {
-        let a = parseInt(document.getElementById("decA").value, 10) || 0;
-        let b = parseInt(document.getElementById("decB").value, 10) || 0;
-        let res = 0;
-
-        let bContainer = document.getElementById("operandB-container");
-        if (currentOp === "~") {
-            bContainer.classList.add("hidden");
-        } else {
-            bContainer.classList.remove("hidden");
+        // Converts decimal to Unsigned Binary String
+        function toBinaryString(num, minLen = 8) {
+            let bin = (num >>> 0).toString(2);
+            return bin.padStart(minLen, '0');
         }
 
-        let binAStr = document.getElementById("binA").value.replace(/[^01]/g, '');
-        let visualBitLen = Math.max(binAStr.length, 8);
+        // Sync Decimal and Binary inputs smoothly
+        function sync(type, operand) {
+            const decInput = document.getElementById(`dec${operand}`);
+            const binInput = document.getElementById(`bin${operand}`);
 
-        if (currentOp === "~") {
-            let paddedA = toBinaryString(a, visualBitLen);
-            let flipped = paddedA.split('').map(bit => bit === '1' ? '0' : '1').join('');
-            res = parseInt(flipped, 2);
-        } else {
-            switch (currentOp) {
-                case "&": res = (a & b) >>> 0; break;
-                case "|": res = (a | b) >>> 0; break;
-                case "^": res = (a ^ b) >>> 0; break;
-                case "<<": res = (a << b) >>> 0; break;
-                case ">>": res = (a >> b) >>> 0; break;
+            if (type === 'dec') {
+                let val = parseInt(decInput.value, 10);
+                if (isNaN(val)) val = 0;
+                let currentLen = Math.max(binInput.value.length, 8);
+                binInput.value = toBinaryString(val, currentLen);
+            } else {
+                let cleanedBin = binInput.value.replace(/[^01]/g, '');
+                binInput.value = cleanedBin;
+                let val = parseInt(cleanedBin, 2);
+                if (isNaN(val)) val = 0;
+                decInput.value = val;
+            }
+            calculate();
+        }
+
+        // Main calculation logic
+        function calculate() {
+            let a = parseInt(document.getElementById("decA").value, 10) || 0;
+            let b = parseInt(document.getElementById("decB").value, 10) || 0;
+            let res = 0;
+
+            let bContainer = document.getElementById("operandB-container");
+            if (currentOp === "~") {
+                bContainer.classList.add("hidden");
+            } else {
+                bContainer.classList.remove("hidden");
+            }
+
+            let binAStr = document.getElementById("binA").value.replace(/[^01]/g, '');
+            let visualBitLen = Math.max(binAStr.length, 8);
+
+            if (currentOp === "~") {
+                let paddedA = toBinaryString(a, visualBitLen);
+                let flipped = paddedA.split('').map(bit => bit === '1' ? '0' : '1').join('');
+                res = parseInt(flipped, 2);
+            } else {
+                switch (currentOp) {
+                    case "&": res = (a & b) >>> 0; break;
+                    case "|": res = (a | b) >>> 0; break;
+                    case "^": res = (a ^ b) >>> 0; break;
+                    case "<<": res = (a << b) >>> 0; break;
+                    case ">>": res = (a >> b) >>> 0; break;
+                }
+            }
+
+            document.getElementById("decRes").value = res;
+            document.getElementById("binRes").value = toBinaryString(res, visualBitLen);
+
+            generateExplanation(a, b, res, currentOp, visualBitLen);
+            generateAndDisplayCode(a, b, res, currentOp, visualBitLen);
+        }
+
+        function generateExplanation(a, b, res, op, bitLen) {
+            document.getElementById("ruleText").innerText = rules[op];
+
+            let strA = toBinaryString(a, bitLen);
+            let strB = toBinaryString(b, bitLen);
+            let strRes = toBinaryString(res, bitLen);
+
+            let maxLen = Math.max(strA.length, strB.length, strRes.length, bitLen);
+
+            strA = strA.padStart(maxLen, '0');
+            strB = strB.padStart(maxLen, '0');
+            strRes = strRes.padStart(maxLen, '0');
+
+            let visualText = "";
+            let opSpacing = op.length === 1 ? `  ${op} ` : `${op} `;
+
+            if (op === "~") {
+                visualText = `    ${strA}  [${a}]\n`;
+                visualText += `(~) ${strRes}  [${res}]`;
+            }
+            else if (op === "<<" || op === ">>") {
+                visualText = `    ${strA}  [${a}]\n`;
+                visualText += `    Shifted by ${b}\n`;
+                visualText += `    ${strRes}  [${res}]`;
+            }
+            else {
+                visualText = `    ${strA}  [${a}]\n`;
+                visualText += `${opSpacing}${strB}  [${b}]\n`;
+                visualText += `    ${strRes}  [${res}]`;
+            }
+
+            document.getElementById("visualMath").innerText = visualText;
+        }
+
+        // --- Modern Code Generation & Syntax Highlighting ---
+
+        function generateAndDisplayCode(a, b, res, op, bitLen) {
+            let code = "";
+
+            // Define clean C code template
+            code += `#include <stdio.h>\n\n`;
+            code += `// Helper function to print binary representation\n`;
+            code += `void print_binary(unsigned int n) {\n`;
+            code += `    for (int i = ${bitLen - 1}; i >= 0; i--) {\n`;
+            code += `        int k = n >> i;\n`;
+            code += `        if (k & 1) printf("1");\n`;
+            code += `        else printf("0");\n`;
+            code += `    }\n`;
+            code += `    printf("\\n");\n`;
+            code += `}\n\n`;
+
+            code += `int main() {\n`;
+
+            // Variable declarations
+            code += `    unsigned int a = ${a};      // ${toBinaryString(a, bitLen)}\n`;
+
+            if (op !== "~") {
+                code += `    unsigned int b = ${b};      // ${toBinaryString(b, bitLen)}\n`;
+            }
+
+            code += `    unsigned int result = 0;\n\n`;
+
+            // Operation
+            if (op === "~") {
+                code += `    // Bitwise NOT Operation\n`;
+                code += `    result = ~a;\n`;
+            } else if (op === "<<") {
+                code += `    // Left Shift Operation\n`;
+                code += `    result = a << b;\n`;
+            } else if (op === ">>") {
+                code += `    // Right Shift Operation\n`;
+                code += `    result = a >> b;\n`;
+            } else {
+                let opName = op === "&" ? "AND" : op === "|" ? "OR" : "XOR";
+                code += `    // Bitwise ${opName} Operation\n`;
+                code += `    result = a ${op} b;\n`;
+            }
+
+            code += `\n    // Output results in binary\n`;
+            code += `    printf("A:      "); print_binary(a);\n`;
+            if (op !== "~") {
+                if (op === "<<" || op === ">>") {
+                    code += `    printf("Shift:  %d\\n", b);\n`;
+                } else {
+                    code += `    printf("B:      "); print_binary(b);\n`;
+                }
+            }
+            code += `    printf("Result: "); print_binary(result);\n\n`;
+            code += `    return 0;\n`;
+            code += `}`;
+
+            generatedRawCode = code; // Save for copy button
+            document.getElementById("code-display").innerHTML = highlightSyntax(code);
+        }
+
+        function highlightSyntax(code) {
+            // Simple regex-based highlighter
+            // Note: Order matters (strings/comments first)
+            let html = code
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // Highlights
+            html = html
+                // Strings
+                .replace(/(".*?")/g, '<span class="hl-str">$1</span>')
+                // Comments (Single line)
+                .replace(/(\/\/.*)/g, '<span class="hl-comment">$1</span>')
+                // Preprocessor
+                .replace(/(#include <.*>)/g, '<span class="hl-keyword">$1</span>')
+                // Keywords
+                .replace(/\b(int|void|if|else|for|return|unsigned)\b/g, '<span class="hl-keyword">$1</span>')
+                // Functions
+                .replace(/\b(printf|print_binary|main)\b/g, '<span class="hl-fn">$1</span>')
+                // Numbers
+                .replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
+
+            return html;
+        }
+
+        function toggleCodeExample() {
+            const box = document.getElementById("code-example-box");
+            const btn = document.getElementById("show-code-btn");
+
+            if (box.classList.contains("visible")) {
+                box.classList.remove("visible");
+                // Delay display none for transition
+                setTimeout(() => box.style.display = "none", 300);
+                btn.textContent = "Show C code example";
+            } else {
+                box.style.display = "block";
+                // Small delay to allow display:block to apply before opacity transition
+                setTimeout(() => box.classList.add("visible"), 10);
+                btn.textContent = "Hide C code example";
             }
         }
 
-        document.getElementById("decRes").value = res;
-        document.getElementById("binRes").value = toBinaryString(res, visualBitLen);
+        async function copyCode(btn) {
+            try {
+                await navigator.clipboard.writeText(generatedRawCode);
+                let originalHtml = btn.innerHTML;
 
-        generateExplanation(a, b, res, currentOp, visualBitLen);
-        generateAndDisplayCode(a, b, res, currentOp, visualBitLen);
-    }
-
-    function generateExplanation(a, b, res, op, bitLen) {
-        document.getElementById("ruleText").innerText = rules[op];
-
-        let strA = toBinaryString(a, bitLen);
-        let strB = toBinaryString(b, bitLen);
-        let strRes = toBinaryString(res, bitLen);
-        
-        let maxLen = Math.max(strA.length, strB.length, strRes.length, bitLen);
-        
-        strA = strA.padStart(maxLen, '0');
-        strB = strB.padStart(maxLen, '0');
-        strRes = strRes.padStart(maxLen, '0');
-
-        let visualText = "";
-        let opSpacing = op.length === 1 ? `  ${op} ` : `${op} `;
-
-        if (op === "~") {
-            visualText = `    ${strA}  [${a}]\n`;
-            visualText += `(~) ${strRes}  [${res}]`;
-        }
-        else if (op === "<<" || op === ">>") {
-            visualText = `    ${strA}  [${a}]\n`;
-            visualText += `    Shifted by ${b}\n`;
-            visualText += `    ${strRes}  [${res}]`;
-        }
-        else {
-            visualText = `    ${strA}  [${a}]\n`;
-            visualText += `${opSpacing}${strB}  [${b}]\n`;
-            visualText += `    ${strRes}  [${res}]`;
-        }
-
-        document.getElementById("visualMath").innerText = visualText;
-    }
-
-    // --- Modern Code Generation & Syntax Highlighting ---
-
-    function generateAndDisplayCode(a, b, res, op, bitLen) {
-        let code = "";
-        
-        // Define clean C code template
-        code += `#include <stdio.h>\n\n`;
-        code += `// Helper function to print binary representation\n`;
-        code += `void print_binary(unsigned int n) {\n`;
-        code += `    for (int i = ${bitLen - 1}; i >= 0; i--) {\n`;
-        code += `        int k = n >> i;\n`;
-        code += `        if (k & 1) printf("1");\n`;
-        code += `        else printf("0");\n`;
-        code += `    }\n`;
-        code += `    printf("\\n");\n`;
-        code += `}\n\n`;
-        
-        code += `int main() {\n`;
-        
-        // Variable declarations
-        code += `    unsigned int a = ${a};      // ${toBinaryString(a, bitLen)}\n`;
-        
-        if (op !== "~") {
-            code += `    unsigned int b = ${b};      // ${toBinaryString(b, bitLen)}\n`;
-        }
-        
-        code += `    unsigned int result = 0;\n\n`;
-
-        // Operation
-        if (op === "~") {
-            code += `    // Bitwise NOT Operation\n`;
-            code += `    result = ~a;\n`;
-        } else if (op === "<<") {
-            code += `    // Left Shift Operation\n`;
-            code += `    result = a << b;\n`;
-        } else if (op === ">>") {
-            code += `    // Right Shift Operation\n`;
-            code += `    result = a >> b;\n`;
-        } else {
-            let opName = op === "&" ? "AND" : op === "|" ? "OR" : "XOR";
-            code += `    // Bitwise ${opName} Operation\n`;
-            code += `    result = a ${op} b;\n`;
-        }
-
-        code += `\n    // Output results in binary\n`;
-        code += `    printf("A:      "); print_binary(a);\n`;
-        if (op !== "~") {
-             if (op === "<<" || op === ">>") {
-                code += `    printf("Shift:  %d\\n", b);\n`; 
-             } else {
-                code += `    printf("B:      "); print_binary(b);\n`;
-             }
-        }
-        code += `    printf("Result: "); print_binary(result);\n\n`;
-        code += `    return 0;\n`;
-        code += `}`;
-
-        generatedRawCode = code; // Save for copy button
-        document.getElementById("code-display").innerHTML = highlightSyntax(code);
-    }
-
-    function highlightSyntax(code) {
-        // Simple regex-based highlighter
-        // Note: Order matters (strings/comments first)
-        let html = code
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-
-        // Highlights
-        html = html
-            // Strings
-            .replace(/(".*?")/g, '<span class="hl-str">$1</span>')
-            // Comments (Single line)
-            .replace(/(\/\/.*)/g, '<span class="hl-comment">$1</span>')
-            // Preprocessor
-            .replace(/(#include <.*>)/g, '<span class="hl-keyword">$1</span>')
-            // Keywords
-            .replace(/\b(int|void|if|else|for|return|unsigned)\b/g, '<span class="hl-keyword">$1</span>')
-            // Functions
-            .replace(/\b(printf|print_binary|main)\b/g, '<span class="hl-fn">$1</span>')
-            // Numbers
-            .replace(/\b(\d+)\b/g, '<span class="hl-num">$1</span>');
-
-        return html;
-    }
-
-    function toggleCodeExample() {
-        const box = document.getElementById("code-example-box");
-        const btn = document.getElementById("show-code-btn");
-        
-        if (box.classList.contains("visible")) {
-            box.classList.remove("visible");
-            // Delay display none for transition
-            setTimeout(() => box.style.display = "none", 300);
-            btn.textContent = "Show C code example";
-        } else {
-            box.style.display = "block";
-            // Small delay to allow display:block to apply before opacity transition
-            setTimeout(() => box.classList.add("visible"), 10);
-            btn.textContent = "Hide C code example";
-        }
-    }
-
-    async function copyCode(btn) {
-        try {
-            await navigator.clipboard.writeText(generatedRawCode);
-            let originalHtml = btn.innerHTML;
-            
-            // Success Feedback
-            btn.innerHTML = `
+                // Success Feedback
+                btn.innerHTML = `
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
                 Copied!`;
-            btn.style.color = "#27c93f";
-            btn.style.borderColor = "#27c93f";
+                btn.style.color = "#27c93f";
+                btn.style.borderColor = "#27c93f";
 
-            setTimeout(() => {
-                btn.innerHTML = originalHtml;
-                btn.style.color = "";
-                btn.style.borderColor = "";
-            }, 2000);
-        } catch (err) {
-            console.error('Failed to copy text: ', err);
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.style.color = "";
+                    btn.style.borderColor = "";
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
         }
-    }
 
-    window.onload = function() {
-        calculate();
-    };
-</script>
+        window.onload = function () {
+            calculate();
+        };
+    </script>
 
 </body>
+
 </html>

@@ -1,89 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Hexadecimal Converter</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Hexadecimal to Decimal Converter — PocketEngineer</title>
+  <meta name="description"
+    content="Convert between hexadecimal and decimal numbers instantly. Visual power-of-16 breakdown with step-by-step calculation. Supports values up to 64-bit (16 hex digits).">
+  <link rel="canonical" href="https://www.pockeng.com/hexa.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/hexa.html">
+  <meta property="og:title" content="Hexadecimal to Decimal Converter — PocketEngineer">
+  <meta property="og:description"
+    content="Hex ↔ Decimal converter with visual digit breakdown and step-by-step power-of-16 calculations.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
   <style>
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
-    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
-    
-    .input-card { 
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .input-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid #e4e4e7;
       background-color: white;
     }
-    .input-card:focus-within { 
-      border-color: #18181b; 
-      background-color: white; 
+
+    .input-card:focus-within {
+      border-color: #18181b;
+      background-color: white;
       box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08);
       transform: translateY(-1px);
     }
-    
+
     .byte-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid #e4e4e7;
       background-color: white;
     }
+
     .byte-card.selected {
-      border-color: #8b5cf6; /* Violet for Hex */
+      border-color: #8b5cf6;
+      /* Violet for Hex */
       background-color: #f5f3ff;
       box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
       transform: scale(1.02);
     }
-    
+
     .explanation-row {
       animation: slideIn 0.3s ease-out forwards;
       opacity: 0;
       transform: translateY(8px);
     }
+
     @keyframes slideIn {
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased">
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
       <a href="index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
         Back
       </a>
-      
+
       <div class="flex items-center gap-4">
-        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+        <button onclick="resetCalc()"
+          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
       </div>
     </div>
   </header>
+  <h1 class="sr-only">Hexadecimal to Decimal Converter</h1>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
-    
+
     <!-- Left: Inputs & Explanation -->
-    <div class="lg:w-[500px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col">
+    <div
+      class="lg:w-[500px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col">
       <div class="p-6 space-y-6">
-        
+
         <!-- Decimal Input -->
         <div id="decimal-card" class="input-card rounded-xl p-5">
           <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number (Base 10)</label>
           <div class="flex items-baseline gap-2">
-            <input type="number" id="decimal-input" oninput="convertFromDecimal()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
+            <input type="number" id="decimal-input" oninput="convertFromDecimal()"
+              class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
           </div>
           <p class="text-xs text-zinc-400 mt-2">Enter a positive integer</p>
         </div>
@@ -93,7 +117,9 @@
           <label class="text-[10px] font-bold text-violet-500 uppercase mb-2 block">Hexadecimal Number (Base 16)</label>
           <div class="flex items-baseline gap-2">
             <span class="text-2xl font-mono text-zinc-400 font-bold">0x</span>
-            <input type="text" id="hex-input" oninput="convertFromHex()" class="w-full bg-transparent font-mono text-3xl outline-none uppercase" placeholder="00" pattern="[0-9A-Fa-f]*" spellcheck="false">
+            <input type="text" id="hex-input" oninput="convertFromHex()"
+              class="w-full bg-transparent font-mono text-3xl outline-none uppercase" placeholder="00"
+              pattern="[0-9A-Fa-f]*" spellcheck="false">
           </div>
           <p class="text-xs text-zinc-400 mt-2">Enter hex digits (0-9, A-F)</p>
         </div>
@@ -124,7 +150,7 @@
         <!-- How It Works Explanation -->
         <div id="how-it-works" class="bg-violet-50 rounded-xl p-5 border border-violet-200 hidden">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-xs font-bold text-violet-600 uppercase tracking-wider">How It Works</h3>
+            <h2 class="text-xs font-bold text-violet-600 uppercase tracking-wider">How It Works</h2>
             <span id="how-it-works-direction" class="text-xs font-bold text-violet-600 uppercase tracking-wider"></span>
           </div>
           <div id="how-it-works-content" class="text-sm text-violet-900 leading-relaxed space-y-3"></div>
@@ -135,27 +161,30 @@
 
     <!-- Right: Visual Explanation -->
     <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
-      
+
       <!-- Canvas Backdrop -->
-      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
-      
+      <div class="absolute inset-0 pointer-events-none opacity-40"
+        style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+
       <!-- Main Visualization Card -->
-      <div class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl max-h-full overflow-y-auto">
+      <div
+        class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl max-h-full overflow-y-auto">
         <div id="visualization-content">
           <div class="text-center mb-8">
             <div class="text-5xl md:text-6xl font-mono font-bold text-zinc-900 mb-4 break-all" id="main-result">0</div>
           </div>
-          
+
           <!-- Power of 16 Visualization -->
           <div id="power-visualization" class="hidden mb-6">
-            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Hexadecimal Representation</div>
+            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">
+              Hexadecimal Representation</div>
             <div id="power-note" class="text-[10px] text-zinc-500 mb-3 italic text-center"></div>
             <div id="power-grid" class="grid grid-cols-4 md:grid-cols-8 gap-2"></div>
           </div>
 
           <!-- Step-by-Step Explanation -->
           <div id="explanation-panel" class="hidden mt-6 pt-6 border-t border-zinc-200">
-            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Step-by-Step Calculation</h3>
+            <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Step-by-Step Calculation</h2>
             <div id="explanation-content" class="space-y-2"></div>
           </div>
         </div>
@@ -205,7 +234,7 @@
 
     function convertFromDecimal() {
       const rawVal = decimalInput.value.trim();
-      
+
       if (rawVal === '' || isNaN(Number(rawVal)) || Number(rawVal) < 0) {
         if (rawVal === '') hexInput.value = '';
         clearVisualizations();
@@ -214,7 +243,7 @@
 
       try {
         const decimalBig = BigInt(rawVal);
-        
+
         // Auto-determine required bits
         const requiredBits = getRequiredBits(decimalBig);
         updateBitIndicator(requiredBits);
@@ -223,7 +252,7 @@
         let hex = decimalBig.toString(16).toUpperCase();
         const requiredHexDigits = requiredBits / 4;
         hex = hex.padStart(requiredHexDigits, '0');
-        
+
         hexInput.value = hex;
         updateVisualizations(decimalBig, hex, true);
       } catch (e) {
@@ -233,12 +262,12 @@
 
     function convertFromHex() {
       let hex = hexInput.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
-      
+
       // Preserve cursor position by updating value only if it changed invalid chars
       if (hexInput.value !== hex) {
-          hexInput.value = hex;
+        hexInput.value = hex;
       }
-      
+
       if (hex === '') {
         decimalInput.value = '';
         clearVisualizations();
@@ -250,14 +279,14 @@
         let requiredBits = Math.max(8, Math.ceil(hex.length / 2) * 8);
         if (requiredBits > 64) requiredBits = 64;
         if (requiredBits < 8) requiredBits = 8;
-        
+
         // Pad hex string to match byte boundaries
         const paddedHex = hex.padStart(requiredBits / 4, '0');
         updateBitIndicator(requiredBits);
 
         const decimalBig = BigInt('0x' + paddedHex);
         decimalInput.value = decimalBig.toString();
-        
+
         updateVisualizations(decimalBig, paddedHex, false);
       } catch (e) {
         clearVisualizations();
@@ -266,8 +295,8 @@
 
     function updateVisualizations(decimalBig, hex, fromDecimal) {
       // Update main result
-      mainResult.innerHTML = fromDecimal 
-        ? `<span class="text-zinc-400">0x</span>${hex}` 
+      mainResult.innerHTML = fromDecimal
+        ? `<span class="text-zinc-400">0x</span>${hex}`
         : decimalBig.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
       // Create "How It Works" explanation
@@ -294,30 +323,30 @@
 
       // Create step-by-step explanation
       explanationContent.innerHTML = '';
-      
+
       if (fromDecimal) {
         // Show decimal to hex conversion steps
         let tempDecimal = decimalBig;
         const steps = [];
-        
+
         if (tempDecimal === 0n) {
-            steps.push({ decimal: 0n, remainder: 0n, hexChar: '0', quotient: 0n });
+          steps.push({ decimal: 0n, remainder: 0n, hexChar: '0', quotient: 0n });
         } else {
-            while (tempDecimal > 0n) {
-              const remainder = tempDecimal % 16n;
-              const quotient = tempDecimal / 16n;
-              steps.push({ decimal: tempDecimal, remainder, hexChar: hexChars[Number(remainder)], quotient });
-              tempDecimal = quotient;
-            }
+          while (tempDecimal > 0n) {
+            const remainder = tempDecimal % 16n;
+            const quotient = tempDecimal / 16n;
+            steps.push({ decimal: tempDecimal, remainder, hexChar: hexChars[Number(remainder)], quotient });
+            tempDecimal = quotient;
+          }
         }
-        
+
         steps.forEach((step, idx) => {
           const row = document.createElement('div');
           row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
           row.style.animationDelay = `${idx * 50}ms`;
-          
-          let remText = step.remainder >= 10n 
-            ? `${step.remainder} → <strong class="text-violet-600 text-base">${step.hexChar}</strong>` 
+
+          let remText = step.remainder >= 10n
+            ? `${step.remainder} → <strong class="text-violet-600 text-base">${step.hexChar}</strong>`
             : `<strong class="text-violet-600 text-base">${step.hexChar}</strong>`;
 
           row.innerHTML = `
@@ -328,19 +357,19 @@
           `;
           explanationContent.appendChild(row);
         });
-        
+
         updateBitsTable(hex);
 
       } else {
         // Show hex to decimal conversion steps
         const hexArray = hex.split('');
         const activeBits = [];
-        
+
         for (let i = hexArray.length - 1; i >= 0; i--) {
           const char = hexArray[i];
           const decValue = BigInt('0x' + char);
           const power = BigInt(hexArray.length - 1 - i);
-          
+
           // Only show steps for non-zero values to keep it clean, unless it's the only digit
           if (decValue > 0n || hexArray.length === 1) {
             const multiplier = 16n ** power;
@@ -348,12 +377,12 @@
             activeBits.push({ positionFromRight: power, char, decValue, multiplier, value });
           }
         }
-        
+
         activeBits.forEach((item, idx) => {
           const row = document.createElement('div');
           row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
           row.style.animationDelay = `${idx * 50}ms`;
-          
+
           let charDisplay = item.decValue >= 10n ? `${item.char} (${item.decValue})` : item.char;
 
           row.innerHTML = `
@@ -377,20 +406,20 @@
       powerVisualization.classList.remove('hidden');
       powerTitle.innerHTML = 'Hexadecimal Digits';
       powerNote.textContent = 'Read the remainders from bottom to top to form this string';
-      
+
       const digits = hex.split('');
-      const maxDigits = Math.min(16, digits.length); 
-      
+      const maxDigits = Math.min(16, digits.length);
+
       for (let i = 0; i < maxDigits; i++) {
         const char = digits[i];
-        
+
         const cell = document.createElement('div');
         cell.className = `p-3 rounded-lg border-2 text-center transition-all bg-violet-500 border-violet-600 text-white shadow-sm`;
-        
+
         cell.innerHTML = `
           <div class="text-lg font-mono font-bold">${char}</div>
         `;
-        
+
         powerGrid.appendChild(cell);
       }
     }
@@ -400,26 +429,25 @@
       powerVisualization.classList.remove('hidden');
       powerTitle.textContent = 'Power of 16 Breakdown';
       powerNote.textContent = 'Positions start from 0 at the right';
-      
+
       const digits = hex.split('');
-      const maxDigits = Math.min(16, digits.length); 
-      
+      const maxDigits = Math.min(16, digits.length);
+
       for (let i = 0; i < maxDigits; i++) {
         const char = digits[i];
         const decValue = parseInt(char, 16);
         const power = (digits.length - 1) - i;
-        
+
         const cell = document.createElement('div');
-        cell.className = `p-2 rounded-lg border-2 text-center transition-all ${
-          decValue > 0
-            ? 'bg-violet-500 border-violet-600 text-white shadow-sm'
-            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-        }`;
-        
+        cell.className = `p-2 rounded-lg border-2 text-center transition-all ${decValue > 0
+          ? 'bg-violet-500 border-violet-600 text-white shadow-sm'
+          : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+          }`;
+
         // Format large multipliers nicely, or use scientific notation if too big for UI box
         let multiplierStr = (16 ** power).toString();
         if (multiplierStr.length > 6) {
-            multiplierStr = `16^${power}`;
+          multiplierStr = `16^${power}`;
         }
 
         cell.innerHTML = `
@@ -427,7 +455,7 @@
           <div class="text-[10px] mb-1 opacity-90">16<sup>${power}</sup></div>
           <div class="text-[9px] opacity-75 font-mono break-all">${multiplierStr}</div>
         `;
-        
+
         powerGrid.appendChild(cell);
       }
     }
@@ -484,4 +512,5 @@
     });
   </script>
 </body>
+
 </html>

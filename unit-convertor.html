@@ -1,50 +1,77 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Unit Converter</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Unit Converter (Length, Weight, Temperature & More) — PocketEngineer</title>
+  <meta name="description"
+    content="Free all-in-one unit converter — convert length (inches, mm, km, miles), area (m², sq ft, acres), volume (liters, gallons), weight (kg, lbs), temperature (°C, °F, K), power (hp, kW), pressure (PSI, Pa, bar), and Roman numerals. Instant bidirectional calculations.">
+  <link rel="canonical" href="https://www.pockeng.com/unit-convertor.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/unit-convertor.html">
+  <meta property="og:title" content="Unit Converter — PocketEngineer">
+  <meta property="og:description"
+    content="Convert between metric and imperial units instantly. Length, area, volume, weight, temperature, power, pressure, and Roman numerals.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
   <style>
     /* Input Polish */
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type=number] { -moz-appearance: textfield; }
-    
-    .input-card { transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-    .input-card:focus-within { 
-      border-color: #71717a; 
-      background-color: white; 
-      box-shadow: 0 4px 12px -2px rgba(0,0,0,0.05); 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .input-card {
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .input-card:focus-within {
+      border-color: #71717a;
+      background-color: white;
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
       transform: translateY(-1px);
     }
 
 
     /* Hide Scrollbar for Nav */
-    .hide-scroll::-webkit-scrollbar { display: none; }
-    .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    .hide-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
     /* Nav Link Active State */
-    .nav-link.active { background-color: #f4f4f5; color: #18181b; font-weight: 600; }
+    .nav-link.active {
+      background-color: #f4f4f5;
+      color: #18181b;
+      font-weight: 600;
+    }
 
     /* Modal Transitions */
-    .modal-backdrop { transition: opacity 0.3s ease-out; }
-    .modal-panel { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modal-backdrop {
+      transition: opacity 0.3s ease-out;
+    }
+
+    .modal-panel {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
   </style>
 </head>
+
 <body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden antialiased">
 
   <!-- Header -->
@@ -52,63 +79,86 @@
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-4">
         <a href="index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
           Back
         </a>
         <div class="w-px h-6 bg-zinc-200 hidden md:block"></div>
         <h1 class="text-lg font-semibold text-zinc-900 tracking-tight hidden md:block">Unit Converter</h1>
       </div>
       <div class="flex items-center gap-4">
-        <button onclick="resetAll()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset All</button>
+        <button onclick="resetAll()"
+          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset
+          All</button>
       </div>
     </div>
   </header>
 
   <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative z-0 max-w-7xl mx-auto w-full">
-    
+
     <!-- Navigation Sidebar with Info Buttons -->
-    <nav class="md:w-64 flex-none bg-white border-b md:border-b-0 md:border-r border-zinc-200 overflow-x-auto md:overflow-y-auto hide-scroll z-10">
+    <nav
+      class="md:w-64 flex-none bg-white border-b md:border-b-0 md:border-r border-zinc-200 overflow-x-auto md:overflow-y-auto hide-scroll z-10">
       <div class="flex md:flex-col p-2 md:p-4 gap-1">
-        <p class="hidden md:block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-3 pt-2">Categories</p>
-        
+        <p class="hidden md:block text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-2 px-3 pt-2">
+          Categories</p>
+
         <div class="relative flex items-center">
-          <a href="#length" class="nav-link active w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Length</a>
-          <button onclick="openInfo('length')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
-        </div>
-        
-        <div class="relative flex items-center">
-          <a href="#area" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Area</a>
-          <button onclick="openInfo('area')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#length"
+            class="nav-link active w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Length</a>
+          <button onclick="openInfo('length')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#volume" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Volume (Liquid)</a>
-          <button onclick="openInfo('volume')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#area"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Area</a>
+          <button onclick="openInfo('area')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#weight" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Weight & Mass</a>
-          <button onclick="openInfo('weight')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#volume"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Volume</a>
+          <button onclick="openInfo('volume')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#temperature" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Temperature</a>
-          <button onclick="openInfo('temperature')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#weight"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Weight
+            & Mass</a>
+          <button onclick="openInfo('weight')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#power" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Power</a>
-          <button onclick="openInfo('power')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#temperature"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Temperature</a>
+          <button onclick="openInfo('temperature')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#pressure" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Pressure</a>
-          <button onclick="openInfo('pressure')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#power"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Power</a>
+          <button onclick="openInfo('power')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
-          <a href="#numerals" class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Numerals</a>
-          <button onclick="openInfo('numerals')" class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+          <a href="#pressure"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Pressure</a>
+          <button onclick="openInfo('pressure')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+        </div>
+
+        <div class="relative flex items-center">
+          <a href="#numerals"
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Numerals</a>
+          <button onclick="openInfo('numerals')"
+            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
       </div>
     </nav>
@@ -123,7 +173,7 @@
             Length <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
           <div class="space-y-4">
-            
+
             <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
@@ -131,12 +181,17 @@
                     <label class="text-[10px] font-bold text-purple-500 uppercase block">Inches (in)</label>
                     <span class="text-[9px] text-zinc-400 font-medium">Accepts fractions</span>
                   </div>
-                  <input type="text" id="val-in" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="e.g. 1 1/2 or 3/16">
+                  <input type="text" id="val-in" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="e.g. 1 1/2 or 3/16">
                 </div>
-                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                  </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <label class="text-[10px] font-bold text-pink-500 uppercase block mb-1">Millimeters (mm)</label>
-                  <input type="number" id="val-mm" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <input type="number" id="val-mm" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="0">
                 </div>
               </div>
             </div>
@@ -145,12 +200,17 @@
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Kilometers (km)</label>
-                  <input type="number" id="val-km" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <input type="number" id="val-km" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="0">
                 </div>
-                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                  </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <label class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">Miles (mi)</label>
-                  <input type="number" id="val-mi" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <input type="number" id="val-mi" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="0">
                 </div>
               </div>
             </div>
@@ -159,12 +219,17 @@
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <label class="text-[10px] font-bold text-emerald-500 uppercase block mb-1">Meters (m)</label>
-                  <input type="number" id="val-m" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <input type="number" id="val-m" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="0">
                 </div>
-                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+                <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                  </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <label class="text-[10px] font-bold text-teal-500 uppercase block mb-1">Feet (ft)</label>
-                  <input type="number" id="val-ft" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                  <input type="number" id="val-ft" class="w-full bg-transparent font-mono text-lg outline-none"
+                    placeholder="0">
                 </div>
               </div>
             </div>
@@ -180,42 +245,54 @@
             <div class="grid grid-cols-2 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-cyan-500 uppercase block mb-1">Sq Meters (m²)</label>
-                <input type="number" id="val-m2" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-m2" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Sq Feet (sq ft)</label>
-                <input type="number" id="val-sqft" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-sqft" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-green-500 uppercase block mb-1">Acres</label>
-                <input type="number" id="val-acre" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-acre" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">Hectares (ha)</label>
-                <input type="number" id="val-hectare" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-hectare" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
         </section>
 
-        <!-- VOLUME (LIQUID) SECTION -->
+        <!-- VOLUME SECTION -->
         <section id="volume" class="scroll-mt-8">
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-            Volume (Liquid) <span class="h-px bg-zinc-200 flex-1"></span>
+            Volume <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label class="text-[10px] font-bold text-fuchsia-500 uppercase block mb-1">Cubic Meters (m³)</label>
+                <input type="number" id="val-m3" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
+              </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Liters (L)</label>
-                <input type="number" id="val-l" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-l" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">US Fl. Ounces (oz)</label>
-                <input type="number" id="val-floz" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-floz" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">US Gallons (gal)</label>
-                <input type="number" id="val-gal" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-gal" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
@@ -230,12 +307,17 @@
             <div class="flex flex-col sm:flex-row items-center gap-3">
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-rose-500 uppercase block mb-1">Kilograms (kg)</label>
-                <input type="number" id="val-kg" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-kg" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
-              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                </svg></div>
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-orange-500 uppercase block mb-1">Pounds (lbs)</label>
-                <input type="number" id="val-lbs" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-lbs" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
@@ -250,15 +332,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Celsius (°C)</label>
-                <input type="number" id="val-c" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-c" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-amber-500 uppercase block mb-1">Fahrenheit (°F)</label>
-                <input type="number" id="val-f" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-f" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-purple-500 uppercase block mb-1">Kelvin (K)</label>
-                <input type="number" id="val-k" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-k" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
@@ -273,12 +358,17 @@
             <div class="flex flex-col sm:flex-row items-center gap-3">
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-red-500 uppercase block mb-1">Horsepower (hp)</label>
-                <input type="number" id="val-hp" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-hp" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
-              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                </svg></div>
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-yellow-500 uppercase block mb-1">Kilowatts (kW)</label>
-                <input type="number" id="val-kw" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-kw" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
@@ -293,15 +383,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-gray-500 uppercase block mb-1">PSI</label>
-                <input type="number" id="val-psi" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-psi" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-zinc-700 uppercase block mb-1">Pascals (Pa)</label>
-                <input type="number" id="val-pa" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-pa" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Bar</label>
-                <input type="number" id="val-bar" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
+                <input type="number" id="val-bar" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
               </div>
             </div>
           </div>
@@ -319,15 +412,20 @@
                   <label class="text-[10px] font-bold text-amber-600 uppercase block">Roman Numerals</label>
                   <span class="text-[9px] text-zinc-400 font-medium">I, V, X, L, C, D, M</span>
                 </div>
-                <input type="text" id="val-roman" class="w-full bg-transparent font-mono text-lg outline-none uppercase" placeholder="e.g. XIV">
+                <input type="text" id="val-roman" class="w-full bg-transparent font-mono text-lg outline-none uppercase"
+                  placeholder="e.g. XIV">
               </div>
-              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/></svg></div>
+              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
+                </svg></div>
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <div class="flex justify-between items-center mb-1">
                   <label class="text-[10px] font-bold text-orange-600 uppercase block">Arabic Numerals</label>
                   <span class="text-[9px] text-zinc-400 font-medium">1 to 3999</span>
                 </div>
-                <input type="number" id="val-arabic" class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0" min="1" max="3999">
+                <input type="number" id="val-arabic" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0" min="1" max="3999">
               </div>
             </div>
           </div>
@@ -338,12 +436,19 @@
   </div>
 
   <!-- Centered Info Modal -->
-  <div id="info-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none modal-backdrop bg-zinc-900/40 backdrop-blur-sm" onclick="closeInfo(event)">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform scale-95 modal-panel flex flex-col max-h-[85vh]" id="info-modal-content">
+  <div id="info-modal"
+    class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none modal-backdrop bg-zinc-900/40 backdrop-blur-sm"
+    onclick="closeInfo(event)">
+    <div
+      class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform scale-95 modal-panel flex flex-col max-h-[85vh]"
+      id="info-modal-content">
       <div class="flex justify-between items-start mb-4">
         <h3 id="info-title" class="text-xl font-bold text-zinc-900">Title</h3>
-        <button onclick="closeInfo(event, true)" class="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-500 transition-colors shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        <button onclick="closeInfo(event, true)" aria-label="Close"
+          class="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-500 transition-colors shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
         </button>
       </div>
       <div class="overflow-y-auto hide-scroll">
@@ -379,13 +484,14 @@
         `
       },
       'volume': {
-        title: 'Volume (Liquid)',
+        title: 'Volume',
         content: `
           <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 m³</strong> = 1000 L</li>
             <li><strong>1 L</strong> ≈ 33.814 US fl oz</li>
             <li><strong>1 US gal</strong> = 128 US fl oz ≈ 3.785 L</li>
           </ul>
-          <p class="mt-3 text-zinc-600">Liters for fuel and lab work; fl oz for drinks and recipes; gallons for tanks and fuel economy (US).</p>
+          <p class="mt-3 text-zinc-600">Cubic meters for solids and large capacities; Liters for fuel and lab work; fl oz for drinks and recipes; gallons for tanks and fuel economy (US).</p>
           <p class="mt-2 text-xs text-zinc-400">US fluid measures; UK Imperial differs slightly.</p>
         `
       },
@@ -503,7 +609,7 @@
 
     bindConverter('val-km', 'val-mi', 0.621371);
     bindConverter('val-m', 'val-ft', 3.28084);
-    
+
     // 2. Area (4-Way)
     const aM2 = document.getElementById('val-m2');
     const aSqft = document.getElementById('val-sqft');
@@ -511,7 +617,7 @@
     const aHect = document.getElementById('val-hectare');
 
     function updateArea(source, valInM2) {
-      if (isNaN(valInM2)) { aM2.value=''; aSqft.value=''; aAcre.value=''; aHect.value=''; return; }
+      if (isNaN(valInM2)) { aM2.value = ''; aSqft.value = ''; aAcre.value = ''; aHect.value = ''; return; }
       if (source !== aM2) aM2.value = formatNumber(valInM2);
       if (source !== aSqft) aSqft.value = formatNumber(valInM2 * 10.7639104);
       if (source !== aAcre) aAcre.value = formatNumber(valInM2 / 4046.85642);
@@ -522,24 +628,27 @@
     aAcre.addEventListener('input', () => updateArea(aAcre, parseFloat(aAcre.value) * 4046.85642));
     aHect.addEventListener('input', () => updateArea(aHect, parseFloat(aHect.value) * 10000));
 
-    // 3. Volume (3-Way)
+    // 3. Volume (4-Way)
+    const vM3 = document.getElementById('val-m3');
     const vL = document.getElementById('val-l');
     const vOz = document.getElementById('val-floz');
     const vGal = document.getElementById('val-gal');
 
     function updateVolume(source, valInL) {
-      if (isNaN(valInL)) { vL.value=''; vOz.value=''; vGal.value=''; return; }
+      if (isNaN(valInL)) { vM3.value = ''; vL.value = ''; vOz.value = ''; vGal.value = ''; return; }
+      if (source !== vM3) vM3.value = formatNumber(valInL / 1000);
       if (source !== vL) vL.value = formatNumber(valInL);
       if (source !== vOz) vOz.value = formatNumber(valInL * 33.8140226);
       if (source !== vGal) vGal.value = formatNumber(valInL * 0.264172052);
     }
+    vM3.addEventListener('input', () => updateVolume(vM3, parseFloat(vM3.value) * 1000));
     vL.addEventListener('input', () => updateVolume(vL, parseFloat(vL.value)));
     vOz.addEventListener('input', () => updateVolume(vOz, parseFloat(vOz.value) / 33.8140226));
     vGal.addEventListener('input', () => updateVolume(vGal, parseFloat(vGal.value) / 0.264172052));
 
     // 4. Weight
     bindConverter('val-kg', 'val-lbs', 2.20462);
-    
+
     // 5. Temperature (3-Way)
     const tC = document.getElementById('val-c');
     const tF = document.getElementById('val-f');
@@ -547,12 +656,12 @@
     tC.addEventListener('input', () => {
       if (tC.value === '') { tF.value = ''; tK.value = ''; return; }
       const c = parseFloat(tC.value);
-      tF.value = formatNumber((c * 9/5) + 32);
+      tF.value = formatNumber((c * 9 / 5) + 32);
       tK.value = formatNumber(c + 273.15);
     });
     tF.addEventListener('input', () => {
       if (tF.value === '') { tC.value = ''; tK.value = ''; return; }
-      const c = (parseFloat(tF.value) - 32) * 5/9;
+      const c = (parseFloat(tF.value) - 32) * 5 / 9;
       tC.value = formatNumber(c);
       tK.value = formatNumber(c + 273.15);
     });
@@ -560,7 +669,7 @@
       if (tK.value === '') { tC.value = ''; tF.value = ''; return; }
       const c = parseFloat(tK.value) - 273.15;
       tC.value = formatNumber(c);
-      tF.value = formatNumber((c * 9/5) + 32);
+      tF.value = formatNumber((c * 9 / 5) + 32);
     });
 
     // 6. Power
@@ -571,7 +680,7 @@
     const pPa = document.getElementById('val-pa');
     const pBar = document.getElementById('val-bar');
     function updatePressure(source, valInPa) {
-      if (isNaN(valInPa)) { pPsi.value=''; pPa.value=''; pBar.value=''; return; }
+      if (isNaN(valInPa)) { pPsi.value = ''; pPa.value = ''; pBar.value = ''; return; }
       if (source !== pPa) pPa.value = formatNumber(valInPa);
       if (source !== pPsi) pPsi.value = formatNumber(valInPa / 6894.75729);
       if (source !== pBar) pBar.value = formatNumber(valInPa / 100000);
@@ -586,7 +695,7 @@
 
     function toRoman(num) {
       if (num < 1 || num > 3999) return '';
-      const roman = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
+      const roman = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
       let str = '';
       for (let i of Object.keys(roman)) {
         let q = Math.floor(num / roman[i]);
@@ -598,11 +707,11 @@
 
     function toArabic(str) {
       str = str.toUpperCase();
-      const roman = {I:1, V:5, X:10, L:50, C:100, D:500, M:1000};
+      const roman = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
       let num = 0;
       for (let i = 0; i < str.length; i++) {
         let curr = roman[str[i]];
-        let next = roman[str[i+1]];
+        let next = roman[str[i + 1]];
         if (!curr) return NaN;
         if (next && curr < next) num -= curr;
         else num += curr;
@@ -639,7 +748,7 @@
           const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
           if (activeLink) {
             activeLink.classList.add('active');
-            if(window.innerWidth < 768) {
+            if (window.innerWidth < 768) {
               activeLink.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
           }
@@ -677,4 +786,5 @@
     });
   </script>
 </body>
+
 </html>

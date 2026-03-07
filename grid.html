@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resistors, Battery & Solar Series-Parallel calculator</title>
+    <title>Circuit Canvas — Series & Parallel Simulator — PocketEngineer</title>
+    <meta name="description"
+        content="Build and simulate series and parallel circuits with resistors, batteries, and solar panels. Visual circuit canvas with real-time calculations for total resistance, voltage, and current.">
+    <link rel="canonical" href="https://www.pockeng.com/grid.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.pockeng.com/grid.html">
+    <meta property="og:title" content="Circuit Canvas — Series & Parallel Simulator — PocketEngineer">
+    <meta property="og:description"
+        content="Drag-and-drop circuit builder with resistors, batteries, and solar panels. Calculates series and parallel totals in real time.">
+    <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+    <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+    <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
+    <link rel="stylesheet" href="resources/common.css?v=1.2.0">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         :root {
             --bg-canvas: #f8fafc;
             --grid-color: #cbd5e1;
@@ -16,7 +27,8 @@
             --primary: #3b82f6;
             --success: #10b981;
             --danger: #ef4444;
-            --warning: #f59e0b; /* Solar Color */
+            --warning: #f59e0b;
+            /* Solar Color */
             --surface: #ffffff;
             --border: #e2e8f0;
         }
@@ -39,235 +51,563 @@
 
         /* --- Global Input Arrow Removal --- */
         input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
 
         /* --- Start Screen --- */
         #start-screen {
-            position: absolute; inset: 0; background: var(--bg-canvas);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; transition: opacity 0.4s ease, visibility 0.4s ease;
+            position: absolute;
+            inset: 0;
+            background: var(--bg-canvas);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        #start-screen.hidden { opacity: 0; visibility: hidden; }
 
-        .start-title { font-size: 32px; font-weight: 700; margin-bottom: 40px; color: var(--text-main); }
-        .mode-cards { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+        #start-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .start-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: var(--text-main);
+        }
+
+        .mode-cards {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
         .mode-card {
-            background: var(--surface); border: 2px solid var(--border); border-radius: 16px;
-            padding: 40px; width: 260px; text-align: center; cursor: pointer;
-            transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 48px 40px;
+            width: 300px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-        .mode-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .mode-card.battery:hover { border-color: var(--success); }
-        .mode-card.solar:hover { border-color: var(--warning); }
 
-        .mode-icon { font-size: 48px; margin-bottom: 20px; }
-        .mode-icon.ohm { font-family: Inter, system-ui, sans-serif; font-weight: 700; }
-        .mode-card h3 { font-size: 20px; margin-bottom: 8px; }
-        .mode-card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+        .mode-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-card.battery:hover {
+            border-color: var(--success);
+        }
+
+        .mode-card.solar:hover {
+            border-color: var(--warning);
+        }
+
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .mode-icon.ohm {
+            font-family: Inter, system-ui, sans-serif;
+            font-weight: 700;
+        }
+
+        .mode-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .mode-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
 
         /* --- Main App UI --- */
         #app-screen {
-            display: flex; flex-direction: column; height: 100%;
-            opacity: 0; visibility: hidden; transition: opacity 0.4s ease 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease 0.2s;
         }
-        #app-screen.visible { opacity: 1; visibility: visible; }
+
+        #app-screen.visible {
+            opacity: 1;
+            visibility: visible;
+        }
 
         /* Top Bar Stats */
         .top-bar {
-            display: flex; align-items: center; justify-content: center; gap: 40px;
-            padding: 20px 40px; background: var(--surface); border-bottom: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); z-index: 100; min-height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px 40px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            min-height: 85px;
         }
 
-        .stat { display: flex; flex-direction: column; align-items: center; }
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .stat label {
-            font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
-            color: var(--text-muted); margin-bottom: 4px; font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 600;
         }
-        .stat .value { font-size: 24px; font-weight: 700; color: var(--text-main); transition: color 0.2s; }
-        .stat .value.error { color: var(--danger); font-size: 20px; }
-        
+
+        .stat .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            transition: color 0.2s;
+        }
+
+        .stat .value.error {
+            color: var(--danger);
+            font-size: 20px;
+        }
+
         .stat input {
-            font-size: 22px; font-weight: 700; color: var(--text-main);
-            border: none; border-bottom: 2px solid var(--grid-color); width: 90px;
-            text-align: center; outline: none; transition: border-color 0.2s; background: transparent;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            border: none;
+            border-bottom: 2px solid var(--grid-color);
+            width: 90px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+            background: transparent;
         }
-        .stat input:focus { border-color: var(--primary); }
-        .divider { width: 1px; height: 40px; background: var(--border); }
 
-        .back-button {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-            display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text-muted);
-            text-decoration: none; cursor: pointer; transition: color 0.2s;
+        .stat input:focus {
+            border-color: var(--primary);
         }
-        .back-button:hover { color: var(--text-main); }
 
-        .start-screen-back-button {
-            display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text-muted);
-            text-decoration: none; cursor: pointer; transition: color 0.2s;
+        .divider {
+            width: 1px;
+            height: 40px;
+            background: var(--border);
         }
-        .start-screen-back-button:hover { color: var(--text-main); }
+
+        .top-bar .back-button {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .start-screen-back {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 1010;
+        }
 
         /* Canvas Area */
         .canvas-area {
-            flex-grow: 1; padding: 60px; overflow: auto;
+            flex-grow: 1;
+            padding: 60px;
+            overflow: auto;
             background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
             background-size: 24px 24px;
         }
 
         .circuit-wrapper {
-            display: flex; align-items: center; justify-content: center;
-            min-width: max-content; min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: max-content;
+            min-height: 100%;
         }
 
         .terminal {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--surface);
-            border: 2px solid var(--wire-color); display: flex; align-items: center;
-            justify-content: center; font-weight: 700; color: var(--text-main);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); flex-shrink: 0; z-index: 2; font-size: 14px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--wire-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-main);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            z-index: 2;
+            font-size: 14px;
         }
-        .terminal.positive { border-color: var(--danger); color: var(--danger); }
-        .terminal.negative { border-color: var(--primary); color: var(--primary); }
+
+        .terminal.positive {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .terminal.negative {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
 
         /* Circuit Layout & Wires */
-        .series-container { display: flex; flex-direction: row; align-items: center; flex-wrap: nowrap; }
-        .wire { width: 20px; height: 2px; background-color: var(--wire-color); flex-shrink: 0; z-index: 1; }
-        .wire-fill { flex-grow: 1; height: 2px; background-color: var(--wire-color); min-width: 12px; z-index: 1; }
-        
-        .parallel-block { display: flex; flex-direction: column; align-items: stretch; }
-        .branch { display: flex; flex-direction: row; align-items: center; position: relative; padding: 10px 0; }
+        .series-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
 
-        .vert-left, .vert-right { position: absolute; width: 2px; background-color: var(--wire-color); z-index: 1; top: 0; bottom: 0; }
-        .vert-left { left: 0; }
-        .vert-right { right: 0; }
-        .branch:first-child .vert-left, .branch:first-child .vert-right { top: calc(50% - 1px); }
-        .branch:last-child .vert-left, .branch:last-child .vert-right { bottom: calc(50% - 1px); }
-        .branch:first-child:last-child .vert-left, .branch:first-child:last-child .vert-right { top: calc(50% - 1px); bottom: calc(50% - 1px); }
+        .wire {
+            width: 20px;
+            height: 2px;
+            background-color: var(--wire-color);
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .wire-fill {
+            flex-grow: 1;
+            height: 2px;
+            background-color: var(--wire-color);
+            min-width: 12px;
+            z-index: 1;
+        }
+
+        .parallel-block {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            position: relative;
+            padding: 10px 0;
+        }
+
+        .vert-left,
+        .vert-right {
+            position: absolute;
+            width: 2px;
+            background-color: var(--wire-color);
+            z-index: 1;
+            top: 0;
+            bottom: 0;
+        }
+
+        .vert-left {
+            left: 0;
+        }
+
+        .vert-right {
+            right: 0;
+        }
+
+        .branch:first-child .vert-left,
+        .branch:first-child .vert-right {
+            top: calc(50% - 1px);
+        }
+
+        .branch:last-child .vert-left,
+        .branch:last-child .vert-right {
+            bottom: calc(50% - 1px);
+        }
+
+        .branch:first-child:last-child .vert-left,
+        .branch:first-child:last-child .vert-right {
+            top: calc(50% - 1px);
+            bottom: calc(50% - 1px);
+        }
 
         /* --- Components --- */
-        .circuit-element { position: relative; flex-shrink: 0; z-index: 10; }
+        .circuit-element {
+            position: relative;
+            flex-shrink: 0;
+            z-index: 10;
+        }
 
         /* Resistor */
         .resistor-box {
-            display: flex; align-items: center; background: var(--surface);
-            border: 2px solid var(--grid-color); border-radius: 6px;
-            padding: 8px 12px; color: var(--text-main);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border: 2px solid var(--grid-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.2s;
         }
-        .resistor-box:hover { border-color: var(--wire-color); }
+
+        .resistor-box:hover {
+            border-color: var(--wire-color);
+        }
+
         .resistor-box input {
-            width: 55px; border: none; outline: none; font-family: inherit;
-            font-size: 12px; font-weight: 600; color: var(--text-main);
-            text-align: right; margin-right: 4px; background: transparent;
+            width: 55px;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+            margin-right: 4px;
+            background: transparent;
         }
 
         /* Battery */
         .battery-box {
-            display: flex; align-items: center; background: #1e293b;
-            border-radius: 6px; padding: 4px 10px; color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative;
-            border: 2px solid #334155; transition: border-color 0.2s; margin-left: 6px;
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 4px 10px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 2px solid #334155;
+            transition: border-color 0.2s;
+            margin-left: 6px;
         }
-        .battery-box:hover { border-color: var(--success); }
+
+        .battery-box:hover {
+            border-color: var(--success);
+        }
+
         .battery-box::before {
-            content: ''; position: absolute; left: -6px; top: 50%;
-            transform: translateY(-50%); width: 6px; height: 16px;
-            background: var(--wire-color); border-radius: 4px 0 0 4px;
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 16px;
+            background: var(--wire-color);
+            border-radius: 4px 0 0 4px;
         }
 
         /* Solar Panel (UPDATED STYLE) */
         .solar-box {
-            display: flex; align-items: center; 
+            display: flex;
+            align-items: center;
             /* Photovoltaic Dark Blue */
-            background: #172554; 
+            background: #172554;
             /* Aluminum Frame Border */
-            border: 2px solid #94a3b8; 
-            border-radius: 4px; padding: 4px 10px; color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); position: relative;
+            border: 2px solid #94a3b8;
+            border-radius: 4px;
+            padding: 4px 10px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
             transition: border-color 0.2s, transform 0.1s;
         }
-        .solar-box:hover { border-color: #60a5fa; transform: translateY(-1px); }
-        
+
+        .solar-box:hover {
+            border-color: #60a5fa;
+            transform: translateY(-1px);
+        }
+
         /* Solar cell grid visual effect */
         .solar-box::after {
-            content: ''; position: absolute; inset: 0;
+            content: '';
+            position: absolute;
+            inset: 0;
             /* Subtle grid lines */
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
             background-size: 10px 10px;
-            pointer-events: none; z-index: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .comp-inputs { display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 2; }
-        .comp-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 600; }
-        
-        .battery-box .comp-row { color: #94a3b8; }
-        .solar-box .comp-row { color: #93c5fd; } /* Light blue text */
+        .comp-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .comp-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .battery-box .comp-row {
+            color: #94a3b8;
+        }
+
+        .solar-box .comp-row {
+            color: #93c5fd;
+        }
+
+        /* Light blue text */
 
         .comp-row input {
-            width: 44px; background: transparent; border: none;
-            font-weight: 700; font-size: 11.5px; outline: none; text-align: right;
-            border-bottom: 1px solid rgba(255,255,255,0.2); margin-right: 4px; font-family: inherit;
+            width: 44px;
+            background: transparent;
+            border: none;
+            font-weight: 700;
+            font-size: 11.5px;
+            outline: none;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-right: 4px;
+            font-family: inherit;
         }
-        .battery-box input { color: white; }
-        .solar-box input { color: white; border-bottom: 1px solid #3b82f6; }
-        
-        .battery-box input:focus { border-color: var(--success); }
-        .solar-box input:focus { border-color: #60a5fa; }
+
+        .battery-box input {
+            color: white;
+        }
+
+        .solar-box input {
+            color: white;
+            border-bottom: 1px solid #3b82f6;
+        }
+
+        .battery-box input:focus {
+            border-color: var(--success);
+        }
+
+        .solar-box input:focus {
+            border-color: #60a5fa;
+        }
 
         /* Parallel Wrapper */
-        .parallel-wrapper { display: flex; align-items: center; }
+        .parallel-wrapper {
+            display: flex;
+            align-items: center;
+        }
 
         /* Action Buttons */
         .action-btn {
-            position: absolute; display: flex; align-items: center; justify-content: center;
-            width: 20px; height: 20px; border-radius: 50%; border: none; cursor: pointer;
-            color: white; z-index: 20; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: opacity 0.2s, transform 0.1s; opacity: 0; pointer-events: none;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            color: white;
+            z-index: 20;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.2s, transform 0.1s;
+            opacity: 0;
+            pointer-events: none;
         }
-        .action-btn:hover { transform: scale(1.15); }
-        .circuit-element:hover > .action-btn { opacity: 1; pointer-events: auto; }
-        .circuit-element:hover:has(.circuit-element:hover) > .action-btn { opacity: 0; pointer-events: none; }
 
-        .btn-add-right { background: var(--primary); right: -10px; top: 50%; margin-top: -10px; }
-        .btn-add-below { background: var(--primary); bottom: -10px; left: 50%; margin-left: -10px; }
-        .btn-remove { background: var(--danger); top: -10px; left: -10px; }
-        
+        .action-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .circuit-element:hover>.action-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .circuit-element:hover:has(.circuit-element:hover)>.action-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-add-right {
+            background: var(--primary);
+            right: -10px;
+            top: 50%;
+            margin-top: -10px;
+        }
+
+        .btn-add-below {
+            background: var(--primary);
+            bottom: -10px;
+            left: 50%;
+            margin-left: -10px;
+        }
+
+        .btn-remove {
+            background: var(--danger);
+            top: -10px;
+            left: -10px;
+        }
+
         /* Mode specific button colors */
-        .mode-batteries .btn-add-right, .mode-batteries .btn-add-below { background: var(--success); }
-        .mode-solar .btn-add-right, .mode-solar .btn-add-below { background: var(--warning); }
+        .mode-batteries .btn-add-right,
+        .mode-batteries .btn-add-below {
+            background: var(--success);
+        }
 
+        .mode-solar .btn-add-right,
+        .mode-solar .btn-add-below {
+            background: var(--warning);
+        }
     </style>
 </head>
+
 <body>
 
     <!-- Start Screen -->
     <div id="start-screen">
-        <div class="start-title">What do you want to build?</div>
+        <a href="index.html" class="back-button start-screen-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M15 18l-6-6 6-6" />
+            </svg> Back
+        </a>
+        <h1 class="start-title">Series & Parallel Simulator</h1>
         <div class="mode-cards">
             <div class="mode-card" onclick="initApp('resistors')">
-                <div class="mode-icon ohm">Ω</div>
-                <h3>Resistor Circuit</h3>
+                <div class="mode-icon ohm flex justify-center items-center"><img src="resources/Images/resistor.png"
+                        alt="Resistor Icon" style="height: 64px; margin: 0 auto; display: block;" /></div>
+                <h2>Resistor Circuit</h2>
                 <p>Calculate Equivalent Resistance and Current using Ohm's Law.</p>
             </div>
             <div class="mode-card battery" onclick="initApp('batteries')">
-                <div class="mode-icon">🔋</div>
-                <h3>Battery Bank</h3>
+                <div class="mode-icon" style="line-height: 64px; font-size: 56px;">🔋</div>
+                <h2>Battery Bank</h2>
                 <p>Combine batteries to calculate Total Voltage and Capacity (Ah).</p>
             </div>
             <div class="mode-card solar" onclick="initApp('solar')">
-                <div class="mode-icon">⚡</div>
-                <h3>Solar Array</h3>
+                <div class="mode-icon flex justify-center items-center"><img src="resources/Images/solar-cell.png"
+                        alt="Solar Cell Icon" style="height: 64px; margin: 0 auto; display: block;" /></div>
+                <h2>Solar Array</h2>
                 <p>Connect panels to calculate array Voltage, Current, and Wattage.</p>
             </div>
-        </div>
-        <div style="margin-top: 40px;">
-            <a onclick="goBackHome()" class="start-screen-back-button">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> Back to main menu
-            </a>
         </div>
     </div>
 
@@ -281,18 +621,18 @@
             <div class="circuit-wrapper">
                 <div class="terminal positive">V+</div>
                 <div class="wire"></div>
-                
+
                 <div id="circuit-container" class="series-container">
                     <!-- Circuit renders here -->
                 </div>
-                
+
                 <div class="wire"></div>
                 <div class="terminal negative">V-</div>
             </div>
         </main>
     </div>
 
-    <script src="resources/app.js"></script>
+    <script src="resources/app.js?v=1.2.0"></script>
     <script>
         // --- Global State ---
         let appMode = 'resistors'; // 'resistors' | 'batteries' | 'solar'
@@ -430,7 +770,7 @@
         function addBelow(id) {
             let { array, index, element, parent } = findNode(circuit, id);
             let newNode = getNewNode();
-            
+
             if (element.type === 'parallel') {
                 element.branches.push([newNode]);
             } else if (parent && parent.type === 'parallel' && array.length === 1) {
@@ -486,7 +826,7 @@
             if (el.type === 'resistor') return el.value;
             if (el.type === 'parallel') {
                 let branchResistances = el.branches.map(b => calcResistorSeries(b));
-                if (branchResistances.some(r => r === 0)) return 0; 
+                if (branchResistances.some(r => r === 0)) return 0;
                 let invSum = branchResistances.reduce((sum, r) => sum + (1 / r), 0);
                 return invSum === 0 ? 0 : 1 / invSum;
             }
@@ -505,12 +845,12 @@
                 let res = calcBatteryElement(el);
                 if (res.error) return { v: 0, ah: 0, error: res.error, warning: null };
                 if (res.warning) propagatedWarning = res.warning;
-                
+
                 totalV += res.v;
                 if (res.ah < minAh) minAh = res.ah;
                 if (res.ah > maxAh) maxAh = res.ah;
             }
-            
+
             let warning = propagatedWarning;
             if (minAh !== maxAh && minAh !== Infinity) warning = `Bottleneck! Limited to ${minAh}Ah`;
 
@@ -521,7 +861,7 @@
             if (el.type === 'parallel') {
                 let branchResults = el.branches.map(b => calcBatterySeries(b));
                 if (branchResults.length === 0) return { v: 0, ah: 0, error: null, warning: null };
-                
+
                 let errBranch = branchResults.find(r => r.error);
                 if (errBranch) return { v: 0, ah: 0, error: errBranch.error, warning: null };
 
@@ -578,7 +918,7 @@
                 // Physics: Parallel strings must have same voltage.
                 let targetV = branchResults[0].v;
                 let isMismatch = branchResults.some(r => Math.abs(r.v - targetV) > 0.5); // Allow 0.5V tolerance
-                
+
                 if (isMismatch) return { v: 0, i: 0, error: "String Voltage Mismatch!", warning: null };
 
                 // Currents add up
@@ -595,11 +935,11 @@
             if (appMode === 'resistors') {
                 let req = calcResistorSeries(circuit);
                 let currentText = req === 0 ? (globalVoltage > 0 ? "Infinity" : "0.000") : (globalVoltage / req).toFixed(3);
-                
+
                 document.getElementById('stat-req').innerText = req.toFixed(2);
                 document.getElementById('stat-current').innerText = currentText;
                 document.getElementById('stat-current').className = req === 0 && globalVoltage > 0 ? "value error" : "value";
-            
+
             } else if (appMode === 'batteries') {
                 let result = calcBatterySeries(circuit);
                 let elVolts = document.getElementById('stat-volts');
@@ -613,14 +953,14 @@
                     elVolts.className = "value error";
                     elAh.innerText = "---";
                     elWh.innerText = "---";
-                    if(elWarning) elWarning.style.display = 'none';
-                    if(elAhContainer) elAhContainer.style.color = 'var(--text-main)';
+                    if (elWarning) elWarning.style.display = 'none';
+                    if (elAhContainer) elAhContainer.style.color = 'var(--text-main)';
                 } else {
                     elVolts.innerText = result.v.toFixed(1);
                     elVolts.className = "value";
                     elAh.innerText = result.ah.toFixed(1);
                     elWh.innerText = (result.v * result.ah).toFixed(1);
-                    
+
                     if (result.warning && elWarning && elAhContainer) {
                         elWarning.innerText = result.warning;
                         elWarning.style.display = 'block';
@@ -643,7 +983,7 @@
                     elVolts.className = "value error";
                     elI.innerText = "---";
                     elW.innerText = "---";
-                    if(elWarning) elWarning.style.display = 'none';
+                    if (elWarning) elWarning.style.display = 'none';
                 } else {
                     elVolts.innerText = result.v.toFixed(1);
                     elVolts.className = "value";
@@ -716,7 +1056,7 @@
                         <div class="vert-right"></div>
                     </div>
                 `).join('');
-                
+
                 return `
                     <div class="parallel-wrapper circuit-element">
                         <div class="parallel-block">${branchesHtml}</div>
@@ -738,6 +1078,8 @@
             updateStats();
         }
 
+        window.addEventListener('load', checkMobileWarning);
     </script>
 </body>
+
 </html>

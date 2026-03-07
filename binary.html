@@ -1,89 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Binary Converter</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Binary to Decimal Converter — PocketEngineer</title>
+  <meta name="description"
+    content="Free binary to decimal converter with step-by-step explanation. See the division method and power-of-2 breakdown visually. Supports 8, 16, 32, and 64-bit values.">
+  <link rel="canonical" href="https://www.pockeng.com/binary.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/binary.html">
+  <meta property="og:title" content="Binary to Decimal Converter — PocketEngineer">
+  <meta property="og:description"
+    content="Convert between binary and decimal with visual step-by-step explanations. Supports up to 64-bit values.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
   <style>
-    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
-    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
-    
-    .input-card { 
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .input-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid #e4e4e7;
       background-color: white;
     }
-    .input-card:focus-within { 
-      border-color: #18181b; 
-      background-color: white; 
+
+    .input-card:focus-within {
+      border-color: #18181b;
+      background-color: white;
       box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.08);
       transform: translateY(-1px);
     }
-    
+
     .byte-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid #e4e4e7;
       background-color: white;
     }
+
     .byte-card.selected {
       border-color: #3b82f6;
       background-color: #eff6ff;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
       transform: scale(1.02);
     }
-    
+
     .explanation-row {
       animation: slideIn 0.3s ease-out forwards;
       opacity: 0;
       transform: translateY(8px);
     }
+
     @keyframes slideIn {
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased">
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
       <a href="index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
         Back
       </a>
-      
+
       <div class="flex items-center gap-4">
-        <button onclick="resetCalc()" class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+        <button onclick="resetCalc()"
+          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
       </div>
     </div>
   </header>
+  <h1 class="sr-only">Binary to Decimal Converter</h1>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
-    
+
     <!-- Left: Inputs & Explanation -->
-    <div class="lg:w-[500px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col">
+    <div
+      class="lg:w-[500px] w-full flex-none bg-white lg:border-r border-b lg:border-b-0 border-zinc-200 overflow-y-auto flex flex-col">
       <div class="p-6 space-y-6">
-        
+
         <!-- Decimal Input -->
         <div id="decimal-card" class="input-card rounded-xl p-5">
           <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number</label>
           <div class="flex items-baseline gap-2">
-            <input type="number" id="decimal-input" oninput="convertFromDecimal()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
+            <input type="number" id="decimal-input" oninput="convertFromDecimal()"
+              class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
           </div>
           <p class="text-xs text-zinc-400 mt-2">Enter a positive integer</p>
         </div>
@@ -92,7 +115,8 @@
         <div id="binary-card" class="input-card rounded-xl p-5">
           <label class="text-[10px] font-bold text-indigo-500 uppercase mb-2 block">Binary Number</label>
           <div class="flex items-baseline gap-2">
-            <input type="text" id="binary-input" oninput="convertFromBinary()" class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" pattern="[01]*">
+            <input type="text" id="binary-input" oninput="convertFromBinary()"
+              class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" pattern="[01]*">
           </div>
           <p class="text-xs text-zinc-400 mt-2">Enter binary digits (0 or 1)</p>
         </div>
@@ -123,7 +147,7 @@
         <!-- How It Works Explanation -->
         <div id="how-it-works" class="bg-blue-50 rounded-xl p-5 border border-blue-200 hidden">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="text-xs font-bold text-blue-600 uppercase tracking-wider">How It Works</h3>
+            <h2 class="text-xs font-bold text-blue-600 uppercase tracking-wider">How It Works</h2>
             <span id="how-it-works-direction" class="text-xs font-bold text-blue-600 uppercase tracking-wider"></span>
           </div>
           <div id="how-it-works-content" class="text-sm text-blue-900 leading-relaxed space-y-3"></div>
@@ -134,27 +158,34 @@
 
     <!-- Right: Visual Explanation -->
     <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
-      
+
       <!-- Canvas Backdrop -->
-      <div class="absolute inset-0 pointer-events-none opacity-40" style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
-      
+      <div class="absolute inset-0 pointer-events-none opacity-40"
+        style="background-image: radial-gradient(#a1a1aa 1px, transparent 1px); background-size: 24px 24px;"></div>
+
       <!-- Main Visualization Card -->
-      <div class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl">
+      <div
+        class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl">
         <div id="visualization-content">
           <div class="text-center mb-8">
             <div class="text-6xl font-mono font-bold text-zinc-900 mb-4" id="main-result">0</div>
           </div>
-          
+
           <!-- Power of 2 Visualization -->
           <div id="power-visualization" class="hidden mb-6">
-            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-zinc-900 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span></div>
+            <div id="power-title" class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 text-center">
+              Binary Representation <span class="group relative inline-flex cursor-help ml-1"
+                title="In programming, bit positions start from the right"><span
+                  class="text-blue-500 font-bold">?</span><span
+                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-zinc-900 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In
+                  programming, bit positions start from the right</span></span></div>
             <div id="power-note" class="text-[10px] text-zinc-500 mb-3 italic text-center"></div>
             <div id="power-grid" class="grid grid-cols-8 gap-2"></div>
           </div>
 
           <!-- Step-by-Step Explanation -->
           <div id="explanation-panel" class="hidden mt-6 pt-6 border-t border-zinc-200">
-            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Step-by-Step Calculation</h3>
+            <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Step-by-Step Calculation</h2>
             <div id="explanation-content" class="space-y-2"></div>
           </div>
         </div>
@@ -203,7 +234,7 @@
 
     function convertFromDecimal() {
       const decimal = parseInt(decimalInput.value);
-      
+
       if (isNaN(decimal) || decimal < 0 || decimalInput.value === '') {
         if (decimalInput.value === '') {
           binaryInput.value = '';
@@ -218,14 +249,14 @@
 
       const binary = decimalToBinary(decimal, requiredBits);
       binaryInput.value = binary;
-      
+
       updateVisualizations(decimal, binary, true);
     }
 
     function convertFromBinary() {
       let binary = binaryInput.value.replace(/[^01]/g, '');
       binaryInput.value = binary;
-      
+
       if (binary === '' || binaryInput.value === '') {
         if (binaryInput.value === '') {
           decimalInput.value = '';
@@ -238,14 +269,14 @@
       let requiredBits = Math.max(8, Math.ceil(binary.length / 8) * 8);
       if (requiredBits > 64) requiredBits = 64;
       if (requiredBits < 8) requiredBits = 8;
-      
+
       // Pad to required bits
       binary = binary.padStart(requiredBits, '0');
       updateBitIndicator(requiredBits);
 
       const decimal = binaryToDecimal(binary);
       decimalInput.value = decimal;
-      
+
       updateVisualizations(decimal, binary, false);
     }
 
@@ -292,55 +323,55 @@
 
       // Create step-by-step explanation
       explanationContent.innerHTML = '';
-      
+
       if (fromDecimal) {
         // Show decimal to binary conversion steps
         let tempDecimal = decimal;
         const steps = [];
-        
+
         while (tempDecimal > 0) {
           const remainder = tempDecimal % 2;
           const quotient = Math.floor(tempDecimal / 2);
           steps.push({ decimal: tempDecimal, remainder, quotient });
           tempDecimal = quotient;
         }
-        
+
         // Show steps in correct order (first division at top, last at bottom)
         steps.forEach((step, idx) => {
           const row = document.createElement('div');
           row.className = 'explanation-row flex items-center justify-between p-3 bg-white rounded-lg border border-zinc-200';
           row.style.animationDelay = `${idx * 50}ms`;
-          
+
           row.innerHTML = `
             <div class="flex-1">
               <div class="text-xs font-mono text-zinc-900">${step.decimal} ÷ 2 = ${step.quotient}</div>
               <div class="text-[10px] text-zinc-500 mt-1">Remainder: <strong class="text-blue-600">${step.remainder}</strong></div>
             </div>
           `;
-          
+
           explanationContent.appendChild(row);
         });
-        
+
       } else {
         // Show binary to decimal conversion steps
         // Count from right to left (LSB to MSB)
         const binaryArray = binary.split('');
         let sum = 0;
         const activeBits = [];
-        
+
         // Process from right to left
         for (let i = binaryArray.length - 1; i >= 0; i--) {
           const bit = binaryArray[i];
           const positionFromRight = binaryArray.length - 1 - i;
           const power = positionFromRight;
-          
+
           if (bit === '1') {
             const value = Math.pow(2, power);
             sum += value;
             activeBits.push({ position: i, positionFromRight, power, value, bit });
           }
         }
-        
+
         // Show steps for each active bit, ordered from right to left
         activeBits.forEach((item, idx) => {
           const row = document.createElement('div');
@@ -355,7 +386,7 @@
           `;
           explanationContent.appendChild(row);
         });
-        
+
       }
 
       explanationPanel.classList.remove('hidden');
@@ -375,25 +406,24 @@
       powerVisualization.classList.remove('hidden');
       powerTitle.innerHTML = 'Binary Representation <span class="group relative inline-flex cursor-help ml-1" title="In programming, bit positions start from the right"><span class="text-blue-500 font-bold">?</span><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-[10px] lg:text-xs text-white bg-zinc-900 rounded-md max-w-[100px] md:max-w-none md:whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">In programming, bit positions start from the right</span></span>';
       powerNote.textContent = '';
-      
+
       // Display bits from left to right (MSB to LSB) visually
       const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
       const maxBits = Math.min(16, bits.length); // Show first 16 bits
-      
+
       for (let i = 0; i < maxBits; i++) {
         const bit = bits[i];
-        
+
         const cell = document.createElement('div');
-        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
-          bit === '1'
-            ? 'bg-blue-500 border-blue-600 text-white'
-            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-        }`;
-        
+        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${bit === '1'
+          ? 'bg-blue-500 border-blue-600 text-white'
+          : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+          }`;
+
         cell.innerHTML = `
           <div class="text-xs font-bold">${bit}</div>
         `;
-        
+
         powerGrid.appendChild(cell);
       }
     }
@@ -403,32 +433,31 @@
       powerVisualization.classList.remove('hidden');
       powerTitle.textContent = 'Power of 2 Breakdown';
       powerNote.textContent = 'In programming, bit positions start from 0 at the right (LSB)';
-      
+
       // Display bits from left to right (MSB to LSB) visually
       // But show position numbers from right (position 0 is rightmost)
       const bits = binary.split(''); // Keep original order: MSB on left, LSB on right
       const maxBits = Math.min(16, bits.length); // Show first 16 bits
-      
+
       for (let i = 0; i < maxBits; i++) {
         const bit = bits[i];
         // Position from right: rightmost is position 0
         const positionFromRight = (bits.length - 1) - i;
         const power = positionFromRight;
         const value = Math.pow(2, power);
-        
+
         const cell = document.createElement('div');
-        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${
-          bit === '1'
-            ? 'bg-blue-500 border-blue-600 text-white'
-            : 'bg-zinc-50 border-zinc-200 text-zinc-400'
-        }`;
-        
+        cell.className = `p-3 rounded-lg border-2 text-center transition-all ${bit === '1'
+          ? 'bg-blue-500 border-blue-600 text-white'
+          : 'bg-zinc-50 border-zinc-200 text-zinc-400'
+          }`;
+
         cell.innerHTML = `
           <div class="text-xs font-bold mb-1">${bit}</div>
           <div class="text-[10px] mb-1">2<sup>${power}</sup></div>
           <div class="text-[10px] opacity-75">${value.toLocaleString()}</div>
         `;
-        
+
         powerGrid.appendChild(cell);
       }
     }
@@ -486,5 +515,5 @@
     });
   </script>
 </body>
-</html>
 
+</html>

@@ -1,0 +1,3 @@
+./tailwindcss -i ./input.css -o ./resources/tailwind.css --watch
+
+To run in terminal anytime

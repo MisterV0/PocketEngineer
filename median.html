@@ -1,54 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css">
-  <title>Median Calculator</title>
-  <script src="resources/app.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
-          },
-          animation: {
-            'slide-in': 'slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-            'fade-in': 'fadeIn 0.3s ease-out forwards',
-            'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
-            'highlight': 'highlight 0.5s ease-out forwards',
-          },
-          keyframes: {
-            slideIn: {
-              '0%': { opacity: '0', transform: 'translateY(10px) scale(0.95)' },
-              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
-            },
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' }
-            },
-            pulseSoft: {
-              '0%, 100%': { opacity: '1' },
-              '50%': { opacity: '0.7' }
-            },
-            highlight: {
-              '0%': { transform: 'scale(1)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' },
-              '50%': { transform: 'scale(1.1)', boxShadow: '0 8px 16px rgba(59, 130, 246, 0.4)' },
-              '100%': { transform: 'scale(1.05)', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)' }
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <title>Median Calculator with Code Generator — PocketEngineer</title>
+  <meta name="description"
+    content="Calculate the median of any number set with a visual step-by-step breakdown. See the sorted array, highlighted median values, and get ready-to-use C and Python code for the calculation.">
+  <link rel="canonical" href="https://www.pockeng.com/median.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/median.html">
+  <meta property="og:title" content="Median Calculator with Code Generator — PocketEngineer">
+  <meta property="og:description"
+    content="Find the median of any dataset visually. Step-by-step sorting, highlighted median values, and C/Python code generation.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
+  <script src="resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
   <style>
-    body { background-color: #fafafa; }
+    body {
+      background-color: #fafafa;
+    }
 
     /* Array Element Styling */
     .array-element {
@@ -56,10 +31,10 @@
       animation: slide-in;
       animation-delay: calc(var(--index) * 0.05s);
     }
-    
+
     .array-element:hover {
       transform: translateY(-1px) scale(1.02);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     .array-element.median-highlight {
@@ -81,13 +56,16 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       border-radius: 0.75rem;
     }
+
     .add-button:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
+
     .add-button:active {
       transform: scale(0.95);
     }
+
     .add-button:disabled {
       opacity: 0.4;
       cursor: not-allowed;
@@ -98,13 +76,16 @@
     .generate-button {
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .generate-button:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     }
+
     .generate-button:active:not(:disabled) {
       transform: translateY(0);
     }
+
     .generate-button:disabled {
       opacity: 0.4;
       cursor: not-allowed;
@@ -117,6 +98,7 @@
       appearance: none;
       margin: 0;
     }
+
     input[type=number] {
       -moz-appearance: textfield;
       appearance: textfield;
@@ -127,6 +109,7 @@
       transition: all 0.2s ease;
       opacity: 0;
     }
+
     .array-element:hover .remove-btn {
       opacity: 1;
     }
@@ -143,8 +126,9 @@
       font-family: 'JetBrains Mono', monospace;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
+
     .code-box::before {
       content: '';
       position: absolute;
@@ -152,7 +136,7 @@
       left: 0;
       right: 0;
       height: 2rem;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
       pointer-events: none;
     }
 
@@ -160,9 +144,11 @@
     .copy-button {
       transition: all 0.2s ease;
     }
+
     .copy-button:hover {
-      background-color: rgba(255,255,255,0.1);
+      background-color: rgba(255, 255, 255, 0.1);
     }
+
     .copy-button:active {
       transform: scale(0.95);
     }
@@ -172,10 +158,12 @@
       color: #a1a1aa;
       background: transparent;
     }
+
     .language-tab.active {
       color: #ffffff;
       background: #3f3f46;
     }
+
     .language-tab:hover:not(.active) {
       color: #d4d4d8;
     }
@@ -184,16 +172,18 @@
     body {
       letter-spacing: -0.01em;
     }
-
   </style>
 </head>
+
 <body class="text-zinc-900 antialiased min-h-screen flex flex-col">
 
   <!-- Header -->
   <header class="flex-none bg-white/80 backdrop-blur-sm border-b border-zinc-200/50 z-50 relative sticky top-0">
     <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
       <a href="index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
         Back
       </a>
       <h1 class="text-lg font-semibold text-zinc-900 tracking-tight">Median Calculator</h1>
@@ -203,43 +193,31 @@
 
   <!-- Main Content -->
   <main class="flex-1 flex flex-col items-center px-6 py-8 max-w-5xl mx-auto w-full">
-    
+
     <!-- Input Section -->
     <div class="w-full max-w-2xl mx-auto mb-8">
       <div class="bg-white rounded-xl border border-zinc-200/60 p-5 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center gap-2.5 mb-3">
-          <input 
-            type="text" 
-            id="number-input" 
+          <input type="text" id="number-input"
             placeholder="Enter a number or comma-separated values (e.g., 10, 20.5, 15)"
             class="flex-1 px-3.5 py-2.5 rounded-lg border border-zinc-200 focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900/10 transition-all font-mono text-sm"
-            onkeypress="if(event.key === 'Enter') addNumber()"
-          >
+            onkeypress="if(event.key === 'Enter') addNumber()">
           <div class="flex items-center gap-2.5 w-full md:w-auto">
-            <button 
-              id="add-button"
-              onclick="addNumber()"
-              class="add-button w-11 h-11 bg-zinc-900 text-white flex items-center justify-center font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-            >
+            <button id="add-button" onclick="addNumber()"
+              class="add-button w-11 h-11 bg-zinc-900 text-white flex items-center justify-center font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </button>
-            <button 
-              id="random-button"
-              onclick="generateRandomNumbers()"
+            <button id="random-button" onclick="generateRandomNumbers()"
               class="flex-1 md:flex-none px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
-              title="Generate random numbers"
-            >
+              title="Generate random numbers">
               Random
             </button>
-            <button 
-              id="reset-button"
-              onclick="resetAll()"
+            <button id="reset-button" onclick="resetAll()"
               class="flex-1 md:flex-none px-3.5 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold whitespace-nowrap"
-              title="Clear all numbers"
-            >
+              title="Clear all numbers">
               Reset
             </button>
           </div>
@@ -253,11 +231,12 @@
       <div id="array-container" class="flex flex-col gap-2.5 justify-center min-h-[60px] items-center">
         <div class="text-zinc-400 text-xs font-medium animate-pulse-soft">Add numbers to see them here...</div>
       </div>
-      
+
       <!-- New Meta Indicator Container (Text + Legend) -->
-      <div id="array-meta-container" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-4" style="display: none;">
+      <div id="array-meta-container" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-4"
+        style="display: none;">
         <span class="text-xs text-zinc-500 font-medium">Array sorted for median calculation</span>
-        
+
         <!-- Moved Legend -->
         <div class="flex items-center gap-4 text-xs border-l border-zinc-200 pl-6">
           <div class="flex items-center gap-1.5">
@@ -274,12 +253,9 @@
 
     <!-- Calculate Button -->
     <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
-      <button 
-        id="calculate-button"
-        onclick="calculateMedian()"
+      <button id="calculate-button" onclick="calculateMedian()"
         class="generate-button bg-zinc-900 text-white px-7 py-2.5 rounded-lg font-semibold text-xs tracking-wide disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
-        disabled
-      >
+        disabled>
         Calculate Median
       </button>
     </div>
@@ -288,7 +264,7 @@
     <div id="result-container" class="w-full max-w-4xl mx-auto" style="display: none;">
       <div class="result-card bg-white rounded-xl border border-zinc-200/60 p-6 shadow-sm">
         <!-- Header Removed as requested -->
-        
+
         <div class="mb-4">
           <div class="flex flex-col gap-1 mb-2">
             <span class="text-4xl font-bold font-mono text-zinc-900 tracking-tight" id="median-value">-</span>
@@ -300,11 +276,8 @@
         <div class="pt-4 border-t border-zinc-100">
           <!-- Legend Removed from here -->
           <div class="flex justify-center pt-2">
-            <button 
-              id="show-code-button"
-              onclick="toggleCodeView()"
-              class="px-4 py-2 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold"
-            >
+            <button id="show-code-button" onclick="toggleCodeView()"
+              class="px-4 py-2 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold">
               Need the code?
             </button>
           </div>
@@ -324,29 +297,20 @@
             </div>
             <!-- Language Toggle -->
             <div class="flex items-center gap-1 bg-zinc-800/60 rounded-md p-0.5">
-              <button 
-                id="lang-c"
-                onclick="switchLanguage('c')"
-                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab active"
-              >
+              <button id="lang-c" onclick="switchLanguage('c')"
+                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab active">
                 C
               </button>
-              <button 
-                id="lang-python"
-                onclick="switchLanguage('python')"
-                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab"
-              >
+              <button id="lang-python" onclick="switchLanguage('python')"
+                class="px-2.5 py-1 rounded text-[10px] font-medium transition-all language-tab">
                 Python
               </button>
             </div>
             <span id="filename" class="text-[10px] text-zinc-500 font-mono">median.c</span>
           </div>
-          <button 
-            id="copy-button"
-            onclick="copyCode()"
+          <button id="copy-button" onclick="copyCode()"
             class="copy-button px-3 py-1.5 rounded-md text-[10px] font-medium text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-600 flex items-center gap-1.5"
-            style="display: none;"
-          >
+            style="display: none;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -354,7 +318,8 @@
             Copy
           </button>
         </div>
-        <pre id="code-output" class="text-xs leading-relaxed overflow-x-auto"><code class="text-zinc-300">// Calculate median to see the code implementation</code></pre>
+        <pre id="code-output"
+          class="text-xs leading-relaxed overflow-x-auto"><code class="text-zinc-300">// Calculate median to see the code implementation</code></pre>
       </div>
     </div>
 
@@ -382,23 +347,23 @@
 
     function addNumber() {
       const value = numberInput.value.trim();
-      
+
       if (value === '') return;
-      
+
       // Check if value contains commas (multiple values)
       if (value.includes(',')) {
         // Split by comma and parse each value
         const values = value.split(',').map(v => v.trim());
         let addedCount = 0;
-        
+
         for (const v of values) {
           if (v === '') continue;
-          
+
           const num = parseFloat(v);
           if (isNaN(num)) {
             continue;
           }
-          
+
           if (numbers.length >= MAX_ELEMENTS) {
             // Visual feedback for max reached
             addButton.style.transform = 'scale(0.9)';
@@ -407,15 +372,15 @@
             }, 200);
             break;
           }
-          
+
           numbers.push(num);
           addedCount++;
         }
-        
+
         if (addedCount > 0) {
           numberInput.value = '';
           numberInput.focus();
-          
+
           // Reset median calculation
           medianSortedIndices = [];
           isSortedView = false;
@@ -423,7 +388,7 @@
           codeContainer.style.display = 'none';
           arrayMetaContainer.style.display = 'none';
           generatedCode = { c: '', python: '' };
-          
+
           updateArrayDisplay();
           updateCalculateButton();
           updateAddButton();
@@ -448,7 +413,7 @@
         numbers.push(num);
         numberInput.value = '';
         numberInput.focus();
-        
+
         // Reset median calculation
         medianSortedIndices = [];
         isSortedView = false;
@@ -456,7 +421,7 @@
         codeContainer.style.display = 'none';
         arrayMetaContainer.style.display = 'none';
         generatedCode = { c: '', python: '' };
-        
+
         updateArrayDisplay();
         updateCalculateButton();
         updateAddButton();
@@ -466,7 +431,7 @@
     function removeNumber(originalIndex) {
       // Remove from original array by index
       numbers.splice(originalIndex, 1);
-      
+
       // Reset sorted view and median calculation
       medianSortedIndices = [];
       isSortedView = false;
@@ -475,7 +440,7 @@
       codeContainer.style.display = 'none';
       arrayMetaContainer.style.display = 'none';
       generatedCode = { c: '', python: '' };
-      
+
       updateArrayDisplay();
       updateCalculateButton();
       updateAddButton();
@@ -488,7 +453,7 @@
       if (index !== -1) {
         numbers.splice(index, 1);
       }
-      
+
       // Reset sorted view and median calculation
       medianSortedIndices = [];
       isSortedView = false;
@@ -497,7 +462,7 @@
       codeContainer.style.display = 'none';
       arrayMetaContainer.style.display = 'none';
       generatedCode = { c: '', python: '' };
-      
+
       updateArrayDisplay();
       updateCalculateButton();
       updateAddButton();
@@ -527,16 +492,16 @@
         return `
           <div class="flex flex-wrap gap-2.5 justify-center">
             ${row.map((item, colIndex) => {
-              const displayIndex = rowIndex * 10 + colIndex;
-              const delay = displayIndex * 0.03;
-              const isMedian = isSortedView && medianSortedIndices.includes(displayIndex);
-              const highlightClass = isMedian ? 'median-highlight' : '';
-              
-              const removeFunction = isSortedView 
-                ? `removeNumberByValue(${item.num})` 
-                : `removeNumber(${item.originalIndex})`;
-              
-              return `
+          const displayIndex = rowIndex * 10 + colIndex;
+          const delay = displayIndex * 0.03;
+          const isMedian = isSortedView && medianSortedIndices.includes(displayIndex);
+          const highlightClass = isMedian ? 'median-highlight' : '';
+
+          const removeFunction = isSortedView
+            ? `removeNumberByValue(${item.num})`
+            : `removeNumber(${item.originalIndex})`;
+
+          return `
                 <div 
                   class="array-element bg-white border border-zinc-200/60 rounded-lg px-4 py-2.5 flex items-center gap-2 shadow-sm relative group ${highlightClass}"
                   style="--index: ${displayIndex}; animation-delay: ${delay}s;"
@@ -554,7 +519,7 @@
                   </button>
                 </div>
               `;
-            }).join('')}
+        }).join('')}
           </div>
         `;
       }).join('');
@@ -568,7 +533,7 @@
       // Create sorted array with original indices
       sortedNumbers = numbers.map((num, index) => ({ num, originalIndex: index }))
         .sort((a, b) => a.num - b.num);
-      
+
       const sorted = sortedNumbers.map(item => item.num);
       const n = sorted.length;
       let median;
@@ -596,10 +561,10 @@
 
       // Switch to sorted view
       isSortedView = true;
-      
+
       // Update display with highlighting
       updateArrayDisplay();
-      
+
       // Show the meta container (Sorted text + Legend)
       arrayMetaContainer.style.display = 'flex';
 
@@ -608,7 +573,7 @@
       const explanationEl = document.getElementById('median-explanation');
 
       medianValueEl.textContent = median.toFixed(median % 1 !== 0 ? 2 : 0);
-      
+
       if (isEven) {
         explanationEl.textContent = `With an even number of elements (${n}), the median is the average of the two middle values: ${medianValues[0]} and ${medianValues[1]}. Median = (${medianValues[0]} + ${medianValues[1]}) ÷ 2 = ${median.toFixed(median % 1 !== 0 ? 2 : 0)}`;
       } else {
@@ -616,10 +581,10 @@
       }
 
       resultContainer.style.display = 'block';
-      
+
       // Generate code for median calculation (use original numbers array)
       generateCode(numbers, sorted, n, median, isEven, medianValues);
-      
+
       // Smooth scroll to result
       setTimeout(() => {
         resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -629,14 +594,14 @@
     function generateCode(originalNumbers, sorted, n, median, isEven, medianValues) {
       const arrayString = originalNumbers.join(', ');
       const medianFormatted = median % 1 !== 0 ? median.toFixed(2) : median.toFixed(0);
-      
+
       // Generate C code
       if (isEven) {
         const mid1 = medianValues[0];
         const mid2 = medianValues[1];
         const mid1Formatted = mid1 % 1 !== 0 ? mid1.toFixed(2) : mid1.toFixed(0);
         const mid2Formatted = mid2 % 1 !== 0 ? mid2.toFixed(2) : mid2.toFixed(0);
-        
+
         generatedCode.c = `#include <stdio.h>
 
 int main() {
@@ -675,7 +640,7 @@ int main() {
 }`;
       } else {
         const midIndex = Math.floor(n / 2);
-        
+
         generatedCode.c = `#include <stdio.h>
 
 int main() {
@@ -715,7 +680,7 @@ int main() {
       if (isEven) {
         const mid1 = medianValues[0];
         const mid2 = medianValues[1];
-        
+
         generatedCode.python = `# 1. Initialize the list
 arr = [${arrayString}]
 
@@ -738,7 +703,7 @@ print(f"Median: {median:.2f}")
 print(f"(Average of middle two values: {sorted_arr[mid_index1]} and {sorted_arr[mid_index2]})")`;
       } else {
         const midIndex = Math.floor(n / 2);
-        
+
         generatedCode.python = `# 1. Initialize the list
 arr = [${arrayString}]
 
@@ -764,7 +729,7 @@ print(f"Median: {median:.2f}")`;
       if (generatedCode.c === '' && generatedCode.python === '') {
         return; // No code generated yet
       }
-      
+
       const isVisible = codeContainer.style.display !== 'none';
       if (isVisible) {
         codeContainer.style.display = 'none';
@@ -781,22 +746,22 @@ print(f"Median: {median:.2f}")`;
 
     function switchLanguage(lang) {
       currentLanguage = lang;
-      
+
       // Update active tab
       document.getElementById('lang-c').classList.toggle('active', lang === 'c');
       document.getElementById('lang-python').classList.toggle('active', lang === 'python');
-      
+
       // Update filename
       const filename = document.getElementById('filename');
       filename.textContent = lang === 'c' ? 'median.c' : 'median.py';
-      
+
       // Display the code
       displayCode();
     }
 
     function highlightComments(code, language) {
       const escaped = escapeHtml(code);
-      
+
       if (language === 'c') {
         // Highlight C comments: // and /* */
         return escaped
@@ -807,7 +772,7 @@ print(f"Median: {median:.2f}")`;
         return escaped
           .replace(/(#[^\n]*)/g, '<span class="text-green-400">$1</span>');
       }
-      
+
       return escaped;
     }
 
@@ -829,10 +794,10 @@ print(f"Median: {median:.2f}")`;
     async function copyCode() {
       const code = generatedCode[currentLanguage] || codeOutput.textContent;
       if (!code || code.includes('Calculate median')) return;
-      
+
       try {
         await navigator.clipboard.writeText(code);
-        
+
         // Visual feedback
         const originalText = copyButton.innerHTML;
         copyButton.innerHTML = `
@@ -843,7 +808,7 @@ print(f"Median: {median:.2f}")`;
         `;
         copyButton.style.borderColor = '#22c55e';
         copyButton.style.color = '#22c55e';
-        
+
         setTimeout(() => {
           copyButton.innerHTML = originalText;
           copyButton.style.borderColor = '';
@@ -865,7 +830,7 @@ print(f"Median: {median:.2f}")`;
     function generateRandomNumbers() {
       // Generate random count between 5 and 50
       const count = Math.floor(Math.random() * (MAX_ELEMENTS - 4)) + 5;
-      
+
       // Clear existing numbers
       numbers = [];
       sortedNumbers = [];
@@ -875,12 +840,12 @@ print(f"Median: {median:.2f}")`;
       codeContainer.style.display = 'none';
       arrayMetaContainer.style.display = 'none';
       generatedCode = { c: '', python: '' };
-      
+
       // Generate random numbers between 1 and 100
       for (let i = 0; i < count; i++) {
         numbers.push(Math.floor(Math.random() * 100) + 1);
       }
-      
+
       updateArrayDisplay();
       updateCalculateButton();
       updateAddButton();
@@ -897,7 +862,7 @@ print(f"Median: {median:.2f}")`;
       codeContainer.style.display = 'none';
       arrayMetaContainer.style.display = 'none';
       generatedCode = { c: '', python: '' };
-      
+
       updateArrayDisplay();
       updateCalculateButton();
       updateAddButton();
@@ -934,4 +899,5 @@ print(f"Median: {median:.2f}")`;
   </script>
 
 </body>
+
 </html>
