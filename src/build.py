@@ -5,6 +5,9 @@ import urllib.parse
 import json
 import ssl
 
+# Always run from the project root, regardless of where the script lives
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
@@ -41,7 +44,7 @@ def download_fonts():
 def create_tailwind_config():
     config = """/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./*.html", "./resources/**/*.js", "./*.js"],
+  content: ["./*.html", "./tools/*.html", "./resources/**/*.js", "./*.js"],
   theme: {
     extend: {
       fontFamily: {
@@ -84,32 +87,38 @@ def build_tailwind():
     os.system('./tailwindcss -i ./input.css -o ./resources/tailwind.css --minify')
 
 def update_html_files():
-    html_files = [f for f in os.listdir('.') if f.endswith('.html')]
+    # Collect HTML files from root and tools/ subdirectory
+    html_files = [('.', f) for f in os.listdir('.') if f.endswith('.html')]
+    if os.path.isdir('tools'):
+        html_files += [('tools', f) for f in os.listdir('tools') if f.endswith('.html')]
     
-    for filename in html_files:
-        with open(filename, 'r') as f:
+    for directory, filename in html_files:
+        filepath = os.path.join(directory, filename)
+        with open(filepath, 'r') as f:
             content = f.read()
             
         original_content = content
+        
+        # Determine resource prefix based on location
+        res_prefix = '../resources' if directory == 'tools' else 'resources'
         
         # Remove Google Fonts Preconnect
         content = re.sub(r'<link rel="preconnect" href="https://fonts\.googleapis\.com">\s*', '', content)
         content = re.sub(r'<link rel="preconnect" href="https://fonts\.gstatic\.com" crossorigin>\s*', '', content)
         
         # Replace Google Fonts link with local link
-        content = re.sub(r'<link.*?href="https://fonts\.googleapis\.com/css2.*?family=.*?rel="stylesheet">', '<link rel="stylesheet" href="resources/fonts.css">', content)
+        content = re.sub(r'<link.*?href="https://fonts\.googleapis\.com/css2.*?family=.*?rel="stylesheet">', f'<link rel="stylesheet" href="{res_prefix}/fonts.css">', content)
         
         # Replace Tailwind CDN script with local CSS link
-        content = re.sub(r'<script src="https://cdn\.tailwindcss\.com"></script>', '<link rel="stylesheet" href="resources/tailwind.css">', content)
+        content = re.sub(r'<script src="https://cdn\.tailwindcss\.com"></script>', f'<link rel="stylesheet" href="{res_prefix}/tailwind.css">', content)
         
         # Remove the <script> block containing tailwind.config
-        # We need a robust regex to get <script>\n  tailwind.config = ... \n</script>
         content = re.sub(r'<script>\s*tailwind\.config\s*=\s*\{.*?</script>\s*', '', content, flags=re.DOTALL)
         
         if original_content != content:
-            with open(filename, 'w') as f:
+            with open(filepath, 'w') as f:
                 f.write(content)
-            print(f'Updated {filename}')
+            print(f'Updated {filepath}')
 
 if __name__ == '__main__':
     download_fonts()

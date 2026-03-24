@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <title>Matrix Calculator — PocketEngineer</title>
+  <meta name="description"
+    content="Free online matrix calculator — add, subtract, multiply matrices, compute determinant, transpose, and inverse. Supports 2×2, 3×3, and 4×4 matrices with visual grid editor.">
+  <link rel="canonical" href="https://www.pockeng.com/tools/matrix.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/tools/matrix.html">
+  <meta property="og:title" content="Matrix Calculator — PocketEngineer">
+  <meta property="og:description"
+    content="Add, multiply, transpose, and invert matrices up to 4×4. Visual grid editor with instant results.">
+  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+  <script src="../resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <style>
+    body {
+      font-feature-settings: "cv05", "cv08", "ss01";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .ios-input-wrapper {
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .ios-input-wrapper:focus-within {
+      border-color: #3f3f46;
+      box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .matrix-cell {
+      width: 56px;
+      height: 40px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      outline: none;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .matrix-cell:focus {
+      border-color: #18181b;
+      box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.1);
+    }
+
+    .matrix-bracket {
+      border-left: 2.5px solid #18181b;
+      border-right: 2.5px solid #18181b;
+      border-radius: 3px;
+      padding: 6px 4px;
+    }
+
+    .op-btn {
+      transition: all 0.25s ease;
+    }
+
+    .op-btn.active {
+      background: #18181b;
+      color: white;
+      box-shadow: 0 4px 12px -2px rgba(0,0,0,0.15);
+    }
+
+    .result-cell {
+      width: 72px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      color: #0ea5e9;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
+
+  <!-- Left Column -->
+  <aside class="w-full md:w-[460px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative">
+
+    <header class="flex-none p-8 pb-4 border-b border-zinc-100">
+      <div class="flex items-center gap-4 mb-0">
+        <a href="../index.html" class="back-button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back
+        </a>
+        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Matrix Calculator</h1>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-8 pt-6 space-y-6">
+
+      <!-- Size Selector -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Matrix Size</label>
+        <div class="flex gap-2">
+          <button class="op-btn active text-xs font-semibold px-4 py-2 rounded-lg border border-zinc-200" data-size="2" onclick="setSize(2)">2 × 2</button>
+          <button class="op-btn text-xs font-semibold px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-size="3" onclick="setSize(3)">3 × 3</button>
+          <button class="op-btn text-xs font-semibold px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-size="4" onclick="setSize(4)">4 × 4</button>
+        </div>
+      </div>
+
+      <!-- Operation Selector -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Operation</label>
+        <div class="grid grid-cols-3 gap-2" id="op-selector">
+          <button class="op-btn active text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200" data-op="add" onclick="setOp('add')">A + B</button>
+          <button class="op-btn text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-op="sub" onclick="setOp('sub')">A − B</button>
+          <button class="op-btn text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-op="mul" onclick="setOp('mul')">A × B</button>
+          <button class="op-btn text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-op="det" onclick="setOp('det')">det(A)</button>
+          <button class="op-btn text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-op="trans" onclick="setOp('trans')">A<sup>T</sup></button>
+          <button class="op-btn text-xs font-semibold px-3 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-op="inv" onclick="setOp('inv')">A<sup>−1</sup></button>
+        </div>
+      </div>
+
+      <!-- Matrix A -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Matrix A</label>
+        <div class="flex justify-center">
+          <div class="matrix-bracket">
+            <div id="matrix-a" class="grid gap-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix B (hidden for unary ops) -->
+      <div id="matrix-b-section">
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Matrix B</label>
+        <div class="flex justify-center">
+          <div class="matrix-bracket">
+            <div id="matrix-b" class="grid gap-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scalar Result (for determinant) -->
+      <div id="scalar-result" class="hidden">
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Result</label>
+        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
+          <div class="relative z-10">
+            <p class="text-zinc-400 text-xs font-semibold mb-1 select-none">Determinant</p>
+            <div class="flex items-baseline gap-2">
+              <span id="display-det" class="text-5xl font-mono font-medium tracking-tighter">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Result -->
+      <div id="matrix-result-section">
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Result</label>
+        <div class="flex justify-center">
+          <div class="matrix-bracket" style="border-color: #0ea5e9;">
+            <div id="matrix-result" class="grid gap-1"></div>
+          </div>
+        </div>
+        <div id="error-msg" class="text-xs text-red-500 text-center mt-2 hidden"></div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Right Column: Visual -->
+  <main class="flex-1 relative flex flex-col bg-[#F5F5F7]">
+    <div class="flex-1 flex items-center justify-center p-8 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none opacity-[0.4]"
+        style="background-image: linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px); background-size: 40px 40px; background-position: center;">
+      </div>
+      <div class="relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] rounded-2xl bg-white p-2 border border-zinc-100">
+        <canvas id="matrixCanvas" class="bg-white rounded-xl block"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctxC = canvas.getContext('2d');
+
+    let size = 2;
+    let op = 'add';
+    const unaryOps = new Set(['det', 'trans', 'inv']);
+
+    function setSize(n) {
+      size = n;
+      document.querySelectorAll('[data-size]').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.size) === n);
+        b.classList.toggle('text-zinc-600', parseInt(b.dataset.size) !== n);
+      });
+      buildGrids();
+      compute();
+    }
+
+    function setOp(o) {
+      op = o;
+      document.querySelectorAll('[data-op]').forEach(b => {
+        b.classList.toggle('active', b.dataset.op === o);
+        b.classList.toggle('text-zinc-600', b.dataset.op !== o);
+      });
+      document.getElementById('matrix-b-section').classList.toggle('hidden', unaryOps.has(o));
+      document.getElementById('scalar-result').classList.toggle('hidden', o !== 'det');
+      document.getElementById('matrix-result-section').classList.toggle('hidden', o === 'det');
+      compute();
+    }
+
+    function buildGrids() {
+      buildGrid('matrix-a', 'a');
+      buildGrid('matrix-b', 'b');
+      buildResultGrid();
+    }
+
+    function buildGrid(containerId, prefix) {
+      const container = document.getElementById(containerId);
+      container.style.gridTemplateColumns = 'repeat(' + size + ', 56px)';
+      container.innerHTML = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'matrix-cell';
+          input.id = prefix + '-' + r + '-' + c;
+          input.value = (r === c) ? 1 : 0;
+          input.addEventListener('input', compute);
+          container.appendChild(input);
+        }
+      }
+    }
+
+    function buildResultGrid() {
+      const container = document.getElementById('matrix-result');
+      container.style.gridTemplateColumns = 'repeat(' + size + ', 72px)';
+      container.innerHTML = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'result-cell';
+          cell.id = 'r-' + r + '-' + c;
+          cell.textContent = '0';
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    function getMatrix(prefix) {
+      const m = [];
+      for (let r = 0; r < size; r++) {
+        m[r] = [];
+        for (let c = 0; c < size; c++) {
+          m[r][c] = parseFloat(document.getElementById(prefix + '-' + r + '-' + c).value) || 0;
+        }
+      }
+      return m;
+    }
+
+    function setResult(m) {
+      document.getElementById('error-msg').classList.add('hidden');
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = document.getElementById('r-' + r + '-' + c);
+          if (cell) cell.textContent = Number.isFinite(m[r][c]) ? parseFloat(m[r][c].toFixed(6)) : '—';
+        }
+      }
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = document.getElementById('r-' + r + '-' + c);
+          if (cell) cell.textContent = '—';
+        }
+      }
+    }
+
+    function compute() {
+      const A = getMatrix('a');
+      const B = getMatrix('b');
+
+      if (op === 'add') {
+        const R = A.map((row, r) => row.map((v, c) => v + B[r][c]));
+        setResult(R);
+      } else if (op === 'sub') {
+        const R = A.map((row, r) => row.map((v, c) => v - B[r][c]));
+        setResult(R);
+      } else if (op === 'mul') {
+        const R = multiply(A, B);
+        setResult(R);
+      } else if (op === 'det') {
+        const d = determinant(A);
+        document.getElementById('display-det').textContent = parseFloat(d.toFixed(6));
+      } else if (op === 'trans') {
+        const R = A[0].map((_, c) => A.map(row => row[c]));
+        setResult(R);
+      } else if (op === 'inv') {
+        const d = determinant(A);
+        if (Math.abs(d) < 1e-10) {
+          showError('Matrix is singular (det = 0), no inverse exists.');
+        } else {
+          const R = inverse(A);
+          if (R) setResult(R);
+          else showError('Could not compute inverse.');
+        }
+      }
+
+      drawCanvas();
+    }
+
+    function multiply(A, B) {
+      const n = A.length;
+      const R = Array.from({ length: n }, () => Array(n).fill(0));
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < n; j++)
+          for (let k = 0; k < n; k++)
+            R[i][j] += A[i][k] * B[k][j];
+      return R;
+    }
+
+    function determinant(M) {
+      const n = M.length;
+      if (n === 1) return M[0][0];
+      if (n === 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+      let det = 0;
+      for (let c = 0; c < n; c++) {
+        det += ((c % 2 === 0 ? 1 : -1) * M[0][c] * determinant(minor(M, 0, c)));
+      }
+      return det;
+    }
+
+    function minor(M, row, col) {
+      return M.filter((_, r) => r !== row).map(r => r.filter((_, c) => c !== col));
+    }
+
+    function inverse(M) {
+      const n = M.length;
+      const det = determinant(M);
+      if (Math.abs(det) < 1e-10) return null;
+
+      // Cofactor matrix
+      const cof = Array.from({ length: n }, (_, i) =>
+        Array.from({ length: n }, (_, j) =>
+          ((i + j) % 2 === 0 ? 1 : -1) * determinant(minor(M, i, j))
+        )
+      );
+
+      // Transpose (adjugate)
+      const adj = cof[0].map((_, c) => cof.map(row => row[c]));
+
+      // Divide by determinant
+      return adj.map(row => row.map(v => v / det));
+    }
+
+    // Canvas visualization
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const displayW = Math.min(560, window.innerWidth - 60);
+      const displayH = 460;
+      canvas.width = displayW * dpr;
+      canvas.height = displayH * dpr;
+      canvas.style.width = displayW + 'px';
+      canvas.style.height = displayH + 'px';
+      ctxC.setTransform(1, 0, 0, 1, 0, 0);
+      ctxC.scale(dpr, dpr);
+      drawCanvas();
+    }
+
+    function drawCanvas() {
+      const w = parseFloat(canvas.style.width);
+      const h = parseFloat(canvas.style.height);
+      ctxC.clearRect(0, 0, w, h);
+
+      const A = getMatrix('a');
+
+      if (op === 'det') {
+        drawDetVisualization(w, h, A);
+      } else if (op === 'trans') {
+        drawTransposeVisualization(w, h, A);
+      } else {
+        drawMatrixGrid(w, h, A);
+      }
+    }
+
+    function drawMatrixGrid(w, h, M) {
+      const n = M.length;
+      const cellSize = Math.min(60, (Math.min(w, h) - 100) / n);
+      const gridW = n * cellSize;
+      const gridH = n * cellSize;
+      const ox = (w - gridW) / 2;
+      const oy = (h - gridH) / 2;
+
+      // Find max absolute value for color scaling
+      let maxVal = 0;
+      M.forEach(row => row.forEach(v => { if (Math.abs(v) > maxVal) maxVal = Math.abs(v); }));
+      if (maxVal === 0) maxVal = 1;
+
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          const x = ox + c * cellSize;
+          const y = oy + r * cellSize;
+          const val = M[r][c];
+          const intensity = Math.abs(val) / maxVal;
+
+          // Color: positive = dark zinc, negative = light, zero = white
+          if (val > 0) {
+            const alpha = intensity * 0.8;
+            ctxC.fillStyle = 'rgba(24, 24, 27, ' + alpha + ')';
+          } else if (val < 0) {
+            const alpha = intensity * 0.6;
+            ctxC.fillStyle = 'rgba(220, 38, 38, ' + alpha + ')';
+          } else {
+            ctxC.fillStyle = '#fafafa';
+          }
+
+          ctxC.beginPath();
+          ctxC.roundRect(x + 2, y + 2, cellSize - 4, cellSize - 4, 4);
+          ctxC.fill();
+
+          ctxC.strokeStyle = '#e4e4e7';
+          ctxC.lineWidth = 1;
+          ctxC.stroke();
+
+          // Value text
+          ctxC.font = '600 12px JetBrains Mono';
+          ctxC.fillStyle = intensity > 0.5 && val > 0 ? '#ffffff' : '#18181b';
+          ctxC.textAlign = 'center';
+          ctxC.textBaseline = 'middle';
+          ctxC.fillText(parseFloat(val.toFixed(2)).toString(), x + cellSize / 2, y + cellSize / 2);
+        }
+      }
+
+      // Row / col labels
+      ctxC.font = '500 11px Inter';
+      ctxC.fillStyle = '#a1a1aa';
+      for (let i = 0; i < n; i++) {
+        ctxC.textAlign = 'center';
+        ctxC.fillText('c' + (i + 1), ox + i * cellSize + cellSize / 2, oy - 12);
+        ctxC.textAlign = 'right';
+        ctxC.fillText('r' + (i + 1), ox - 8, oy + i * cellSize + cellSize / 2);
+      }
+
+      // Title
+      ctxC.font = 'bold 14px Inter';
+      ctxC.fillStyle = '#18181b';
+      ctxC.textAlign = 'center';
+      ctxC.fillText('Matrix A — Heatmap', w / 2, 30);
+    }
+
+    function drawDetVisualization(w, h, M) {
+      const d = determinant(M);
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Visual representation: square area scaled by determinant
+      const maxSide = Math.min(w, h) * 0.35;
+      const absDet = Math.abs(d);
+      const side = Math.min(maxSide, Math.sqrt(absDet) * 20);
+
+      // Unit square
+      ctxC.strokeStyle = '#e4e4e7';
+      ctxC.lineWidth = 2;
+      ctxC.setLineDash([6, 4]);
+      ctxC.strokeRect(cx - maxSide / 2, cy - maxSide / 2, maxSide, maxSide);
+      ctxC.setLineDash([]);
+
+      ctxC.font = '500 10px Inter';
+      ctxC.fillStyle = '#a1a1aa';
+      ctxC.textAlign = 'center';
+      ctxC.fillText('unit area', cx, cy - maxSide / 2 - 8);
+
+      // Determinant square
+      if (side > 2) {
+        ctxC.fillStyle = d >= 0 ? 'rgba(24, 24, 27, 0.15)' : 'rgba(220, 38, 38, 0.15)';
+        ctxC.fillRect(cx - side / 2, cy - side / 2, side, side);
+        ctxC.strokeStyle = d >= 0 ? '#18181b' : '#dc2626';
+        ctxC.lineWidth = 2.5;
+        ctxC.strokeRect(cx - side / 2, cy - side / 2, side, side);
+      }
+
+      // Label
+      ctxC.font = 'bold 28px JetBrains Mono';
+      ctxC.fillStyle = '#18181b';
+      ctxC.textAlign = 'center';
+      ctxC.textBaseline = 'middle';
+      ctxC.fillText('det = ' + parseFloat(d.toFixed(4)), cx, h - 50);
+
+      ctxC.font = 'bold 14px Inter';
+      ctxC.fillText('Determinant Visualization', cx, 30);
+    }
+
+    function drawTransposeVisualization(w, h, M) {
+      const n = M.length;
+      const cellSize = Math.min(40, (Math.min(w, h) - 160) / n);
+      const gridW = n * cellSize;
+
+      // Original on left
+      const ox1 = w / 2 - gridW - 40;
+      const oy = (h - n * cellSize) / 2;
+
+      drawMiniMatrix(ox1, oy, M, cellSize, 'A');
+
+      // Arrow
+      ctxC.strokeStyle = '#71717a';
+      ctxC.lineWidth = 2;
+      ctxC.beginPath();
+      ctxC.moveTo(w / 2 - 20, h / 2);
+      ctxC.lineTo(w / 2 + 20, h / 2);
+      ctxC.stroke();
+      ctxC.beginPath();
+      ctxC.moveTo(w / 2 + 20, h / 2);
+      ctxC.lineTo(w / 2 + 12, h / 2 - 5);
+      ctxC.moveTo(w / 2 + 20, h / 2);
+      ctxC.lineTo(w / 2 + 12, h / 2 + 5);
+      ctxC.stroke();
+
+      // Transposed on right
+      const T = M[0].map((_, c) => M.map(row => row[c]));
+      const ox2 = w / 2 + 40;
+      drawMiniMatrix(ox2, oy, T, cellSize, 'Aᵀ');
+
+      ctxC.font = 'bold 14px Inter';
+      ctxC.fillStyle = '#18181b';
+      ctxC.textAlign = 'center';
+      ctxC.fillText('Transpose: rows ↔ columns', w / 2, 30);
+    }
+
+    function drawMiniMatrix(ox, oy, M, cellSize, label) {
+      const n = M.length;
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          const x = ox + c * cellSize;
+          const y = oy + r * cellSize;
+          ctxC.fillStyle = (r === c) ? 'rgba(24, 24, 27, 0.1)' : '#fafafa';
+          ctxC.beginPath();
+          ctxC.roundRect(x + 1, y + 1, cellSize - 2, cellSize - 2, 3);
+          ctxC.fill();
+          ctxC.strokeStyle = '#e4e4e7';
+          ctxC.lineWidth = 1;
+          ctxC.stroke();
+
+          ctxC.font = '500 10px JetBrains Mono';
+          ctxC.fillStyle = '#18181b';
+          ctxC.textAlign = 'center';
+          ctxC.textBaseline = 'middle';
+          ctxC.fillText(parseFloat(M[r][c].toFixed(1)).toString(), x + cellSize / 2, y + cellSize / 2);
+        }
+      }
+
+      ctxC.font = 'bold 12px Inter';
+      ctxC.fillStyle = '#52525b';
+      ctxC.textAlign = 'center';
+      ctxC.fillText(label, ox + (n * cellSize) / 2, oy + n * cellSize + 20);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    buildGrids();
+    resizeCanvas();
+    compute();
+
+    // Mobile keyboard fix
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === 'INPUT') {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      }
+    });
+    document.addEventListener('focusout', (e) => {
+      if (e.target.tagName === 'INPUT') {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      }
+    });
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

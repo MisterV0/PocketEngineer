@@ -5,22 +5,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="resources/NewLogo.svg">
-  <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
   <title>Voltage Divider Calculator — PocketEngineer</title>
   <meta name="description"
     content="Free online voltage divider calculator with real-time circuit visualization. Enter Vin, R1, and R2 to instantly calculate Vout using the voltage divider formula. Interactive schematic included.">
-  <link rel="canonical" href="https://www.pockeng.com/voltage.html">
+  <link rel="canonical" href="https://www.pockeng.com/tools/voltage.html">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.pockeng.com/voltage.html">
+  <meta property="og:url" content="https://www.pockeng.com/tools/voltage.html">
   <meta property="og:title" content="Voltage Divider Calculator — PocketEngineer">
   <meta property="og:description"
     content="Calculate output voltage from a resistor divider circuit. Enter Vin, R1, R2 and see Vout instantly with animated circuit diagram.">
-  <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
-  <script src="resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+  <script src="../resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
   <style>
     /* Reset & Polish */
     body {
@@ -130,7 +130,7 @@
     <!-- Header -->
     <header class="flex-none p-8 pb-4 border-b border-zinc-100">
       <div class="flex items-center gap-4 mb-0">
-        <a href="index.html" class="back-button">
+        <a href="../index.html" class="back-button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M15 18l-6-6 6-6" />
           </svg>
@@ -230,52 +230,13 @@
           </div>
         </div>
 
-        <!-- RATIO SLIDER COMPONENT - DISABLED -->
-        <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-4 opacity-50 pointer-events-none relative group">
-          <div class="flex justify-between items-end mb-2">
-            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">Division Ratio</label>
-            <div
-              class="text-[11px] font-mono text-zinc-700 font-semibold bg-white border border-zinc-200 px-2 py-0.5 rounded shadow-sm"
-              id="ratio-display">66.6%</div>
-          </div>
-
-          <div class="relative w-full h-8 flex items-center group/slider">
-            <!-- Background Ticks -->
-            <div
-              class="absolute inset-x-0 h-4 pointer-events-none flex justify-between px-2 text-[9px] text-zinc-400 select-none bottom-0 translate-y-4">
-              <span>0%</span>
-              <span>25%</span>
-              <span>50%</span>
-              <span>75%</span>
-              <span>100%</span>
-            </div>
-
-            <!-- Track Ticks Overlay -->
-            <div class="absolute w-[calc(100%-12px)] left-[6px] flex justify-between h-1.5 pointer-events-none">
-              <div class="w-[1px] h-full bg-zinc-300"></div>
-              <div class="w-[1px] h-full bg-zinc-300"></div>
-              <div class="w-[1px] h-full bg-zinc-300"></div>
-              <div class="w-[1px] h-full bg-zinc-300"></div>
-              <div class="w-[1px] h-full bg-zinc-300"></div>
-            </div>
-
-            <!-- Range Input - DISABLED -->
-            <input type="range" id="ratio-slider" min="0" max="100" step="0.1" value="66.6" class="slider-track z-10"
-              oninput="handleSliderMove()" disabled>
-          </div>
-          <!-- Tooltip on hover -->
-          <div
-            class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-2 bg-zinc-800 text-white text-[9px] font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-            Coming soon with enhanced ratio selection
-          </div>
-        </div>
       </form>
 
       <!-- Output Display (Calculated) -->
       <div>
         <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Calculated Result</label>
         <div
-          class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5 group transition-transform duration-500 hover:scale-[1.01]">
+          class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-4 group transition-transform duration-500 hover:scale-[1.01]">
           <!-- Subtle Ambient Light (White/Grey instead of Blue) -->
           <div
             class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"
@@ -284,10 +245,72 @@
           <div class="relative z-10 flex flex-col justify-center h-full">
             <p class="text-zinc-400 text-xs font-semibold mb-1 select-none">Output Voltage (Vout)</p>
             <div class="flex items-baseline gap-2">
-              <span id="display-vout" class="text-5xl font-mono font-medium tracking-tighter origin-left">0.00</span>
-              <span class="text-zinc-500 font-medium select-none text-lg">V</span>
+              <span id="display-vout" class="text-3xl font-mono font-medium tracking-tighter origin-left">0.00</span>
+              <span class="text-zinc-500 font-medium select-none text-base">V</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- RATIO SLIDER COMPONENT -->
+      <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-4 relative group">
+        <div class="flex justify-between items-end mb-2">
+          <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">Division Ratio</label>
+          <div
+            class="text-[11px] font-mono text-zinc-700 font-semibold bg-white border border-zinc-200 px-2 py-0.5 rounded shadow-sm"
+            id="ratio-display">66.6%</div>
+        </div>
+
+        <div class="relative w-full h-8 flex items-center group/slider">
+          <!-- Background Ticks -->
+          <div
+            class="absolute inset-x-0 h-4 pointer-events-none flex justify-between px-2 text-[9px] text-zinc-400 select-none bottom-0 translate-y-4">
+            <span>0%</span>
+            <span>25%</span>
+            <span>50%</span>
+            <span>75%</span>
+            <span>100%</span>
+          </div>
+
+          <!-- Track Ticks Overlay -->
+          <div class="absolute w-[calc(100%-12px)] left-[6px] flex justify-between h-1.5 pointer-events-none">
+            <div class="w-[1px] h-full bg-zinc-300"></div>
+            <div class="w-[1px] h-full bg-zinc-300"></div>
+            <div class="w-[1px] h-full bg-zinc-300"></div>
+            <div class="w-[1px] h-full bg-zinc-300"></div>
+            <div class="w-[1px] h-full bg-zinc-300"></div>
+          </div>
+
+          <!-- Range Input -->
+          <input type="range" id="ratio-slider" min="0" max="100" step="0.1" value="66.6" class="slider-track z-10"
+            oninput="handleSliderMove()">
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <p class="text-[10px] text-zinc-400 text-center animate-pulse">↓ Scroll down for E24 standard pair suggestions</p>
+
+      <!-- Standard Resistor Pair Finder -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Standard Pair Finder (E24)</label>
+          <div class="relative group/tooltip cursor-help">
+            <div class="w-4 h-4 rounded-full border border-zinc-300 flex items-center justify-center text-[10px] text-zinc-400 hover:border-zinc-500 hover:text-zinc-600 transition-colors">?</div>
+            <div class="absolute right-6 top-1/2 -translate-y-1/2 w-48 p-2 bg-zinc-800 text-white text-[10px] leading-snug rounded shadow-xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50">
+              Enter your desired Vout. We'll find the closest resistor pairs from the E24 series (ISO 60063, ±5%).
+            </div>
+          </div>
+        </div>
+
+        <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2.5">
+          <label for="desired-vout" class="text-sm font-medium text-zinc-500 shrink-0 select-none">Target V<sub>out</sub></label>
+          <input type="number" id="desired-vout" value="3.3" step="0.1" min="0" oninput="findStandardPairs()"
+            class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+          <span class="text-xs text-zinc-400 font-medium ml-2 w-4 text-center select-none">V</span>
+        </div>
+
+        <div id="pair-results" class="space-y-2">
+          <p class="text-xs text-zinc-400 italic">Enter a target voltage to find matching resistor pairs.</p>
         </div>
       </div>
 
@@ -566,9 +589,83 @@
 
     window.addEventListener('resize', resizeCanvas);
 
+    // --- E24 Standard Resistor Pair Finder --- //
+    const E24_BASE = [1.0,1.1,1.2,1.3,1.5,1.6,1.8,2.0,2.2,2.4,2.7,3.0,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1];
+    const E24_DECADES = [1, 10, 100, 1e3, 1e4, 1e5, 1e6];
+    const E24_VALUES = [];
+    E24_BASE.forEach(b => E24_DECADES.forEach(d => E24_VALUES.push(+(b * d).toPrecision(2))));
+
+    function findStandardPairs() {
+      const vin = Math.abs(parseFloat(document.getElementById('vin').value) || 0);
+      const desiredVout = Math.abs(parseFloat(document.getElementById('desired-vout').value) || 0);
+      const container = document.getElementById('pair-results');
+
+      if (vin <= 0 || desiredVout <= 0 || desiredVout >= vin) {
+        container.innerHTML = '<p class="text-xs text-zinc-400 italic">Enter a valid target (0 &lt; V<sub>out</sub> &lt; V<sub>in</sub>)</p>';
+        return;
+      }
+
+      const results = [];
+      for (const r2 of E24_VALUES) {
+        const idealR1 = r2 * (vin / desiredVout - 1);
+        let bestR1 = E24_VALUES[0], bestDist = Infinity;
+        for (const r1 of E24_VALUES) {
+          const dist = Math.abs(r1 - idealR1);
+          if (dist < bestDist) { bestDist = dist; bestR1 = r1; }
+        }
+        const actualVout = vin * (r2 / (bestR1 + r2));
+        const errorPercent = Math.abs((actualVout - desiredVout) / desiredVout) * 100;
+        const practical = (bestR1 >= 100 && bestR1 <= 1e6 && r2 >= 100 && r2 <= 1e6) ? 0 : 1;
+        results.push({ r1: bestR1, r2, actualVout, errorPercent, practical });
+      }
+
+      results.sort((a, b) => {
+        const diff = a.errorPercent - b.errorPercent;
+        if (Math.abs(diff) < 0.001) return a.practical - b.practical;
+        return diff;
+      });
+
+      const seen = new Set();
+      const top = [];
+      for (const r of results) {
+        const key = r.r1 + ':' + r.r2;
+        if (!seen.has(key)) { seen.add(key); top.push(r); }
+        if (top.length >= 3) break;
+      }
+
+      let html = '';
+      top.forEach((p, i) => {
+        const isExact = p.errorPercent < 0.01;
+        const badge = isExact
+          ? '<span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">EXACT</span>'
+          : '<span class="text-[9px] font-mono text-zinc-500">' + p.errorPercent.toFixed(2) + '% off</span>';
+        html += '<button onclick="applyPair(' + p.r1 + ',' + p.r2 + ')"'
+          + ' class="w-full flex items-center justify-between bg-white border border-zinc-200 rounded-lg px-3 py-2.5 hover:border-zinc-400 hover:shadow-sm transition-all text-left group/pair">'
+          + '<div class="flex items-center gap-3">'
+          + '<span class="text-[10px] font-bold text-zinc-300 w-4">#' + (i+1) + '</span>'
+          + '<div><span class="text-xs font-mono font-semibold text-zinc-800">R1: ' + formatOhms(p.r1) + '</span>'
+          + '<span class="text-zinc-300 mx-1">·</span>'
+          + '<span class="text-xs font-mono font-semibold text-zinc-800">R2: ' + formatOhms(p.r2) + '</span></div>'
+          + '</div><div class="flex items-center gap-2">' + badge
+          + '<span class="text-xs font-mono text-zinc-500">' + p.actualVout.toFixed(3) + 'V</span>'
+          + '<svg class="w-3 h-3 text-zinc-300 group-hover/pair:text-zinc-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>'
+          + '</div></button>';
+      });
+      container.innerHTML = html;
+    }
+
+    function applyPair(r1, r2) {
+      document.getElementById('r1').value = r1;
+      document.getElementById('r2').value = r2;
+      calculate('inputs');
+      const btns = document.querySelectorAll('#pair-results button');
+      btns.forEach(b => { b.style.transition = 'background 0.2s'; });
+    }
+
     // Init
     resizeCanvas();
     calculate('init');
+    findStandardPairs();
     requestAnimationFrame(animate);
 
     // --- MOBILE KEYBOARD BACK BUTTON FIX ---

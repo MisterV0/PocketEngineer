@@ -7,16 +7,16 @@
     <title>Circuit Canvas — Series & Parallel Simulator — PocketEngineer</title>
     <meta name="description"
         content="Build and simulate series and parallel circuits with resistors, batteries, and solar panels. Visual circuit canvas with real-time calculations for total resistance, voltage, and current.">
-    <link rel="canonical" href="https://www.pockeng.com/grid.html">
+    <link rel="canonical" href="https://www.pockeng.com/tools/grid.html">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.pockeng.com/grid.html">
+    <meta property="og:url" content="https://www.pockeng.com/tools/grid.html">
     <meta property="og:title" content="Circuit Canvas — Series & Parallel Simulator — PocketEngineer">
     <meta property="og:description"
         content="Drag-and-drop circuit builder with resistors, batteries, and solar panels. Calculates series and parallel totals in real time.">
-    <meta property="og:image" content="https://www.pockeng.com/resources/icon_256_256.png">
-    <link rel="stylesheet" href="resources/tailwind.css?v=1.2.0">
-    <link rel="stylesheet" href="resources/fonts.css?v=1.2.0">
-    <link rel="stylesheet" href="resources/common.css?v=1.2.0">
+    <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+    <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+    <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+    <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
     <style>
         :root {
             --bg-canvas: #f8fafc;
@@ -69,9 +69,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 80px;
+            padding-bottom: 60px;
             z-index: 1000;
             transition: opacity 0.4s ease, visibility 0.4s ease;
+            overflow-y: auto;
         }
 
         #start-screen.hidden {
@@ -584,7 +587,7 @@
 
     <!-- Start Screen -->
     <div id="start-screen">
-        <a href="index.html" class="back-button start-screen-back">
+        <a href="../index.html" class="back-button start-screen-back">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M15 18l-6-6 6-6" />
             </svg> Back
@@ -592,8 +595,8 @@
         <h1 class="start-title">Series & Parallel Simulator</h1>
         <div class="mode-cards">
             <div class="mode-card" onclick="initApp('resistors')">
-                <div class="mode-icon ohm flex justify-center items-center"><img src="resources/Images/resistor.png"
-                        alt="Resistor Icon" style="height: 64px; margin: 0 auto; display: block;" /></div>
+                <div class="mode-icon ohm flex justify-center items-center"><img src="../resources/Images/resistor.png"
+                        alt="Resistor circuit symbol for series and parallel resistance calculator" style="height: 64px; margin: 0 auto; display: block;" /></div>
                 <h2>Resistor Circuit</h2>
                 <p>Calculate Equivalent Resistance and Current using Ohm's Law.</p>
             </div>
@@ -603,11 +606,119 @@
                 <p>Combine batteries to calculate Total Voltage and Capacity (Ah).</p>
             </div>
             <div class="mode-card solar" onclick="initApp('solar')">
-                <div class="mode-icon flex justify-center items-center"><img src="resources/Images/solar-cell.png"
-                        alt="Solar Cell Icon" style="height: 64px; margin: 0 auto; display: block;" /></div>
+                <div class="mode-icon flex justify-center items-center"><img src="../resources/Images/solar-cell.png"
+                        alt="Solar panel icon for photovoltaic array voltage and current simulator" style="height: 64px; margin: 0 auto; display: block;" /></div>
                 <h2>Solar Array</h2>
                 <p>Connect panels to calculate array Voltage, Current, and Wattage.</p>
             </div>
+        </div>
+
+        <!-- Series vs Parallel Educational Section -->
+        <div style="max-width: 960px; margin: 56px auto 0; padding: 0 24px; width: 100%;">
+            <h2 style="font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 8px; color: var(--text-main);">Series vs Parallel</h2>
+            <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6;">Two fundamental ways to wire components — each affects voltage, current, and resistance differently.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+
+                <!-- Series Card -->
+                <div style="background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                        </div>
+                        <h3 style="font-size: 18px; font-weight: 700;">Series</h3>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;">Components wired end-to-end in a single loop. The <strong style="color: var(--text-main);">same current</strong> flows through every component — like water through one pipe.</p>
+
+                    <!-- Visual Diagram -->
+                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; text-align: center;">
+                        <svg width="260" height="50" viewBox="0 0 260 50">
+                            <line x1="0" y1="25" x2="40" y2="25" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="40" y="10" width="50" height="30" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+                            <text x="65" y="29" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6">A</text>
+                            <line x1="90" y1="25" x2="110" y2="25" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="110" y="10" width="50" height="30" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+                            <text x="135" y="29" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6">B</text>
+                            <line x1="160" y1="25" x2="180" y2="25" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="180" y="10" width="50" height="30" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+                            <text x="205" y="29" text-anchor="middle" font-size="10" font-weight="600" fill="#3b82f6">C</text>
+                            <line x1="230" y1="25" x2="260" y2="25" stroke="#94a3b8" stroke-width="2"/>
+                        </svg>
+                        <p style="font-size: 10px; color: #94a3b8; margin-top: 10px;">One path — current flows through A, then B, then C</p>
+                    </div>
+
+                    <div style="background: #f1f5f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Resistors</p>
+                        <code style="font-size: 12px; color: #1e40af; font-weight: 600;">R<sub>total</sub> = R<sub>A</sub> + R<sub>B</sub> + R<sub>C</sub> + …</code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Resistance <strong>adds up</strong>. Voltage divides across each one.</p>
+                    </div>
+                    <div style="background: #f1f5f9; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Batteries</p>
+                        <code style="font-size: 12px; color: #1e40af; font-weight: 600;">V<sub>total</sub> = V<sub>A</sub> + V<sub>B</sub> + V<sub>C</sub></code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Voltages <strong>stack</strong>. Capacity stays equal to the smallest cell.</p>
+                    </div>
+                    <div style="background: #f1f5f9; border-radius: 10px; padding: 14px 16px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Solar Panels</p>
+                        <code style="font-size: 12px; color: #1e40af; font-weight: 600;">V<sub>total</sub> = V<sub>A</sub> + V<sub>B</sub> + V<sub>C</sub></code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Voltages add up. Current limited by the <strong>weakest panel</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- Parallel Card -->
+                <div style="background: var(--surface); border: 2px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><line x1="7" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="17" y2="20"/></svg>
+                        </div>
+                        <h3 style="font-size: 18px; font-weight: 700;">Parallel</h3>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;">Components bridged across the same two points. The <strong style="color: var(--text-main);">same voltage</strong> is applied to every component — like lanes on a highway.</p>
+
+                    <!-- Visual Diagram -->
+                    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; text-align: center;">
+                        <svg width="200" height="110" viewBox="0 0 200 110">
+                            <!-- Left bus -->
+                            <line x1="20" y1="15" x2="20" y2="95" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- Right bus -->
+                            <line x1="180" y1="15" x2="180" y2="95" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- Branch A -->
+                            <line x1="20" y1="20" x2="55" y2="20" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="55" y="7" width="90" height="26" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+                            <text x="100" y="24" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">A</text>
+                            <line x1="145" y1="20" x2="180" y2="20" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- Branch B -->
+                            <line x1="20" y1="55" x2="55" y2="55" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="55" y="42" width="90" height="26" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+                            <text x="100" y="59" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">B</text>
+                            <line x1="145" y1="55" x2="180" y2="55" stroke="#94a3b8" stroke-width="2"/>
+                            <!-- Branch C -->
+                            <line x1="20" y1="90" x2="55" y2="90" stroke="#94a3b8" stroke-width="2"/>
+                            <rect x="55" y="77" width="90" height="26" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+                            <text x="100" y="94" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">C</text>
+                            <line x1="145" y1="90" x2="180" y2="90" stroke="#94a3b8" stroke-width="2"/>
+                        </svg>
+                        <p style="font-size: 10px; color: #94a3b8; margin-top: 10px;">Multiple paths — current splits across A, B, and C</p>
+                    </div>
+
+                    <div style="background: #f0fdf4; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Resistors</p>
+                        <code style="font-size: 12px; color: #166534; font-weight: 600;">1/R<sub>total</sub> = 1/R<sub>A</sub> + 1/R<sub>B</sub> + 1/R<sub>C</sub></code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Resistance <strong>drops</strong>. More paths = easier flow.</p>
+                    </div>
+                    <div style="background: #f0fdf4; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Batteries</p>
+                        <code style="font-size: 12px; color: #166534; font-weight: 600;">Ah<sub>total</sub> = Ah<sub>A</sub> + Ah<sub>B</sub> + Ah<sub>C</sub></code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Capacity <strong>adds up</strong>. Voltage stays the same.</p>
+                    </div>
+                    <div style="background: #f0fdf4; border-radius: 10px; padding: 14px 16px;">
+                        <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Solar Panels</p>
+                        <code style="font-size: 12px; color: #166534; font-weight: 600;">I<sub>total</sub> = I<sub>A</sub> + I<sub>B</sub> + I<sub>C</sub></code>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Currents combine. Voltage stays the same.</p>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
@@ -632,7 +743,7 @@
         </main>
     </div>
 
-    <script src="resources/app.js?v=1.2.0"></script>
+    <script src="../resources/app.js?v=1.2.0"></script>
     <script>
         // --- Global State ---
         let appMode = 'resistors'; // 'resistors' | 'batteries' | 'solar'

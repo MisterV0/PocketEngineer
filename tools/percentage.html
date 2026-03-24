@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <title>Percentage Calculator — PocketEngineer</title>
+  <meta name="description"
+    content="Free percentage calculator — compute X% of Y, what % X is of Y, percentage change, markup, discount, and tip. Instant results with visual bar breakdown.">
+  <link rel="canonical" href="https://www.pockeng.com/tools/percentage.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/tools/percentage.html">
+  <meta property="og:title" content="Percentage Calculator — PocketEngineer">
+  <meta property="og:description"
+    content="Calculate percentages instantly — X% of Y, what percent, change, markup and discount. Visual bar breakdown included.">
+  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+  <script src="../resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <style>
+    body {
+      font-feature-settings: "cv05", "cv08", "ss01";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .ios-input-wrapper {
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .ios-input-wrapper:focus-within {
+      border-color: #3f3f46;
+      box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .mode-btn {
+      transition: all 0.25s ease;
+    }
+
+    .mode-btn.active {
+      background: #3f3f46;
+      color: white;
+      box-shadow: 0 4px 12px -2px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+
+<body class="bg-[#F5F5F7] text-zinc-900 min-h-screen flex flex-col items-center selection:bg-zinc-200 selection:text-zinc-900">
+
+  <!-- Header -->
+  <header class="w-full max-w-md px-5 pt-6 pb-2 flex items-center gap-3">
+    <a href="../index.html" class="back-button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+      Back
+    </a>
+    <h1 class="text-lg font-bold tracking-tight text-zinc-900">Percentage</h1>
+  </header>
+
+  <main class="w-full max-w-md px-5 pb-8 flex flex-col gap-5">
+
+    <!-- Circle Visualization -->
+    <div class="flex justify-center">
+      <canvas id="percentCanvas" class="block"></canvas>
+    </div>
+
+    <!-- Result Display -->
+    <div class="relative overflow-hidden bg-zinc-700 text-white rounded-xl shadow-lg px-5 py-4">
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <p class="text-zinc-400 text-[11px] font-semibold select-none" id="result-label">25% of 200</p>
+        <span id="display-result" class="text-3xl font-mono font-medium tracking-tighter">50</span>
+      </div>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="grid grid-cols-2 gap-1.5" id="mode-selector">
+      <button class="mode-btn active text-[11px] font-semibold px-2 py-2 rounded-lg border border-zinc-200" data-mode="of" onclick="setMode('of')">X% of Y</button>
+      <button class="mode-btn text-[11px] font-semibold px-2 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-mode="what" onclick="setMode('what')">X is ?% of Y</button>
+      <button class="mode-btn text-[11px] font-semibold px-2 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-mode="change" onclick="setMode('change')">% Change</button>
+      <button class="mode-btn text-[11px] font-semibold px-2 py-2 rounded-lg border border-zinc-200 text-zinc-600" data-mode="markup" onclick="setMode('markup')">Markup / Discount</button>
+    </div>
+
+    <!-- Mode: X% of Y -->
+    <div id="panel-of">
+      <div class="text-[11px] text-zinc-500 mb-2">What is <strong>X%</strong> of <strong>Y</strong>?</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">X</label>
+          <input type="number" id="of-x" value="25" oninput="calcOf()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+          <span class="text-[10px] text-zinc-400 font-medium ml-1 select-none">%</span>
+        </div>
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">Y</label>
+          <input type="number" id="of-y" value="200" oninput="calcOf()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode: X is ?% of Y -->
+    <div id="panel-what" class="hidden">
+      <div class="text-[11px] text-zinc-500 mb-2"><strong>X</strong> is what <strong>%</strong> of <strong>Y</strong>?</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">X</label>
+          <input type="number" id="what-x" value="50" oninput="calcWhat()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">Y</label>
+          <input type="number" id="what-y" value="200" oninput="calcWhat()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode: % Change -->
+    <div id="panel-change" class="hidden">
+      <div class="text-[11px] text-zinc-500 mb-2">Change from <strong>Old</strong> to <strong>New</strong></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">Old</label>
+          <input type="number" id="change-old" value="80" oninput="calcChange()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">New</label>
+          <input type="number" id="change-new" value="100" oninput="calcChange()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode: Markup / Discount -->
+    <div id="panel-markup" class="hidden">
+      <div class="text-[11px] text-zinc-500 mb-2">Apply <strong>markup</strong> or <strong>discount</strong></div>
+      <div class="grid grid-cols-2 gap-2 mb-2">
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">Val</label>
+          <input type="number" id="markup-val" value="100" oninput="calcMarkup()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+        </div>
+        <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-3 py-2">
+          <label class="text-xs font-medium text-zinc-400 shrink-0 select-none mr-2">Rate</label>
+          <input type="number" id="markup-rate" value="15" oninput="calcMarkup()"
+            class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
+          <span class="text-[10px] text-zinc-400 font-medium ml-1 select-none">%</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btn-markup" class="text-[11px] font-semibold py-1.5 rounded-lg bg-zinc-900 text-white" onclick="setMarkupDir(1)">Markup +</button>
+        <button id="btn-discount" class="text-[11px] font-semibold py-1.5 rounded-lg border border-zinc-300 text-zinc-600" onclick="setMarkupDir(-1)">Discount −</button>
+      </div>
+    </div>
+
+    <!-- Breakdown -->
+    <div id="breakdown"></div>
+
+  </main>
+
+  <script>
+    const canvas = document.getElementById('percentCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let currentMode = 'of';
+    let markupDir = 1;
+    let displayPercent = 0;
+    let displayTotal = 0;
+    let displayPart = 0;
+    let animTarget = 0;
+    let animCurrent = 0;
+
+    const modes = ['of', 'what', 'change', 'markup'];
+
+    function setMode(mode) {
+      currentMode = mode;
+      modes.forEach(m => {
+        document.getElementById('panel-' + m).classList.toggle('hidden', m !== mode);
+        const btn = document.querySelector('[data-mode="' + m + '"]');
+        btn.classList.toggle('active', m === mode);
+        if (m === mode) {
+          btn.classList.remove('text-zinc-600');
+        } else {
+          btn.classList.add('text-zinc-600');
+        }
+      });
+      recalc();
+    }
+
+    function setMarkupDir(dir) {
+      markupDir = dir;
+      document.getElementById('btn-markup').className = dir === 1
+        ? 'text-[11px] font-semibold py-1.5 rounded-lg bg-zinc-900 text-white'
+        : 'text-[11px] font-semibold py-1.5 rounded-lg border border-zinc-300 text-zinc-600';
+      document.getElementById('btn-discount').className = dir === -1
+        ? 'text-[11px] font-semibold py-1.5 rounded-lg bg-zinc-900 text-white'
+        : 'text-[11px] font-semibold py-1.5 rounded-lg border border-zinc-300 text-zinc-600';
+      calcMarkup();
+    }
+
+    function recalc() {
+      if (currentMode === 'of') calcOf();
+      else if (currentMode === 'what') calcWhat();
+      else if (currentMode === 'change') calcChange();
+      else calcMarkup();
+    }
+
+    function calcOf() {
+      const x = parseFloat(document.getElementById('of-x').value) || 0;
+      const y = parseFloat(document.getElementById('of-y').value) || 0;
+      const result = (x / 100) * y;
+      displayPercent = x;
+      displayTotal = y;
+      displayPart = result;
+      animTarget = Math.min(Math.abs(x), 100);
+      document.getElementById('result-label').textContent = x + '% of ' + y;
+      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '');
+      updateBreakdown(x, y, result);
+    }
+
+    function calcWhat() {
+      const x = parseFloat(document.getElementById('what-x').value) || 0;
+      const y = parseFloat(document.getElementById('what-y').value) || 0;
+      const result = y !== 0 ? (x / y) * 100 : 0;
+      displayPercent = result;
+      displayTotal = y;
+      displayPart = x;
+      animTarget = Math.min(Math.abs(result), 100);
+      document.getElementById('result-label').textContent = x + ' is what % of ' + y;
+      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '') + '%';
+      updateBreakdown(result, y, x);
+    }
+
+    function calcChange() {
+      const oldVal = parseFloat(document.getElementById('change-old').value) || 0;
+      const newVal = parseFloat(document.getElementById('change-new').value) || 0;
+      const change = oldVal !== 0 ? ((newVal - oldVal) / Math.abs(oldVal)) * 100 : 0;
+      const sign = change >= 0 ? '+' : '';
+      displayPercent = Math.abs(change);
+      displayTotal = oldVal;
+      displayPart = newVal;
+      animTarget = Math.min(Math.abs(change), 100);
+      document.getElementById('result-label').textContent = 'Change from ' + oldVal + ' → ' + newVal;
+      document.getElementById('display-result').textContent = sign + change.toFixed(2) + '%';
+      document.getElementById('breakdown').innerHTML =
+        '<div class="bg-zinc-50 border border-zinc-200 rounded-lg p-3">' +
+        '<p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Difference</p>' +
+        '<p class="text-sm font-mono font-semibold text-zinc-900">' + sign + (newVal - oldVal).toFixed(4).replace(/\.?0+$/, '') + '</p></div>';
+    }
+
+    function calcMarkup() {
+      const val = parseFloat(document.getElementById('markup-val').value) || 0;
+      const rate = parseFloat(document.getElementById('markup-rate').value) || 0;
+      const delta = val * (rate / 100) * markupDir;
+      const result = val + delta;
+      displayPercent = rate;
+      displayTotal = val;
+      displayPart = Math.abs(delta);
+      animTarget = Math.min(rate, 100);
+      const label = markupDir === 1 ? 'Markup' : 'Discount';
+      document.getElementById('result-label').textContent = label + ' ' + rate + '% on ' + val;
+      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '');
+      document.getElementById('breakdown').innerHTML =
+        '<div class="grid grid-cols-2 gap-2">' +
+        '<div class="bg-zinc-50 border border-zinc-200 rounded-lg p-3">' +
+        '<p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Original</p>' +
+        '<p class="text-sm font-mono font-semibold text-zinc-900">' + val + '</p></div>' +
+        '<div class="bg-zinc-50 border border-zinc-200 rounded-lg p-3">' +
+        '<p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">' + label + ' Amount</p>' +
+        '<p class="text-sm font-mono font-semibold text-zinc-900">' + (markupDir === 1 ? '+' : '−') + Math.abs(delta).toFixed(2) + '</p></div></div>';
+    }
+
+    function updateBreakdown(pct, total, part) {
+      const remainder = total - part;
+      document.getElementById('breakdown').innerHTML =
+        '<div class="grid grid-cols-2 gap-2">' +
+        '<div class="bg-zinc-50 border border-zinc-200 rounded-lg p-3">' +
+        '<p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Part</p>' +
+        '<p class="text-sm font-mono font-semibold text-zinc-900">' + part.toFixed(4).replace(/\.?0+$/, '') + '</p></div>' +
+        '<div class="bg-zinc-50 border border-zinc-200 rounded-lg p-3">' +
+        '<p class="text-[10px] font-bold text-zinc-400 uppercase mb-0.5">Remainder</p>' +
+        '<p class="text-sm font-mono font-semibold text-zinc-900">' + remainder.toFixed(4).replace(/\.?0+$/, '') + '</p></div></div>';
+    }
+
+    // Canvas
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const size = Math.min(240, window.innerWidth - 40);
+      canvas.width = size * dpr;
+      canvas.height = size * dpr;
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
+
+    function animate() {
+      animCurrent += (animTarget - animCurrent) * 0.08;
+      drawVis();
+      requestAnimationFrame(animate);
+    }
+
+    function drawVis() {
+      const s = parseFloat(canvas.style.width);
+      ctx.clearRect(0, 0, s, s);
+
+      const cx = s / 2;
+      const cy = s / 2;
+      const radius = s * 0.42;
+      const pct = Math.max(0, Math.min(animCurrent, 100));
+      const angle = (pct / 100) * Math.PI * 2;
+
+      // Background circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#f4f4f5';
+      ctx.fill();
+      ctx.strokeStyle = '#e4e4e7';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Filled arc
+      if (pct > 0) {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, -Math.PI / 2, -Math.PI / 2 + angle);
+        ctx.closePath();
+        ctx.fillStyle = '#18181b';
+        ctx.fill();
+      }
+
+      // Center white circle
+      const innerR = radius * 0.6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      // Center text
+      ctx.font = 'bold 28px JetBrains Mono';
+      ctx.fillStyle = '#18181b';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pct.toFixed(1) + '%', cx, cy);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    calcOf();
+    requestAnimationFrame(animate);
+
+    // Mobile keyboard fix
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

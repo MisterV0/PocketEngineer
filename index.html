@@ -12,7 +12,7 @@
   <meta name="description"
     content="Free professional engineering tools for students and pros. Voltage Divider, Ohm's Law solver, Resistor Color Codes, Geometry Calculators (Circle, Square, Rectangle), Binary & Hex Converters, Median Calculator, Unit Converter, Bitwise Operations, and Circuit Simulator — all in one place.">
   <meta name="keywords"
-    content="engineering calculator, voltage divider, resistor color code, ohms law, circle geometry, square solver, rectangle calculator, physics visualizer, binary converter, bubble sort generator, median calculator, unit converter, hexadecimal converter, bitwise calculator, circuit simulator, free engineering tools, online calculator">
+    content="engineering calculator, voltage divider, resistor color code, ohms law, circle geometry, square solver, rectangle calculator, physics visualizer, binary converter, bubble sort generator, median calculator, unit converter, hexadecimal converter, bitwise calculator, circuit simulator, pythagorean theorem, led calculator, pwm simulator, free engineering tools, online calculator">
   <meta name="robots" content="index, follow">
   <meta name="author" content="PocketEngineer">
   <meta name="theme-color" content="#ffffff">
@@ -52,7 +52,7 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "featureList": "Voltage Divider, Resistor Color Codes, Ohm's Law, Circle Solver, Square Solver, Rectangle Solver, Binary Converter, Bubble Sort Generator, Median Calculator, Unit Converter, Hexadecimal Converter, Bitwise Calculator, Circuit Canvas"
+    "featureList": "Voltage Divider, Resistor Color Codes, Ohm's Law, Circle Solver, Square Solver, Rectangle Solver, Binary Converter, Bubble Sort Generator, Median Calculator, Unit Converter, Hexadecimal Converter, Bitwise Calculator, Circuit Canvas, Pythagorean Theorem, LED Calculator, Gear Ratio, Percentage Calculator, Matrix Calculator"
   }
   </script>
 
@@ -180,6 +180,33 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
           </button>
+          <button
+            class="filter-btn flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+            data-category="Math">
+            <span>Math</span>
+            <svg class="w-4 h-4 check-icon opacity-0 scale-75 transition-all duration-200 text-zinc-400" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
+          <button
+            class="filter-btn flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+            data-category="Physics">
+            <span>Physics</span>
+            <svg class="w-4 h-4 check-icon opacity-0 scale-75 transition-all duration-200 text-zinc-400" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
+          <button
+            class="filter-btn flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+            data-category="Mechanical">
+            <span>Mechanical</span>
+            <svg class="w-4 h-4 check-icon opacity-0 scale-75 transition-all duration-200 text-zinc-400" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -188,7 +215,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full opacity-0 animate-fade-up-delay" id="app-grid">
 
       <!-- 1. Voltage Divider -->
-      <a href="voltage.html"
+      <a href="tools/voltage.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
@@ -205,7 +232,7 @@
       </a>
 
       <!-- 2. Resistor Decoder -->
-      <a href="resistor.html"
+      <a href="tools/resistor.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
@@ -222,7 +249,7 @@
       </a>
 
       <!-- 3. Ohm's Law -->
-      <a href="ohms-law.html"
+      <a href="tools/ohms-law.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
@@ -239,7 +266,7 @@
       </a>
 
       <!-- 4. Circle Geometry -->
-      <a href="circle.html"
+      <a href="tools/circle.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Geometry</div>
@@ -256,7 +283,7 @@
       </a>
 
       <!-- 5. Rectangle Geometry -->
-      <a href="rectangle.html"
+      <a href="tools/rectangle.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Geometry</div>
@@ -273,7 +300,7 @@
       </a>
 
       <!-- 6. Square Geometry -->
-      <a href="square.html"
+      <a href="tools/square.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Geometry</div>
@@ -290,7 +317,7 @@
       </a>
 
       <!-- 7. Binary Converter -->
-      <a href="binary.html"
+      <a href="tools/binary.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
@@ -308,7 +335,7 @@
       </a>
 
       <!-- 9. Median Calculator -->
-      <a href="median.html"
+      <a href="tools/median.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
@@ -325,7 +352,7 @@
       </a>
 
       <!-- 10. Unit Converter -->
-      <a href="unit-convertor.html"
+      <a href="tools/unit-convertor.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Utilities</div>
@@ -343,7 +370,7 @@
       </a>
 
       <!-- 11. Hexadecimal Converter -->
-      <a href="hexa.html"
+      <a href="tools/hexa.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
@@ -360,7 +387,7 @@
       </a>
 
       <!-- 12. Bitwise Calculator -->
-      <a href="bitoperaitons.html"
+      <a href="tools/bitoperations.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Programming</div>
@@ -378,7 +405,7 @@
       </a>
 
       <!-- 13. Circuit & Battery Canvas -->
-      <a href="grid.html"
+      <a href="tools/grid.html"
         class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
         <div class="flex-1">
           <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
@@ -392,6 +419,89 @@
         </div>
         <div
           class="absolute -bottom-10 -right-10 w-40 h-40 bg-lime-50 rounded-full blur-3xl group-hover:bg-lime-100 transition-colors duration-700">
+        </div>
+      </a>
+
+      <!-- 14. Pythagorean Theorem -->
+      <a href="tools/pitagora.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Geometry</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">Pythagorean Theorem</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Enter any two sides of a right triangle to
+            instantly calculate the third side, all angles, area, and perimeter with animated visualization.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-50 rounded-full blur-3xl group-hover:bg-emerald-100 transition-colors duration-700">
+        </div>
+      </a>
+
+      <!-- 15. LED Calculator -->
+      <a href="tools/led.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">LED Calculator</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Calculate LED resistance, pick standard colors with
+            forward voltages, simulate Arduino PWM brightness, and generate ready-to-use code.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-red-50 rounded-full blur-3xl group-hover:bg-red-100 transition-colors duration-700">
+        </div>
+      </a>
+
+
+      <!-- 17. Gear Ratio Calculator -->
+      <a href="tools/gear.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Mechanical</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">Gear Ratio</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Calculate gear ratio, output RPM, and torque from tooth count. Animated meshing gears with real-time speed visualization.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-orange-50 rounded-full blur-3xl group-hover:bg-orange-100 transition-colors duration-700">
+        </div>
+      </a>
+
+      <!-- 18. Percentage Calculator -->
+      <a href="tools/percentage.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Math</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">Percentage</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">All-in-one percentage tool — X% of Y, what percent, percentage change, markup and discount. Donut chart and bar visualization.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-sky-50 rounded-full blur-3xl group-hover:bg-sky-100 transition-colors duration-700">
+        </div>
+      </a>
+
+      <!-- 19. Matrix Calculator -->
+      <a href="tools/matrix.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Math</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">Matrix Calculator</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Add, subtract, multiply matrices, compute determinant, transpose, and inverse. Supports 2×2, 3×3, and 4×4 with heatmap visualization.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-violet-50 rounded-full blur-3xl group-hover:bg-violet-100 transition-colors duration-700">
         </div>
       </a>
 
@@ -798,7 +908,7 @@
             if (!cardCatEl) return;
 
             const cardCat = cardCatEl.textContent.trim();
-            const matchedCat = ['Electronics', 'Geometry', 'Programming', 'Utilities'].find(c => cardCat.toLowerCase() === c.toLowerCase());
+            const matchedCat = ['Electronics', 'Geometry', 'Programming', 'Utilities', 'Math', 'Physics', 'Mechanical'].find(c => cardCat.toLowerCase() === c.toLowerCase());
 
             if (activeCategories.has('All') || activeCategories.has(matchedCat)) {
               card.style.display = 'flex';

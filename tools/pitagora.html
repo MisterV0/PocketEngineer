@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <title>Pythagorean Theorem Calculator — PocketEngineer</title>
+  <meta name="description"
+    content="Interactive Pythagorean theorem calculator — enter any two sides of a right triangle to instantly solve for the third. Includes real-time triangle visualization, angle calculation, area, and perimeter.">
+  <link rel="canonical" href="https://www.pockeng.com/tools/pitagora.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.pockeng.com/tools/pitagora.html">
+  <meta property="og:title" content="Pythagorean Theorem Calculator — PocketEngineer">
+  <meta property="og:description"
+    content="Enter any two sides of a right triangle to instantly calculate the third side, all angles, area, and perimeter with animated visualization.">
+  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+  <script src="../resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <style>
+    body {
+      font-feature-settings: "cv05", "cv08", "ss01";
+      -webkit-font-smoothing: antialiased;
+    }
+
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .ios-input-wrapper {
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .ios-input-wrapper:focus-within {
+      border-color: #3f3f46;
+      box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.1);
+      transform: translateY(-1px);
+    }
+
+    details>summary {
+      list-style: none;
+      outline: none;
+    }
+
+    details>summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details[open] summary~* {
+      animation: sweep .3s ease-in-out;
+    }
+
+    @keyframes sweep {
+      0% {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .param-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #f1f1f4;
+    }
+
+    .is-input {
+      border-color: #18181b;
+      background-color: white;
+      box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.05);
+    }
+
+    .is-output {
+      background-color: #fafafa;
+      border-style: dashed;
+      border-color: #e4e4e7;
+    }
+
+    .is-output input {
+      color: #0ea5e9;
+      pointer-events: none;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #18181b;
+      color: #fafafa;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 50;
+    }
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #18181b;
+    }
+    .group:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
+
+  <!-- Left Column: Controls -->
+  <aside class="w-full md:w-[420px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative">
+
+    <!-- Header -->
+    <header class="flex-none p-8 pb-4 border-b border-zinc-100">
+      <div class="flex items-center gap-4 mb-0">
+        <a href="../index.html" class="back-button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back
+        </a>
+        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Pythagorean Theorem</h1>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-8 pt-6 space-y-6">
+
+      <!-- Theory -->
+      <div class="bg-zinc-50 rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
+        <details class="group open:pb-4">
+          <summary class="flex justify-between items-center font-medium cursor-pointer p-4 hover:bg-zinc-100 transition-colors select-none">
+            <span class="text-sm">Logic & Formula</span>
+            <span class="text-zinc-400 group-open:rotate-180 transition-transform">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </summary>
+          <div class="px-5 text-sm leading-relaxed text-zinc-600 space-y-3 pt-2">
+            <p>
+              In a right triangle, the square of the hypotenuse (<span class="font-mono text-xs text-zinc-700">c</span>)
+              equals the sum of the squares of the other two sides.
+            </p>
+            <div class="bg-white border border-zinc-200 rounded-lg p-3 flex justify-center items-center shadow-sm">
+              <span class="font-mono text-sm text-zinc-900 font-semibold">
+                a² + b² = c²
+              </span>
+            </div>
+
+          </div>
+        </details>
+      </div>
+
+      <!-- Side Inputs -->
+      <form class="space-y-3" onsubmit="return false;">
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Side a -->
+          <div id="card-a" class="param-card px-4 py-3 rounded-xl bg-white">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side a</label>
+              <span class="text-[10px] font-mono font-bold text-zinc-300" id="a-formula">a</span>
+            </div>
+            <div class="relative">
+              <input type="number" id="side-a" oninput="handleInput('a')" placeholder="0"
+                class="w-full bg-transparent text-xl font-mono font-medium outline-none">
+            </div>
+          </div>
+
+          <!-- Side b -->
+          <div id="card-b" class="param-card px-4 py-3 rounded-xl bg-white">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side b</label>
+              <span class="text-[10px] font-mono font-bold text-zinc-300" id="b-formula">b</span>
+            </div>
+            <div class="relative">
+              <input type="number" id="side-b" oninput="handleInput('b')" placeholder="0"
+                class="w-full bg-transparent text-xl font-mono font-medium outline-none">
+            </div>
+          </div>
+        </div>
+
+        <!-- Side c (hypotenuse) -->
+        <div id="card-c" class="param-card px-4 py-3 rounded-xl bg-white">
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side c (hypotenuse)</label>
+            <span class="text-[10px] font-mono font-bold text-zinc-300" id="c-formula">c</span>
+          </div>
+          <div class="relative">
+            <input type="number" id="side-c" oninput="handleInput('c')" placeholder="0"
+              class="w-full bg-transparent text-xl font-mono font-medium outline-none pr-4">
+          </div>
+        </div>
+      </form>
+
+      <!-- Properties -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Triangle Properties</label>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3 group relative cursor-help">
+            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Angle α</p>
+            <p class="text-base font-mono font-semibold text-zinc-900" id="angle-alpha">—</p>
+            <span class="tooltip">α = arctan(a / b)</span>
+          </div>
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3 group relative cursor-help">
+            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Angle β</p>
+            <p class="text-base font-mono font-semibold text-zinc-900" id="angle-beta">—</p>
+            <span class="tooltip">β = arctan(b / a)</span>
+          </div>
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3 group relative cursor-help">
+            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Area</p>
+            <p class="text-base font-mono font-semibold text-zinc-900" id="prop-area">—</p>
+            <span class="tooltip">A = (a × b) / 2</span>
+          </div>
+          <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3 group relative cursor-help">
+            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Perimeter</p>
+            <p class="text-base font-mono font-semibold text-zinc-900" id="prop-perimeter">—</p>
+            <span class="tooltip">P = a + b + c</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Right Column: Visualization -->
+  <main class="flex-1 relative flex flex-col bg-[#F5F5F7]">
+    <div class="flex-1 flex items-center justify-center p-8 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none opacity-[0.4]"
+        style="background-image: linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px); background-size: 40px 40px; background-position: center;">
+      </div>
+      <div class="relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] rounded-2xl bg-white p-2 border border-zinc-100">
+        <canvas id="triangleCanvas" class="bg-white rounded-xl block"></canvas>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('triangleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // State — start with a classic 3-4-5 triangle
+    let inputs = { a: 3, b: 4, c: 5 };
+    let lastEdited = ['a', 'b'];
+
+    function handleInput(side) {
+      const val = parseFloat(document.getElementById('side-' + side).value);
+      inputs[side] = (val > 0) ? val : null;
+
+      // Track last 2 edited sides
+      lastEdited = lastEdited.filter(s => s !== side);
+      lastEdited.push(side);
+      if (lastEdited.length > 2) lastEdited.shift();
+
+      solve();
+    }
+
+    function solve() {
+      const { a, b, c } = inputs;
+      const edited = new Set(lastEdited);
+      let solved = null;
+
+      // Determine which side to compute
+      if (edited.has('a') && edited.has('b') && a && b) {
+        solved = 'c';
+        const cVal = Math.sqrt(a * a + b * b);
+        document.getElementById('side-c').value = cVal.toFixed(4);
+        inputs.c = cVal;
+      } else if (edited.has('a') && edited.has('c') && a && c) {
+        if (c > a) {
+          solved = 'b';
+          const bVal = Math.sqrt(c * c - a * a);
+          document.getElementById('side-b').value = bVal.toFixed(4);
+          inputs.b = bVal;
+        }
+      } else if (edited.has('b') && edited.has('c') && b && c) {
+        if (c > b) {
+          solved = 'a';
+          const aVal = Math.sqrt(c * c - b * b);
+          document.getElementById('side-a').value = aVal.toFixed(4);
+          inputs.a = aVal;
+        }
+      } else if (a && b && !c) {
+        solved = 'c';
+        const cVal = Math.sqrt(a * a + b * b);
+        document.getElementById('side-c').value = cVal.toFixed(4);
+        inputs.c = cVal;
+      } else if (a && c && !b && c > a) {
+        solved = 'b';
+        const bVal = Math.sqrt(c * c - a * a);
+        document.getElementById('side-b').value = bVal.toFixed(4);
+        inputs.b = bVal;
+      } else if (b && c && !a && c > b) {
+        solved = 'a';
+        const aVal = Math.sqrt(c * c - b * b);
+        document.getElementById('side-a').value = aVal.toFixed(4);
+        inputs.a = aVal;
+      }
+
+      updateCardStates(solved);
+      updateProperties();
+      drawTriangle();
+    }
+
+    function updateCardStates(solved) {
+      ['a', 'b', 'c'].forEach(s => {
+        const card = document.getElementById('card-' + s);
+        const formulaEl = document.getElementById(s + '-formula');
+        if (s === solved) {
+          card.classList.remove('is-input');
+          card.classList.add('is-output');
+          if (s === 'c') formulaEl.textContent = '√(a² + b²)';
+          else if (s === 'a') formulaEl.textContent = '√(c² − b²)';
+          else formulaEl.textContent = '√(c² − a²)';
+        } else {
+          card.classList.remove('is-output');
+          card.classList.add('is-input');
+          formulaEl.textContent = s;
+        }
+      });
+    }
+
+    function updateProperties() {
+      const { a, b, c } = inputs;
+      if (a && b && c && a > 0 && b > 0 && c > 0) {
+        const alphaRad = Math.atan2(a, b);
+        const betaRad = Math.atan2(b, a);
+        document.getElementById('angle-alpha').textContent = (alphaRad * 180 / Math.PI).toFixed(2) + '°';
+        document.getElementById('angle-beta').textContent = (betaRad * 180 / Math.PI).toFixed(2) + '°';
+        document.getElementById('prop-area').textContent = ((a * b) / 2).toFixed(2);
+        document.getElementById('prop-perimeter').textContent = (a + b + c).toFixed(2);
+      } else {
+        document.getElementById('angle-alpha').textContent = '—';
+        document.getElementById('angle-beta').textContent = '—';
+        document.getElementById('prop-area').textContent = '—';
+        document.getElementById('prop-perimeter').textContent = '—';
+      }
+    }
+
+    // Canvas
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const displayW = Math.min(560, window.innerWidth - 60);
+      const displayH = 460;
+      canvas.width = displayW * dpr;
+      canvas.height = displayH * dpr;
+      canvas.style.width = displayW + 'px';
+      canvas.style.height = displayH + 'px';
+      ctx.scale(dpr, dpr);
+      drawTriangle();
+    }
+
+    function drawTriangle() {
+      const w = parseFloat(canvas.style.width);
+      const h = parseFloat(canvas.style.height);
+      ctx.clearRect(0, 0, w, h);
+
+      const { a, b, c } = inputs;
+      if (!a || !b || !c || a <= 0 || b <= 0 || c <= 0) {
+        // Placeholder
+        ctx.font = '500 16px Inter';
+        ctx.fillStyle = '#a1a1aa';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Enter two sides to see the triangle', w / 2, h / 2);
+        return;
+      }
+
+      // Normalize to a standard-sized triangle that always looks good
+      const pad = 70;
+      const drawW = w - pad * 2;
+      const drawH = h - pad * 2;
+
+      // Compute the aspect ratio of the real triangle
+      const ratio = a / b;
+      // Clamp the aspect ratio so extreme values still look reasonable
+      const clampedRatio = Math.max(0.25, Math.min(4, ratio));
+
+      // Determine drawn dimensions that fit the canvas
+      let sB, sA;
+      if (clampedRatio >= 1) {
+        // Tall triangle: height is the constraint
+        sA = drawH;
+        sB = sA / clampedRatio;
+        if (sB > drawW) { sB = drawW; sA = sB * clampedRatio; }
+      } else {
+        // Wide triangle: width is the constraint
+        sB = drawW;
+        sA = sB * clampedRatio;
+        if (sA > drawH) { sA = drawH; sB = sA / clampedRatio; }
+      }
+
+      // Ensure minimum size so tiny triangles are still visible
+      const minDim = 80;
+      if (sA < minDim && sB < minDim) {
+        const boost = minDim / Math.max(sA, sB);
+        sA *= boost;
+        sB *= boost;
+      }
+
+      // Center in canvas
+      const ox = (w - sB) / 2;
+      const oy = (h + sA) / 2;
+
+      const pRight = { x: ox, y: oy };
+      const pBottom = { x: ox + sB, y: oy };
+      const pTop = { x: ox, y: oy - sA };
+
+      // Fill triangle
+      ctx.beginPath();
+      ctx.moveTo(pRight.x, pRight.y);
+      ctx.lineTo(pBottom.x, pBottom.y);
+      ctx.lineTo(pTop.x, pTop.y);
+      ctx.closePath();
+      ctx.fillStyle = '#f4f4f5';
+      ctx.fill();
+
+      // Draw edges
+      ctx.beginPath();
+      ctx.moveTo(pRight.x, pRight.y);
+      ctx.lineTo(pBottom.x, pBottom.y);
+      ctx.lineTo(pTop.x, pTop.y);
+      ctx.closePath();
+      ctx.strokeStyle = '#18181b';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Right angle marker
+      const sq = 14;
+      ctx.beginPath();
+      ctx.moveTo(pRight.x + sq, pRight.y);
+      ctx.lineTo(pRight.x + sq, pRight.y - sq);
+      ctx.lineTo(pRight.x, pRight.y - sq);
+      ctx.strokeStyle = '#71717a';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Helper: format number concisely
+      function fmt(v) {
+        if (v >= 10000) return v.toFixed(0);
+        if (v >= 100) return v.toFixed(1);
+        return v.toFixed(2);
+      }
+
+      const labelSize = 13;
+      const smallSize = 11;
+
+      // --- LABELS: always OUTSIDE the triangle, never overlapping edges ---
+      ctx.font = `bold ${labelSize}px Inter`;
+      ctx.fillStyle = '#18181b';
+      ctx.textBaseline = 'middle';
+
+      // Side a (left vertical) — label to the LEFT of the edge
+      ctx.textAlign = 'right';
+      ctx.fillText('a = ' + fmt(a), pRight.x - 12, (pRight.y + pTop.y) / 2);
+
+      // Side b (bottom horizontal) — label BELOW the edge
+      ctx.textAlign = 'center';
+      ctx.fillText('b = ' + fmt(b), (pRight.x + pBottom.x) / 2, pRight.y + 20);
+
+      // Side c (hypotenuse) — label to the UPPER-RIGHT of the edge
+      const midCx = (pTop.x + pBottom.x) / 2;
+      const midCy = (pTop.y + pBottom.y) / 2;
+      // Compute perpendicular outward offset from hypotenuse
+      const hypLen = Math.sqrt(sA * sA + sB * sB);
+      const nx = sA / hypLen;   // normal x (points right-and-up, away from triangle)
+      const ny = sB / hypLen;   // normal y
+      ctx.textAlign = 'left';
+      ctx.fillText('c = ' + fmt(c), midCx + nx * 16, midCy - ny * 16);
+
+      // Angle labels
+      ctx.font = `500 ${smallSize}px JetBrains Mono`;
+      ctx.fillStyle = '#52525b';
+
+      const alphaRad = Math.atan2(a, b);
+      const betaRad = Math.atan2(b, a);
+
+      // α at bottom-right vertex — below-left of vertex
+      ctx.textAlign = 'right';
+      ctx.fillText('α=' + (alphaRad * 180 / Math.PI).toFixed(1) + '°', pBottom.x - 8, pBottom.y + 20);
+
+      // β at top-left vertex — above-right of vertex
+      ctx.textAlign = 'left';
+      ctx.fillText('β=' + (betaRad * 180 / Math.PI).toFixed(1) + '°', pTop.x + 15, pTop.y - 12);
+
+      // 90° at right angle — below-left of vertex
+      ctx.textAlign = 'right';
+      ctx.fillText('90°', pRight.x - 8, pRight.y + 18);
+
+      // Draw angle arcs
+      ctx.beginPath();
+      const alphaStart = Math.PI;
+      const alphaEnd = Math.PI + alphaRad;
+      ctx.arc(pBottom.x, pBottom.y, 20, alphaStart, alphaEnd);
+      ctx.strokeStyle = '#a1a1aa';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.beginPath();
+      const betaStart = Math.PI / 2;
+      const betaEnd = Math.PI / 2 + betaRad;
+      ctx.arc(pTop.x, pTop.y, 20, betaStart, betaEnd);
+      ctx.stroke();
+
+      // Vertex dots
+      [pRight, pBottom, pTop].forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#18181b';
+        ctx.fill();
+      });
+    }
+
+    // Populate default values into inputs and draw
+    document.getElementById('side-a').value = '3';
+    document.getElementById('side-b').value = '4';
+    document.getElementById('side-c').value = '5';
+    updateCardStates('c');
+    updateProperties();
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
+    let keyboardOpen = false;
+    let historyStatePushed = false;
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        keyboardOpen = true;
+        if (!historyStatePushed) {
+          history.pushState({ keyboardOpen: true }, '');
+          historyStatePushed = true;
+        }
+      });
+      input.addEventListener('blur', () => {
+        keyboardOpen = false;
+        historyStatePushed = false;
+      });
+    });
+    window.addEventListener('popstate', (e) => {
+      if (keyboardOpen) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === 'INPUT') {
+          activeElement.blur();
+          history.pushState({ keyboardOpen: true }, '');
+          e.preventDefault();
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
