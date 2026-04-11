@@ -97,6 +97,13 @@
       visibility: visible;
       opacity: 1;
     }
+
+    /* Canvas Hide on Mobile & Fill Space */
+    @media (max-width: 1024px) {
+      main {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 
@@ -317,9 +324,15 @@
       // Cap visual teeth while maintaining meshing ratio
       if (t1 > MAX_VISIBLE_TEETH || t2 > MAX_VISIBLE_TEETH) {
         isCapped = true;
-        const scale = MAX_VISIBLE_TEETH / Math.max(t1, t2);
-        vt1 = Math.max(4, Math.round(t1 * scale));
-        vt2 = Math.max(4, Math.round(t2 * scale));
+        const bigger = Math.max(t1, t2);
+        // Scale the smaller gear first, then derive the larger to preserve exact ratio
+        if (t1 >= t2) {
+          vt1 = MAX_VISIBLE_TEETH;
+          vt2 = Math.max(4, Math.round(t2 * MAX_VISIBLE_TEETH / t1));
+        } else {
+          vt2 = MAX_VISIBLE_TEETH;
+          vt1 = Math.max(4, Math.round(t1 * MAX_VISIBLE_TEETH / t2));
+        }
       }
 
       // Module-based sizing: both gears share the same tooth size (module)
@@ -340,7 +353,10 @@
 
       // Sync rotation: offset gear2 by half a tooth so teeth interleave into valleys
       // We use the visual teeth (vt1, vt2) to ensure the animation meshes perfectly
-      const angle2 = -angle1 * (vt1 / vt2) + (Math.PI / vt2);
+      // For even vt2, offset by π/vt2 places a valley at the contact point.
+      // For odd vt2, a tooth already lands at the contact point, so no offset is needed.
+      const meshOffset = (vt2 % 2 === 0) ? (Math.PI / vt2) : 0;
+      const angle2 = -angle1 * (vt1 / vt2) + meshOffset;
 
       drawGear(cx1, cy, r1, vt1, angle1, toothDepth, '#18181b', '#f4f4f5');
       drawGear(cx2, cy, r2, vt2, angle2, toothDepth, '#52525b', '#fafafa');
@@ -402,11 +418,10 @@
       ctx.beginPath();
       for (let i = 0; i < teeth; i++) {
         const a = angle + i * step;
-        // Rise from valley to tooth
-        const valleyEnd = a - step * 0.5 + step * 0.3;
-        if (i === 0) ctx.moveTo(cx + Math.cos(a - toothHalf) * outerR, cy + Math.sin(a - toothHalf) * outerR);
         // Tooth tip (flat top)
-        ctx.lineTo(cx + Math.cos(a - toothHalf) * outerR, cy + Math.sin(a - toothHalf) * outerR);
+        const x0 = cx + Math.cos(a - toothHalf) * outerR;
+        const y0 = cy + Math.sin(a - toothHalf) * outerR;
+        if (i === 0) ctx.moveTo(x0, y0); else ctx.lineTo(x0, y0);
         ctx.lineTo(cx + Math.cos(a + toothHalf) * outerR, cy + Math.sin(a + toothHalf) * outerR);
         // Down to valley
         const va = a + step * 0.5;
@@ -461,6 +476,9 @@
         }
       }
     });
+
+    // --- MOBILE WARNING MODAL ---
+    window.addEventListener('load', checkMobileWarning);
   </script>
 </body>
 

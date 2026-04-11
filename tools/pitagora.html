@@ -91,6 +91,26 @@
       pointer-events: none;
     }
 
+    .card-badge {
+      font-size: 7px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1px 5px;
+      border-radius: 3px;
+      line-height: 1.4;
+    }
+
+    .is-input .card-badge {
+      background-color: #f4f4f5;
+      color: #71717a;
+    }
+
+    .is-output .card-badge {
+      background-color: #e0f2fe;
+      color: #0284c7;
+    }
+
     .tooltip {
       visibility: hidden;
       opacity: 0;
@@ -121,6 +141,20 @@
     .group:hover .tooltip {
       visibility: visible;
       opacity: 1;
+    }
+
+    /* Canvas Hide on Mobile & Fill Space */
+    @media (max-width: 1024px) {
+      main {
+        display: none !important;
+      }
+
+      aside {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        border-right: none !important;
+      }
     }
   </style>
 </head>
@@ -177,7 +211,10 @@
           <!-- Side a -->
           <div id="card-a" class="param-card px-4 py-3 rounded-xl bg-white">
             <div class="flex justify-between items-center mb-1.5">
-              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side a</label>
+              <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side a</label>
+                <span class="card-badge" id="badge-a">INPUT</span>
+              </div>
               <span class="text-[10px] font-mono font-bold text-zinc-300" id="a-formula">a</span>
             </div>
             <div class="relative">
@@ -189,7 +226,10 @@
           <!-- Side b -->
           <div id="card-b" class="param-card px-4 py-3 rounded-xl bg-white">
             <div class="flex justify-between items-center mb-1.5">
-              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side b</label>
+              <div class="flex items-center gap-1.5">
+                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side b</label>
+                <span class="card-badge" id="badge-b">INPUT</span>
+              </div>
               <span class="text-[10px] font-mono font-bold text-zinc-300" id="b-formula">b</span>
             </div>
             <div class="relative">
@@ -202,7 +242,10 @@
         <!-- Side c (hypotenuse) -->
         <div id="card-c" class="param-card px-4 py-3 rounded-xl bg-white">
           <div class="flex justify-between items-center mb-1.5">
-            <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side c (hypotenuse)</label>
+            <div class="flex items-center gap-1.5">
+              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side c (hypotenuse)</label>
+              <span class="card-badge" id="badge-c">CALCULATED</span>
+            </div>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="c-formula">c</span>
           </div>
           <div class="relative">
@@ -258,9 +301,9 @@
     const canvas = document.getElementById('triangleCanvas');
     const ctx = canvas.getContext('2d');
 
-    // State — start with a classic 3-4-5 triangle
-    let inputs = { a: 3, b: 4, c: 5 };
-    let lastEdited = ['a', 'b'];
+    // State — start empty
+    let inputs = { a: null, b: null, c: null };
+    let lastEdited = [];
 
     function handleInput(side) {
       const val = parseFloat(document.getElementById('side-' + side).value);
@@ -277,42 +320,43 @@
     function solve() {
       const { a, b, c } = inputs;
       const edited = new Set(lastEdited);
+      const currentlyEditing = lastEdited.length > 0 ? lastEdited[lastEdited.length - 1] : null;
       let solved = null;
 
       // Determine which side to compute
       if (edited.has('a') && edited.has('b') && a && b) {
         solved = 'c';
         const cVal = Math.sqrt(a * a + b * b);
-        document.getElementById('side-c').value = cVal.toFixed(4);
+        document.getElementById('side-c').value = cVal.toFixed(2);
         inputs.c = cVal;
       } else if (edited.has('a') && edited.has('c') && a && c) {
         if (c > a) {
           solved = 'b';
           const bVal = Math.sqrt(c * c - a * a);
-          document.getElementById('side-b').value = bVal.toFixed(4);
+          document.getElementById('side-b').value = bVal.toFixed(2);
           inputs.b = bVal;
         }
       } else if (edited.has('b') && edited.has('c') && b && c) {
         if (c > b) {
           solved = 'a';
           const aVal = Math.sqrt(c * c - b * b);
-          document.getElementById('side-a').value = aVal.toFixed(4);
+          document.getElementById('side-a').value = aVal.toFixed(2);
           inputs.a = aVal;
         }
-      } else if (a && b && !c) {
+      } else if (a && b && !c && currentlyEditing !== 'c') {
         solved = 'c';
         const cVal = Math.sqrt(a * a + b * b);
-        document.getElementById('side-c').value = cVal.toFixed(4);
+        document.getElementById('side-c').value = cVal.toFixed(2);
         inputs.c = cVal;
-      } else if (a && c && !b && c > a) {
+      } else if (a && c && !b && c > a && currentlyEditing !== 'b') {
         solved = 'b';
         const bVal = Math.sqrt(c * c - a * a);
-        document.getElementById('side-b').value = bVal.toFixed(4);
+        document.getElementById('side-b').value = bVal.toFixed(2);
         inputs.b = bVal;
-      } else if (b && c && !a && c > b) {
+      } else if (b && c && !a && c > b && currentlyEditing !== 'a') {
         solved = 'a';
         const aVal = Math.sqrt(c * c - b * b);
-        document.getElementById('side-a').value = aVal.toFixed(4);
+        document.getElementById('side-a').value = aVal.toFixed(2);
         inputs.a = aVal;
       }
 
@@ -325,15 +369,18 @@
       ['a', 'b', 'c'].forEach(s => {
         const card = document.getElementById('card-' + s);
         const formulaEl = document.getElementById(s + '-formula');
+        const badge = document.getElementById('badge-' + s);
         if (s === solved) {
           card.classList.remove('is-input');
           card.classList.add('is-output');
+          badge.textContent = 'CALCULATED';
           if (s === 'c') formulaEl.textContent = '√(a² + b²)';
           else if (s === 'a') formulaEl.textContent = '√(c² − b²)';
           else formulaEl.textContent = '√(c² − a²)';
         } else {
           card.classList.remove('is-output');
           card.classList.add('is-input');
+          badge.textContent = 'INPUT';
           formulaEl.textContent = s;
         }
       });
@@ -516,9 +563,7 @@
       ctx.stroke();
 
       ctx.beginPath();
-      const betaStart = Math.PI / 2;
-      const betaEnd = Math.PI / 2 + betaRad;
-      ctx.arc(pTop.x, pTop.y, 20, betaStart, betaEnd);
+      ctx.arc(pTop.x, pTop.y, 20, alphaRad, Math.PI / 2);
       ctx.stroke();
 
       // Vertex dots
@@ -530,11 +575,8 @@
       });
     }
 
-    // Populate default values into inputs and draw
-    document.getElementById('side-a').value = '3';
-    document.getElementById('side-b').value = '4';
-    document.getElementById('side-c').value = '5';
-    updateCardStates('c');
+    // Init — no default values, start clean
+    updateCardStates(null);
     updateProperties();
 
     window.addEventListener('resize', resizeCanvas);
@@ -566,6 +608,9 @@
         }
       }
     });
+
+    // --- MOBILE WARNING MODAL ---
+    window.addEventListener('load', checkMobileWarning);
   </script>
 </body>
 

@@ -640,13 +640,13 @@
           ? '<span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">EXACT</span>'
           : '<span class="text-[9px] font-mono text-zinc-500">' + p.errorPercent.toFixed(2) + '% off</span>';
         html += '<button onclick="applyPair(' + p.r1 + ',' + p.r2 + ')"'
-          + ' class="w-full flex items-center justify-between bg-white border border-zinc-200 rounded-lg px-3 py-2.5 hover:border-zinc-400 hover:shadow-sm transition-all text-left group/pair">'
-          + '<div class="flex items-center gap-3">'
-          + '<span class="text-[10px] font-bold text-zinc-300 w-4">#' + (i+1) + '</span>'
-          + '<div><span class="text-xs font-mono font-semibold text-zinc-800">R1: ' + formatOhms(p.r1) + '</span>'
+          + ' class="w-full flex flex-wrap items-center gap-y-1 bg-white border border-zinc-200 rounded-lg px-3 py-2.5 hover:border-zinc-400 hover:shadow-sm transition-all text-left group/pair">'
+          + '<div class="flex items-center gap-3 min-w-0 flex-1">'
+          + '<span class="text-[10px] font-bold text-zinc-300 shrink-0">#' + (i+1) + '</span>'
+          + '<div class="truncate"><span class="text-xs font-mono font-semibold text-zinc-800">R1: ' + formatOhms(p.r1) + '</span>'
           + '<span class="text-zinc-300 mx-1">·</span>'
           + '<span class="text-xs font-mono font-semibold text-zinc-800">R2: ' + formatOhms(p.r2) + '</span></div>'
-          + '</div><div class="flex items-center gap-2">' + badge
+          + '</div><div class="flex items-center gap-2 shrink-0">' + badge
           + '<span class="text-xs font-mono text-zinc-500">' + p.actualVout.toFixed(3) + 'V</span>'
           + '<svg class="w-3 h-3 text-zinc-300 group-hover/pair:text-zinc-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>'
           + '</div></button>';

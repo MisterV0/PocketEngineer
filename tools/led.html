@@ -26,14 +26,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-    }
-
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
-
     .ios-input-wrapper {
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
@@ -44,37 +36,20 @@
       transform: translateY(-1px);
     }
 
-    details>summary {
-      list-style: none;
-      outline: none;
-    }
-
-    details>summary::-webkit-details-marker {
-      display: none;
-    }
-
-    details[open] summary~* {
-      animation: sweep .3s ease-in-out;
-    }
-
-    @keyframes sweep {
-      0% { opacity: 0; transform: translateY(-5px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
     .color-btn {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .color-btn:hover {
-      transform: scale(1.1);
+      transform: scale(1.12);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .color-btn.active {
-      transform: scale(1.15);
-      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.2);
+      transform: scale(1.18);
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.15), 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
     .slider-track {
@@ -89,20 +64,25 @@
 
     .slider-track::-webkit-slider-thumb {
       -webkit-appearance: none;
-      height: 20px;
-      width: 20px;
+      height: 22px;
+      width: 22px;
       border-radius: 50%;
       background: #ffffff;
-      border: 1px solid #71717a;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border: 1.5px solid #71717a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
       cursor: pointer;
-      margin-top: -8px;
-      transition: transform 0.1s ease;
+      margin-top: -9px;
+      transition: transform 0.15s ease;
     }
 
     .slider-track::-webkit-slider-thumb:hover {
-      transform: scale(1.1);
+      transform: scale(1.15);
       border-color: #18181b;
+    }
+
+    .slider-track::-webkit-slider-thumb:active {
+      transform: scale(0.95);
+      background: #f4f4f5;
     }
 
     .slider-track::-webkit-slider-runnable-track {
@@ -113,50 +93,220 @@
       border-radius: 9999px;
     }
 
-    /* LED Glow Effect */
-    @keyframes ledPulse {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.1); }
-    }
-
-    .led-glow {
-      transition: all 0.3s ease;
-    }
-
-    /* Code block */
     .code-block {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
-      line-height: 1.6;
+      line-height: 1.7;
       tab-size: 2;
+    }
+
+    .code-box {
+      background: #1e1e1e;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .code-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2rem;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+      pointer-events: none;
+    }
+
+    .copy-button {
+      transition: all 0.2s ease;
+    }
+    .copy-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .copy-button:active {
+      transform: scale(0.95);
+    }
+
+    .preset-chip {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .preset-chip:hover {
+      border-color: #71717a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .preset-chip:active {
+      transform: scale(0.96);
+    }
+
+    .preset-chip.active {
+      background-color: #18181b;
+      color: #fff;
+      border-color: #18181b;
+    }
+
+    @keyframes fadeResult {
+      0% { opacity: 0.5; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .result-pop {
+      animation: fadeResult 0.25s ease-out;
+    }
+
+    /* Mode toggle tabs */
+    .mode-tab {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mode-tab.active {
+      background-color: #18181b;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .mode-tab:not(.active):hover {
+      background-color: #f4f4f5;
+    }
+
+    /* RGB channel sliders */
+    .rgb-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+      height: 22px;
+    }
+
+    .rgb-slider:focus {
+      outline: none;
+    }
+
+    .rgb-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid currentColor;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      margin-top: -8px;
+      transition: transform 0.15s ease;
+    }
+
+    .rgb-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .rgb-slider::-webkit-slider-thumb:active {
+      transform: scale(0.95);
+    }
+
+    .rgb-slider::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      border-radius: 9999px;
+    }
+
+    .rgb-slider-r { color: #ef4444; }
+    .rgb-slider-r::-webkit-slider-runnable-track { background: linear-gradient(to right, #1a1a1a, #ef4444); }
+    .rgb-slider-g { color: #22c55e; }
+    .rgb-slider-g::-webkit-slider-runnable-track { background: linear-gradient(to right, #1a1a1a, #22c55e); }
+    .rgb-slider-b { color: #3b82f6; }
+    .rgb-slider-b::-webkit-slider-runnable-track { background: linear-gradient(to right, #1a1a1a, #3b82f6); }
+
+    /* RGB color preview */
+    .rgb-color-preview {
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Type toggle */
+    .type-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .type-btn.active {
+      background-color: #18181b;
+      color: #fff;
+      border-color: #18181b;
+    }
+
+    /* RGB preset chip */
+    .rgb-preset {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+
+    .rgb-preset:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .rgb-preset:active {
+      transform: scale(0.96);
+    }
+
+    .rgb-preset.active {
+      box-shadow: 0 0 0 2px #18181b;
+    }
+
+    /* Canvas Hide on Mobile & Fill Space */
+    @media (max-width: 1024px) {
+      main {
+        display: none !important;
+      }
+      aside {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        height: 100% !important;
+        border-right: none !important;
+      }
     }
   </style>
 </head>
 
-<body class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
+<body
+  class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
 
   <!-- Left Column: Controls -->
-  <aside class="w-full md:w-[420px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative">
+  <aside
+    class="w-full md:w-[420px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative md:max-h-screen max-h-[55vh]">
 
     <!-- Header -->
-    <header class="flex-none p-8 pb-4 border-b border-zinc-100">
-      <div class="flex items-center gap-4 mb-0">
+    <header class="flex-none p-6 md:p-8 pb-4 border-b border-zinc-100">
+      <div class="flex items-center gap-4">
         <a href="../index.html" class="back-button">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M15 18l-6-6 6-6" />
           </svg>
           Back
         </a>
-        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">LED Calculator</h1>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight text-zinc-900">LED Calculator</h1>
+      </div>
+      <!-- Mode Toggle -->
+      <div class="flex mt-4 bg-zinc-100 rounded-lg p-0.5 gap-0.5">
+        <button onclick="switchMode('single')" id="tab-single"
+          class="mode-tab active flex-1 text-xs font-semibold py-2 rounded-md text-center">Single LED</button>
+        <button onclick="switchMode('rgb')" id="tab-rgb"
+          class="mode-tab flex-1 text-xs font-semibold py-2 rounded-md text-center">RGB LED</button>
       </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-8 pt-6 space-y-7">
+    <div class="flex-1 overflow-y-auto p-6 md:p-8 pt-5 md:pt-6 space-y-6" id="single-led-panel">
 
-      <!-- Theory -->
+      <!-- Theory Accordion -->
       <div class="bg-zinc-50 rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
         <details class="group open:pb-4">
-          <summary class="flex justify-between items-center font-medium cursor-pointer p-4 hover:bg-zinc-100 transition-colors select-none">
+          <summary
+            class="flex justify-between items-center font-medium cursor-pointer p-4 hover:bg-zinc-100 transition-colors select-none">
             <span class="text-sm">Logic & Formula</span>
             <span class="text-zinc-400 group-open:rotate-180 transition-transform">
               <svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none">
@@ -168,90 +318,118 @@
             <p>An LED needs a current-limiting resistor to prevent burnout. The resistor drops the excess voltage.</p>
             <div class="bg-white border border-zinc-200 rounded-lg p-3 flex justify-center items-center shadow-sm">
               <span class="font-mono text-xs text-zinc-900 font-semibold">
-                R = <span class="inline-flex flex-col text-center align-middle mx-1 text-zinc-500 font-medium"><span class="border-b border-zinc-300">V<sub>s</sub> − (V<sub>f</sub> × n)</span><span>I<sub>f</sub></span></span>
+                R = <span
+                  class="inline-flex flex-col text-center align-middle mx-1 text-zinc-500 font-medium"><span
+                    class="border-b border-zinc-300">V<sub>s</sub> &minus; (V<sub>f</sub> &times;
+                    n)</span><span>I<sub>f</sub></span></span>
               </span>
             </div>
-            <p class="text-xs text-zinc-500">Where V<sub>s</sub> = source voltage, V<sub>f</sub> = LED forward voltage, n = number of LEDs in series, I<sub>f</sub> = desired current.</p>
+            <p class="text-xs text-zinc-500">V<sub>s</sub> = source voltage, V<sub>f</sub> = LED forward voltage, n =
+              LEDs in series, I<sub>f</sub> = desired current.</p>
           </div>
         </details>
       </div>
 
-      <!-- LED Color Picker -->
+      <!-- Board Presets -->
       <div>
-        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">LED Color</label>
-        <div class="flex flex-wrap gap-2" id="color-picker">
-          <!-- Populated by JS -->
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Quick Setup</label>
+        <div class="flex flex-nowrap gap-1.5" id="board-presets">
+          <button onclick="applyPreset(5, 20, 'Arduino Uno')" data-board="Arduino Uno"
+            class="preset-chip active px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">Arduino 5V</button>
+          <button onclick="applyPreset(3.3, 20, 'ESP32')" data-board="ESP32"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">ESP32 3.3V</button>
+          <button onclick="applyPreset(9, 20, '9V Battery')" data-board="9V Battery"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">9V Batt</button>
+          <button onclick="applyPreset(12, 20, '12V Supply')" data-board="12V Supply"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">12V Supply</button>
         </div>
       </div>
 
-      <!-- Input Controls -->
-      <form class="space-y-5" onsubmit="return false;">
+      <!-- LED Color Picker -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">LED Color</label>
+        <div class="flex flex-wrap gap-2" id="color-picker"></div>
+      </div>
 
-        <!-- Source Voltage -->
-        <div class="group/input">
-          <div class="flex items-center gap-2 mb-2">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Source Voltage</label>
-            <div class="relative group/tooltip cursor-help">
-              <div class="w-4 h-4 rounded-full border border-zinc-300 flex items-center justify-center text-[10px] text-zinc-400 hover:border-zinc-500 hover:text-zinc-600 transition-colors">?</div>
-              <div class="absolute left-6 top-1/2 -translate-y-1/2 w-48 p-2 bg-zinc-800 text-white text-[11px] rounded shadow-xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50">
-                Your power supply voltage (e.g. 5V for Arduino, 3.3V for ESP32, 9V/12V battery).
+      <!-- Input Controls -->
+      <form class="space-y-4" onsubmit="return false;">
+
+        <!-- 2-column grid for compact inputs -->
+        <div class="grid grid-cols-2 gap-3">
+
+          <!-- Source Voltage -->
+          <div>
+            <div class="flex items-center gap-1.5 mb-1.5">
+              <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Source Voltage</label>
+              <div class="relative group/tooltip cursor-help">
+                <div
+                  class="w-3.5 h-3.5 rounded-full border border-zinc-300 flex items-center justify-center text-[9px] text-zinc-400 hover:border-zinc-500 hover:text-zinc-600 transition-colors">
+                  ?</div>
+                <div
+                  class="absolute left-5 top-1/2 -translate-y-1/2 w-44 p-2 bg-zinc-800 text-white text-[11px] rounded shadow-xl opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-50">
+                  Power supply voltage (5V for Arduino, 3.3V for ESP32, 9V/12V battery).
+                </div>
               </div>
             </div>
+            <div
+              class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+              <label for="vs" class="text-xs font-medium text-zinc-500 shrink-0 select-none">V<sub>s</sub></label>
+              <input type="number" id="vs" value="5" step="0.1" min="0" oninput="calculate()"
+                class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+              <span class="text-[10px] text-zinc-400 font-medium ml-1.5 select-none">V</span>
+            </div>
           </div>
-          <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2.5">
-            <label for="vs" class="text-sm font-medium text-zinc-500 shrink-0 w-6 select-none">V<sub>s</sub></label>
-            <input type="number" id="vs" value="5" step="0.1" min="0" oninput="calculate()"
-              class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
-            <span class="text-xs text-zinc-400 font-medium ml-2 w-4 text-center select-none">V</span>
-          </div>
-        </div>
 
-        <!-- LED Forward Voltage -->
-        <div class="group/input">
-          <div class="flex items-center gap-2 mb-2">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">LED Forward Voltage</label>
+          <!-- LED Forward Voltage -->
+          <div>
+            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block">Forward Voltage</label>
+            <div
+              class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+              <label for="vf" class="text-xs font-medium text-zinc-500 shrink-0 select-none">V<sub>f</sub></label>
+              <input type="number" id="vf" value="2.0" step="0.1" min="0" oninput="calculate()"
+                class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+              <span class="text-[10px] text-zinc-400 font-medium ml-1.5 select-none">V</span>
+            </div>
           </div>
-          <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2.5">
-            <label for="vf" class="text-sm font-medium text-zinc-500 shrink-0 w-6 select-none">V<sub>f</sub></label>
-            <input type="number" id="vf" value="2.0" step="0.1" min="0" oninput="calculate()"
-              class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
-            <span class="text-xs text-zinc-400 font-medium ml-2 w-4 text-center select-none">V</span>
-          </div>
-        </div>
 
-        <!-- Forward Current -->
-        <div class="group/input">
-          <div class="flex items-center gap-2 mb-2">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Forward Current</label>
+          <!-- Forward Current -->
+          <div>
+            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block">Forward Current</label>
+            <div
+              class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+              <label for="if-ma"
+                class="text-xs font-medium text-zinc-500 shrink-0 select-none">I<sub>f</sub></label>
+              <input type="number" id="if-ma" value="20" step="1" min="0" oninput="calculate()"
+                class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+              <span class="text-[10px] text-zinc-400 font-medium ml-1.5 select-none">mA</span>
+            </div>
           </div>
-          <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2.5">
-            <label for="if-ma" class="text-sm font-medium text-zinc-500 shrink-0 w-6 select-none">I<sub>f</sub></label>
-            <input type="number" id="if-ma" value="20" step="1" min="0" oninput="calculate()"
-              class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
-            <span class="text-xs text-zinc-400 font-medium ml-2 w-8 text-center select-none">mA</span>
-          </div>
-        </div>
 
-        <!-- LEDs in Series -->
-        <div class="group/input">
-          <div class="flex items-center gap-2 mb-2">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">LEDs in Series</label>
+          <!-- LEDs in Series -->
+          <div>
+            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block">LEDs in Series</label>
+            <div
+              class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+              <label for="led-count" class="text-xs font-medium text-zinc-500 shrink-0 select-none">n</label>
+              <input type="number" id="led-count" value="1" step="1" min="1" max="50" oninput="calculate()"
+                class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+            </div>
           </div>
-          <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2.5">
-            <label for="led-count" class="text-sm font-medium text-zinc-500 shrink-0 w-6 select-none">n</label>
-            <input type="number" id="led-count" value="1" step="1" min="1" max="50" oninput="calculate()"
-              class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
-          </div>
+
         </div>
 
         <!-- PWM Duty Cycle -->
         <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-4">
           <div class="flex justify-between items-end mb-2">
-            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">PWM Duty Cycle (Arduino)</label>
-            <div class="text-[11px] font-mono text-zinc-700 font-semibold bg-white border border-zinc-200 px-2 py-0.5 rounded shadow-sm" id="pwm-display">255 (100%)</div>
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wide">PWM Duty Cycle
+              (Arduino)</label>
+            <div
+              class="text-[11px] font-mono text-zinc-700 font-semibold bg-white border border-zinc-200 px-2 py-0.5 rounded shadow-sm"
+              id="pwm-display">255 (100%)</div>
           </div>
           <div class="relative w-full h-8 flex items-center">
-            <input type="range" id="pwm-slider" min="0" max="255" step="1" value="255" class="slider-track z-10" oninput="handlePWM()">
+            <input type="range" id="pwm-slider" min="0" max="255" step="1" value="255" class="slider-track z-10"
+              oninput="handlePWM()">
           </div>
           <div class="flex justify-between text-[9px] text-zinc-400 mt-1 select-none px-1">
             <span>0 (OFF)</span>
@@ -263,20 +441,25 @@
         </div>
       </form>
 
-      <!-- Output -->
+      <!-- Result Card -->
       <div>
-        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Calculated Resistance</label>
-        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5 group transition-transform duration-500 hover:scale-[1.01]">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Calculated
+          Resistance</label>
+        <div
+          class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5 transition-transform duration-500 hover:scale-[1.01]">
+          <div
+            class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none">
+          </div>
           <div class="relative z-10">
             <div class="flex items-baseline gap-2 mb-3">
-              <span id="display-resistance" class="text-4xl font-mono font-medium tracking-tighter">150</span>
-              <span class="text-zinc-500 font-medium select-none text-lg">Ω</span>
+              <span id="display-resistance"
+                class="text-4xl font-mono font-medium tracking-tighter result-pop">150</span>
+              <span class="text-zinc-500 font-medium select-none text-lg">&Omega;</span>
             </div>
-            <div class="flex gap-4 text-xs">
+            <div class="flex flex-wrap gap-x-6 gap-y-2.5 text-xs">
               <div>
                 <span class="text-zinc-500">Nearest E24:</span>
-                <span class="text-white font-mono font-semibold ml-1" id="display-e24">150Ω</span>
+                <span class="text-white font-mono font-semibold ml-1" id="display-e24">150&Omega;</span>
               </div>
               <div>
                 <span class="text-zinc-500">Power:</span>
@@ -286,27 +469,255 @@
           </div>
         </div>
         <div id="error-msg" class="text-xs text-red-500 font-semibold mt-2 hidden"></div>
+        <div id="power-warn" class="text-xs text-amber-600 font-medium mt-2 hidden"></div>
       </div>
 
-      <!-- Arduino Code -->
+      <!-- Arduino Code (collapsible) -->
       <div>
-        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Arduino Code</label>
-        <div class="bg-[#1e1e1e] rounded-xl p-4 relative group">
-          <button onclick="copyCode()" class="absolute top-3 right-3 px-2 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-[10px] font-semibold rounded transition-colors" id="copy-btn">Copy</button>
-          <pre class="code-block text-green-400 overflow-x-auto" id="arduino-code"></pre>
+        <button id="show-code-btn" onclick="toggleCodeView()"
+          class="w-full px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold flex items-center justify-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          &lt;/Arduino Sketch/&gt;
+        </button>
+        <div id="code-container" class="mt-3" style="display: none;">
+          <div class="code-box rounded-xl p-4 text-zinc-100 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-[10px] text-zinc-500 font-mono">sketch.ino</span>
+              </div>
+              <button onclick="copyCode()"
+                class="copy-button px-3 py-1.5 rounded-md text-[10px] font-medium text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-600 flex items-center gap-1.5 transition-all"
+                id="copy-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <pre class="code-block text-zinc-300 overflow-x-auto" id="arduino-code"></pre>
+          </div>
         </div>
       </div>
 
     </div>
+
+    <!-- ============ RGB LED PANEL ============ -->
+    <div class="flex-1 overflow-y-auto p-6 md:p-8 pt-5 md:pt-6 space-y-6" id="rgb-led-panel" style="display:none;">
+
+      <!-- Theory Accordion -->
+      <div class="bg-zinc-50 rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
+        <details class="group open:pb-4">
+          <summary
+            class="flex justify-between items-center font-medium cursor-pointer p-4 hover:bg-zinc-100 transition-colors select-none">
+            <span class="text-sm">RGB LED Basics</span>
+            <span class="text-zinc-400 group-open:rotate-180 transition-transform">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </summary>
+          <div class="px-5 text-sm leading-relaxed text-zinc-600 space-y-3 pt-2">
+            <p>An RGB LED contains three separate dies (Red, Green, Blue) sharing a common pin. Each channel needs its own current-limiting resistor.</p>
+            <p class="text-xs text-zinc-500"><strong>Common Cathode:</strong> shared GND pin, HIGH = ON.<br>
+              <strong>Common Anode:</strong> shared V+ pin, LOW = ON (PWM inverted).</p>
+            <p class="text-xs text-zinc-500">Typical V<sub>f</sub>: Red ≈ 2.0V, Green ≈ 3.2V, Blue ≈ 3.2V</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- LED Type Toggle -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">LED Type</label>
+        <div class="flex gap-2">
+          <button onclick="setRgbType('cathode')" id="type-cathode"
+            class="type-btn active flex-1 text-[11px] font-semibold py-2 rounded-lg border border-zinc-200 bg-white text-center">Common Cathode</button>
+          <button onclick="setRgbType('anode')" id="type-anode"
+            class="type-btn flex-1 text-[11px] font-semibold py-2 rounded-lg border border-zinc-200 bg-white text-center">Common Anode</button>
+        </div>
+      </div>
+
+      <!-- Board Presets (RGB) -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Quick Setup</label>
+        <div class="flex flex-nowrap gap-1.5" id="rgb-board-presets">
+          <button onclick="applyRgbPreset(5, 20, 'Arduino Uno')" data-board="Arduino Uno"
+            class="preset-chip active px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">Arduino 5V</button>
+          <button onclick="applyRgbPreset(3.3, 20, 'ESP32')" data-board="ESP32"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">ESP32 3.3V</button>
+          <button onclick="applyRgbPreset(9, 20, '9V Battery')" data-board="9V Battery"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">9V Batt</button>
+          <button onclick="applyRgbPreset(12, 20, '12V Supply')" data-board="12V Supply"
+            class="preset-chip px-2.5 py-1 rounded-full bg-white border border-zinc-200 text-[10px] font-semibold text-zinc-600 whitespace-nowrap">12V Supply</button>
+        </div>
+      </div>
+
+      <!-- Source Voltage & Current -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block">Source Voltage</label>
+          <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+            <label for="rgb-vs" class="text-xs font-medium text-zinc-500 shrink-0 select-none">V<sub>s</sub></label>
+            <input type="number" id="rgb-vs" value="5" step="0.1" min="0" oninput="calculateRgb()"
+              class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+            <span class="text-[10px] text-zinc-400 font-medium ml-1.5 select-none">V</span>
+          </div>
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5 block">Forward Current</label>
+          <div class="ios-input-wrapper flex items-center bg-white border border-zinc-300 rounded-lg px-2.5 py-2">
+            <label for="rgb-if" class="text-xs font-medium text-zinc-500 shrink-0 select-none">I<sub>f</sub></label>
+            <input type="number" id="rgb-if" value="20" step="1" min="0" oninput="calculateRgb()"
+              class="text-right w-full bg-transparent border-none p-0 text-xs font-mono font-medium focus:ring-0 placeholder-zinc-300 text-zinc-900 outline-none">
+            <span class="text-[10px] text-zinc-400 font-medium ml-1.5 select-none">mA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Picker Trigger -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Color</label>
+        <button onclick="openColorPicker()" type="button"
+          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-sm transition-all group">
+          <div id="rgb-preview" class="rgb-color-preview w-10 h-10 rounded-lg border-2 border-zinc-200 shadow-sm shrink-0"
+            style="background-color: #000000;"></div>
+          <div class="flex-1 text-left">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-semibold text-zinc-900" id="rgb-hex-label">#000000</span>
+              <span class="text-[10px] text-zinc-400 font-medium" id="rgb-vals-label">R:0 G:0 B:0</span>
+            </div>
+            <span class="text-[10px] text-zinc-400">Tap to open color wheel</span>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-zinc-300 group-hover:text-zinc-500 transition-colors shrink-0">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Hidden range inputs (still used by JS) -->
+      <div class="hidden">
+        <input type="range" id="rgb-r" min="0" max="255" value="0">
+        <input type="range" id="rgb-g" min="0" max="255" value="0">
+        <input type="range" id="rgb-b" min="0" max="255" value="0">
+        <span id="rgb-r-display"></span>
+        <span id="rgb-g-display"></span>
+        <span id="rgb-b-display"></span>
+        <input type="text" id="rgb-hex" value="000000">
+      </div>
+
+      <!-- RGB Result Card -->
+      <div>
+        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Calculated Resistances</label>
+        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
+          <div class="relative z-10 space-y-3">
+            <!-- Red channel -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                <span class="text-xs text-zinc-400">Red (V<sub>f</sub> 2.0V)</span>
+              </div>
+              <div class="flex items-baseline gap-1.5">
+                <span id="rgb-res-r" class="text-lg font-mono font-medium tracking-tight">150</span>
+                <span class="text-zinc-500 text-xs">&Omega;</span>
+                <span class="text-zinc-500 text-[10px] ml-1">E24:</span>
+                <span id="rgb-e24-r" class="text-xs font-mono font-semibold">150&Omega;</span>
+              </div>
+            </div>
+            <!-- Green channel -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                <span class="text-xs text-zinc-400">Green (V<sub>f</sub> 3.2V)</span>
+              </div>
+              <div class="flex items-baseline gap-1.5">
+                <span id="rgb-res-g" class="text-lg font-mono font-medium tracking-tight">90</span>
+                <span class="text-zinc-500 text-xs">&Omega;</span>
+                <span class="text-zinc-500 text-[10px] ml-1">E24:</span>
+                <span id="rgb-e24-g" class="text-xs font-mono font-semibold">91&Omega;</span>
+              </div>
+            </div>
+            <!-- Blue channel -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+                <span class="text-xs text-zinc-400">Blue (V<sub>f</sub> 3.2V)</span>
+              </div>
+              <div class="flex items-baseline gap-1.5">
+                <span id="rgb-res-b" class="text-lg font-mono font-medium tracking-tight">90</span>
+                <span class="text-zinc-500 text-xs">&Omega;</span>
+                <span class="text-zinc-500 text-[10px] ml-1">E24:</span>
+                <span id="rgb-e24-b" class="text-xs font-mono font-semibold">91&Omega;</span>
+              </div>
+            </div>
+            <div class="border-t border-zinc-700 pt-2 mt-2 flex justify-between text-xs">
+              <span class="text-zinc-500">Total Power:</span>
+              <span class="font-mono font-semibold" id="rgb-total-power">0mW</span>
+            </div>
+          </div>
+        </div>
+        <div id="rgb-error-msg" class="text-xs text-red-500 font-semibold mt-2 hidden"></div>
+      </div>
+
+      <!-- RGB Arduino Code -->
+      <div>
+        <button id="rgb-show-code-btn" onclick="toggleRgbCodeView()"
+          class="w-full px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all text-xs font-semibold flex items-center justify-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+          &lt;/Arduino Sketch/&gt;
+        </button>
+        <div id="rgb-code-container" class="mt-3" style="display: none;">
+          <div class="code-box rounded-xl p-4 text-zinc-100 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                  <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-[10px] text-zinc-500 font-mono">rgb_led.ino</span>
+              </div>
+              <button onclick="copyRgbCode()"
+                class="copy-button px-3 py-1.5 rounded-md text-[10px] font-medium text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-600 flex items-center gap-1.5 transition-all"
+                id="rgb-copy-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <pre class="code-block text-zinc-300 overflow-x-auto" id="rgb-arduino-code"></pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </aside>
 
   <!-- Right Column: Visualization -->
-  <main class="flex-1 relative flex flex-col bg-[#F5F5F7]">
-    <div class="flex-1 flex items-center justify-center p-8 relative overflow-hidden">
+  <main class="flex-1 relative flex flex-col bg-[#F5F5F7] min-h-[45vh] md:min-h-0">
+    <div class="flex-1 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+      <!-- Background Grid -->
       <div class="absolute inset-0 pointer-events-none opacity-[0.4]"
         style="background-image: linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px); background-size: 40px 40px; background-position: center;">
       </div>
-      <div class="relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] rounded-2xl bg-white p-2 border border-zinc-100">
+
+      <div
+        class="relative shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] rounded-2xl bg-white p-4 border border-zinc-100">
         <canvas id="ledCanvas" class="bg-white rounded-xl block"></canvas>
       </div>
     </div>
@@ -316,26 +727,25 @@
     const canvas = document.getElementById('ledCanvas');
     const ctx = canvas.getContext('2d');
 
-    // LED Colors with standard forward voltages
     const LED_COLORS = [
-      { name: 'Red',        vf: 2.0, hex: '#ef4444', glow: '#fca5a5' },
-      { name: 'Orange',     vf: 2.1, hex: '#f97316', glow: '#fdba74' },
-      { name: 'Yellow',     vf: 2.1, hex: '#eab308', glow: '#fde047' },
-      { name: 'Green',      vf: 2.2, hex: '#22c55e', glow: '#86efac' },
-      { name: 'Blue',       vf: 3.2, hex: '#3b82f6', glow: '#93c5fd' },
-      { name: 'White',      vf: 3.3, hex: '#e5e7eb', glow: '#ffffff' },
-      { name: 'UV',         vf: 3.4, hex: '#8b5cf6', glow: '#c4b5fd' },
-      { name: 'Infrared',   vf: 1.5, hex: '#991b1b', glow: '#dc2626' },
+      { name: 'Red', vf: 2.0, hex: '#ef4444', glow: '#fca5a5' },
+      { name: 'Orange', vf: 2.1, hex: '#f97316', glow: '#fdba74' },
+      { name: 'Yellow', vf: 2.1, hex: '#eab308', glow: '#fde047' },
+      { name: 'Green', vf: 2.2, hex: '#22c55e', glow: '#86efac' },
+      { name: 'Blue', vf: 3.2, hex: '#3b82f6', glow: '#93c5fd' },
+      { name: 'White', vf: 3.3, hex: '#e5e7eb', glow: '#ffffff' },
+      { name: 'UV', vf: 3.4, hex: '#8b5cf6', glow: '#c4b5fd' },
+      { name: 'IR', vf: 1.5, hex: '#991b1b', glow: '#dc2626' },
     ];
 
     let selectedColor = 0;
     let animOffset = 0;
+    let currentBoard = 'Arduino Uno';
 
     // E24 standard values
-    const E24_BASE = [1.0,1.1,1.2,1.3,1.5,1.6,1.8,2.0,2.2,2.4,2.7,3.0,3.3,3.6,3.9,4.3,4.7,5.1,5.6,6.2,6.8,7.5,8.2,9.1];
-    const E24_DECADES = [1, 10, 100, 1e3, 1e4, 1e5, 1e6];
+    const E24_BASE = [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1];
     const E24_ALL = [];
-    E24_BASE.forEach(b => E24_DECADES.forEach(d => E24_ALL.push(+(b * d).toPrecision(2))));
+    E24_BASE.forEach(b => [1, 10, 100, 1e3, 1e4, 1e5, 1e6].forEach(d => E24_ALL.push(+(b * d).toPrecision(2))));
 
     function nearestE24(val) {
       let best = E24_ALL[0], bestDist = Infinity;
@@ -347,12 +757,23 @@
     }
 
     function formatOhms(n) {
-      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'MΩ';
-      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'kΩ';
-      return n.toFixed(0) + 'Ω';
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M\u03A9';
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k\u03A9';
+      return n.toFixed(0) + '\u03A9';
     }
 
-    // Init Color Picker
+    // Board Presets
+    function applyPreset(voltage, current, name) {
+      currentBoard = name;
+      document.getElementById('vs').value = voltage;
+      document.getElementById('if-ma').value = current;
+      document.querySelectorAll('.preset-chip').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-board') === name);
+      });
+      calculate();
+    }
+
+    // Color Picker
     function initColorPicker() {
       const container = document.getElementById('color-picker');
       LED_COLORS.forEach((c, i) => {
@@ -362,7 +783,6 @@
         btn.style.backgroundColor = c.hex;
         btn.style.color = (c.name === 'White' || c.name === 'Yellow') ? '#18181b' : '#fff';
         btn.title = c.name + ' (' + c.vf + 'V)';
-        btn.setAttribute('data-index', i);
         btn.textContent = c.name.substring(0, 2);
         btn.onclick = () => selectColor(i);
         container.appendChild(btn);
@@ -371,11 +791,8 @@
 
     function selectColor(index) {
       selectedColor = index;
-      const led = LED_COLORS[index];
-      document.getElementById('vf').value = led.vf;
-      document.querySelectorAll('.color-btn').forEach((b, i) => {
-        b.classList.toggle('active', i === index);
-      });
+      document.getElementById('vf').value = LED_COLORS[index].vf;
+      document.querySelectorAll('.color-btn').forEach((b, i) => b.classList.toggle('active', i === index));
       calculate();
     }
 
@@ -387,41 +804,49 @@
       const n = Math.max(1, parseInt(document.getElementById('led-count').value) || 1);
 
       const errEl = document.getElementById('error-msg');
+      const warnEl = document.getElementById('power-warn');
       errEl.classList.add('hidden');
+      warnEl.classList.add('hidden');
 
       const totalVf = vf * n;
 
       if (vs <= 0 || vf <= 0 || ifMa <= 0) {
-        document.getElementById('display-resistance').textContent = '—';
-        document.getElementById('display-e24').textContent = '—';
-        document.getElementById('display-power').textContent = '—';
+        setResult('\u2014', '\u2014', '\u2014');
         updateArduinoCode(0);
-        drawCircuit();
         return;
       }
 
       if (totalVf >= vs) {
         errEl.textContent = 'Source voltage too low for ' + n + ' LED' + (n > 1 ? 's' : '') + ' in series (need > ' + totalVf.toFixed(1) + 'V)';
         errEl.classList.remove('hidden');
-        document.getElementById('display-resistance').textContent = '∞';
-        document.getElementById('display-e24').textContent = '—';
-        document.getElementById('display-power').textContent = '—';
+        setResult('\u221E', '\u2014', '\u2014');
         updateArduinoCode(0);
-        drawCircuit();
         return;
       }
 
       const ifA = ifMa / 1000;
       const R = (vs - totalVf) / ifA;
       const e24R = nearestE24(R);
-      const power = (vs - totalVf) * ifA * 1000; // mW
+      const power = (vs - totalVf) * ifA * 1000;
 
-      document.getElementById('display-resistance').textContent = R.toFixed(1);
-      document.getElementById('display-e24').textContent = formatOhms(e24R);
-      document.getElementById('display-power').textContent = power.toFixed(1) + 'mW';
+      setResult(R.toFixed(1), formatOhms(e24R), power.toFixed(1) + 'mW');
+
+      if (power > 250) {
+        warnEl.textContent = '\u26A0 Power dissipation (' + power.toFixed(0) + 'mW) exceeds 1/4W resistor rating. Use a higher wattage resistor.';
+        warnEl.classList.remove('hidden');
+      }
 
       updateArduinoCode(e24R);
-      drawCircuit();
+    }
+
+    function setResult(resistance, e24, power) {
+      const el = document.getElementById('display-resistance');
+      el.textContent = resistance;
+      el.classList.remove('result-pop');
+      void el.offsetWidth;
+      el.classList.add('result-pop');
+      document.getElementById('display-e24').textContent = e24;
+      document.getElementById('display-power').textContent = power;
     }
 
     function handlePWM() {
@@ -429,57 +854,118 @@
       const pct = ((pwm / 255) * 100).toFixed(0);
       document.getElementById('pwm-display').textContent = pwm + ' (' + pct + '%)';
       updateArduinoCode();
-      drawCircuit();
     }
 
     function updateArduinoCode(resistance) {
       const pwm = parseInt(document.getElementById('pwm-slider').value) || 255;
-      const pin = 9;
       const vs = parseFloat(document.getElementById('vs').value) || 5;
       const n = Math.max(1, parseInt(document.getElementById('led-count').value) || 1);
       const led = LED_COLORS[selectedColor];
-      const e24Str = resistance ? formatOhms(resistance) : '—';
+      const ifMa = parseFloat(document.getElementById('if-ma').value) || 20;
 
-      const code =
-        '// LED: ' + led.name + ' (' + led.vf + 'V) x' + n + '\n' +
-        '// R = ' + e24Str + ' (E24 standard)\n' +
-        '// Source: ' + vs + 'V\n\n' +
-        'const int LED_PIN = ' + pin + ';\n\n' +
-        'void setup() {\n' +
-        '  pinMode(LED_PIN, OUTPUT);\n' +
-        '}\n\n' +
-        'void loop() {\n' +
-        '  analogWrite(LED_PIN, ' + pwm + ');\n' +
-        '}';
+      const vf = parseFloat(document.getElementById('vf').value) || 0;
+      const ifA = ifMa / 1000;
+      const totalVf = vf * n;
+      let e24R = 0;
+      if (resistance !== undefined && resistance > 0) {
+        e24R = resistance;
+      } else if (vs > totalVf && ifA > 0) {
+        e24R = nearestE24((vs - totalVf) / ifA);
+      }
+      const e24Str = e24R > 0 ? formatOhms(e24R) : '\u2014';
 
-      document.getElementById('arduino-code').textContent = code;
+      const pin = pwm === 255 ? 13 : 9;
+      const usePWM = pwm < 255;
+
+      let code = '// ' + currentBoard + ' + ' + led.name + ' LED';
+      if (n > 1) code += ' x' + n;
+      code += '\n';
+      code += '// R = ' + e24Str + ' (E24)\n';
+      code += '// Vf = ' + led.vf + 'V, If = ' + ifMa + 'mA\n\n';
+      code += 'const int LED_PIN = ' + pin + ';\n\n';
+      code += 'void setup() {\n';
+      code += '  pinMode(LED_PIN, OUTPUT);\n';
+      code += '}\n\n';
+      code += 'void loop() {\n';
+
+      if (usePWM) {
+        code += '  // PWM brightness: ' + pwm + '/255\n';
+        code += '  analogWrite(LED_PIN, ' + pwm + ');\n';
+      } else {
+        code += '  digitalWrite(LED_PIN, HIGH);\n';
+      }
+
+      code += '}';
+
+      document.getElementById('arduino-code').innerHTML = highlightArduino(code);
+    }
+
+    function highlightArduino(code) {
+      return code.split('\n').map(function(line) {
+        var esc = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Comments first — return whole line green
+        if (/^\/\//.test(esc.trim())) {
+          return '<span class="text-green-400">' + esc + '</span>';
+        }
+        // Inline comment
+        esc = esc.replace(/(\s*\/\/.*)$/, '<span class="text-green-400">$1</span>');
+        // Keywords
+        esc = esc.replace(/\b(const|int|void|return|if|else|for|while)\b/g, '<span class="text-purple-400">$1</span>');
+        // Arduino functions & constants
+        esc = esc.replace(/\b(pinMode|digitalWrite|analogWrite|OUTPUT|HIGH|LOW|INPUT)\b/g, '<span class="text-sky-400">$1</span>');
+        // Numbers — only match digits NOT preceded by "-" or inside an HTML tag
+        esc = esc.replace(/(?<!["\w-])(\d+)(?!["\w-])/g, '<span class="text-amber-300">$1</span>');
+        return esc;
+      }).join('\n');
+    }
+
+    function toggleCodeView() {
+      const container = document.getElementById('code-container');
+      const btn = document.getElementById('show-code-btn');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> &lt;/Hide Sketch/&gt;';
+      } else {
+        container.style.display = 'none';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> &lt;/Arduino Sketch/&gt;';
+      }
     }
 
     function copyCode() {
-      const code = document.getElementById('arduino-code').textContent;
+      const code = document.getElementById('arduino-code').innerText;
       navigator.clipboard.writeText(code).then(() => {
         const btn = document.getElementById('copy-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        const original = btn.innerHTML;
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+        setTimeout(() => { btn.innerHTML = original; }, 2000);
       });
     }
 
-    // --- Canvas Visualization --- //
+    // Canvas Visualization
     function resizeCanvas() {
       const dpr = window.devicePixelRatio || 1;
-      const displayW = Math.min(600, window.innerWidth - 60);
-      const displayH = 500;
+      const parent = canvas.parentElement;
+      const maxW = Math.min(680, parent.clientWidth - 48);
+      const maxH = Math.min(540, parent.clientHeight - 48);
+      const displayW = Math.max(320, maxW);
+      const displayH = Math.max(320, maxH);
+
       canvas.width = displayW * dpr;
       canvas.height = displayH * dpr;
       canvas.style.width = displayW + 'px';
       canvas.style.height = displayH + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
     }
 
     function animate() {
-      animOffset -= 1.0;
+      animOffset -= 0.8;
       if (animOffset < -20) animOffset = 0;
-      drawCircuit();
+      if (currentMode === 'rgb') {
+        drawRgbCircuit();
+      } else {
+        drawCircuit();
+      }
       requestAnimationFrame(animate);
     }
 
@@ -501,234 +987,61 @@
       const SUB = '#52525b';
       const MUTED = '#a1a1aa';
 
-      ctx.lineWidth = 2.5;
-      ctx.lineCap = 'square';
-      ctx.lineJoin = 'miter';
+      const compact = w < 450;
 
-      // Circuit layout
-      const topY = 60;
-      const botY = h - 60;
-      const leftX = 80;
-      const rightX = w - 80;
-      const midX = w / 2;
+      // --- Layout: left half = LED indicator, right half = circuit ---
+      const halfW = w / 2;
+      const dividerX = halfW;
 
-      // Current flow animation
-      if (isValid) {
-        ctx.beginPath();
-        ctx.strokeStyle = '#e4e4e7';
-        ctx.setLineDash([4, 8]);
-        ctx.lineDashOffset = animOffset;
-        ctx.lineWidth = 3;
-        ctx.moveTo(leftX, topY);
-        ctx.lineTo(leftX, botY);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.lineWidth = 2.5;
-      }
-
-      // Main wires
-      ctx.strokeStyle = LINE;
+      // Subtle divider line
+      ctx.beginPath();
+      ctx.strokeStyle = '#e4e4e7';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(dividerX, 20);
+      ctx.lineTo(dividerX, h - 70);
+      ctx.stroke();
       ctx.setLineDash([]);
 
-      // Top wire: Vcc → Resistor
-      ctx.beginPath();
-      ctx.moveTo(leftX, topY);
-      ctx.lineTo(rightX, topY);
-      ctx.stroke();
-
-      // Right vertical wire down to LED area
-      ctx.beginPath();
-      ctx.moveTo(rightX, topY);
-      ctx.lineTo(rightX, topY + 40);
-      ctx.stroke();
-
-      // Draw Resistor (right side, top)
-      const rY = topY + 40;
-      const rH = 50;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(rightX - 12, rY, 24, rH);
-      ctx.strokeStyle = LINE;
-      ctx.strokeRect(rightX - 12, rY, 24, rH);
-
-      // Resistor label
-      ctx.font = 'bold 13px Inter';
-      ctx.fillStyle = LINE;
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      const ifMa = parseFloat(document.getElementById('if-ma').value) || 0;
-      const ifA = ifMa / 1000;
-      const R = isValid ? (vs - totalVf) / ifA : 0;
-      const e24R = R > 0 ? nearestE24(R) : 0;
-      ctx.fillText('R', rightX + 20, rY + rH / 2 - 8);
-      ctx.font = '500 11px JetBrains Mono';
-      ctx.fillStyle = SUB;
-      ctx.fillText(e24R > 0 ? formatOhms(e24R) : '—', rightX + 20, rY + rH / 2 + 8);
-
-      // Wire from resistor to LED area
-      const ledStartY = rY + rH;
-      ctx.strokeStyle = LINE;
-      ctx.beginPath();
-      ctx.moveTo(rightX, ledStartY);
-
-      // LEDs in series
-      const ledSpacing = Math.min(60, (botY - ledStartY - 80) / n);
-      const ledsStartY = ledStartY + 20;
-
-      for (let i = 0; i < n; i++) {
-        const ly = ledsStartY + i * ledSpacing;
-
-        // Wire to LED
-        ctx.beginPath();
-        ctx.strokeStyle = LINE;
-        ctx.moveTo(rightX, i === 0 ? ledStartY : ledsStartY + (i - 1) * ledSpacing + 30);
-        ctx.lineTo(rightX, ly);
-        ctx.stroke();
-
-        // LED Triangle (pointing down)
-        const triH = 20;
-        const triW = 16;
-        ctx.beginPath();
-        ctx.moveTo(rightX - triW / 2, ly);
-        ctx.lineTo(rightX + triW / 2, ly);
-        ctx.lineTo(rightX, ly + triH);
-        ctx.closePath();
-
-        // LED fill with brightness
-        const alpha = 0.3 + brightness * 0.7;
-        ctx.fillStyle = led.hex;
-        ctx.globalAlpha = alpha;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.strokeStyle = LINE;
-        ctx.stroke();
-
-        // LED cathode line
-        ctx.beginPath();
-        ctx.moveTo(rightX - triW / 2, ly + triH);
-        ctx.lineTo(rightX + triW / 2, ly + triH);
-        ctx.strokeStyle = LINE;
-        ctx.stroke();
-
-        // LED glow effect
-        if (isValid && brightness > 0) {
-          ctx.beginPath();
-          ctx.arc(rightX, ly + triH / 2, 25 * brightness, 0, Math.PI * 2);
-          ctx.fillStyle = led.glow;
-          ctx.globalAlpha = 0.15 * brightness;
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }
-
-        // Arrows (photon emission)
-        if (isValid && brightness > 0.3) {
-          ctx.strokeStyle = led.hex;
-          ctx.lineWidth = 1.5;
-          const ax = rightX + triW / 2 + 8;
-          const ay = ly + 5;
-          ctx.beginPath();
-          ctx.moveTo(ax, ay);
-          ctx.lineTo(ax + 10, ay - 8);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(ax + 3, ay + 5);
-          ctx.lineTo(ax + 13, ay - 3);
-          ctx.stroke();
-          // Arrow tips
-          ctx.beginPath();
-          ctx.moveTo(ax + 10, ay - 8);
-          ctx.lineTo(ax + 6, ay - 6);
-          ctx.moveTo(ax + 10, ay - 8);
-          ctx.lineTo(ax + 9, ay - 4);
-          ctx.stroke();
-          ctx.lineWidth = 2.5;
-        }
-
-        // Wire from LED
-        ctx.strokeStyle = LINE;
-        ctx.beginPath();
-        ctx.moveTo(rightX, ly + triH);
-        ctx.lineTo(rightX, ly + 30);
-        ctx.stroke();
-      }
-
-      // Wire from last LED to bottom
-      const lastLedBottom = ledsStartY + (n - 1) * ledSpacing + 30;
-      ctx.beginPath();
-      ctx.strokeStyle = LINE;
-      ctx.moveTo(rightX, lastLedBottom);
-      ctx.lineTo(rightX, botY);
-      ctx.lineTo(leftX, botY);
-      ctx.lineTo(leftX, topY);
-      ctx.stroke();
-
-      // Vcc terminal
-      ctx.beginPath();
-      ctx.arc(leftX, topY, 5, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-      ctx.strokeStyle = LINE;
-      ctx.stroke();
-      ctx.font = 'bold 14px Inter';
-      ctx.fillStyle = LINE;
-      ctx.textAlign = 'center';
-      ctx.fillText('+', leftX, topY - 14);
-
-      // GND terminal
-      ctx.beginPath();
-      ctx.strokeStyle = LINE;
-      ctx.moveTo(leftX - 12, botY + 8);
-      ctx.lineTo(leftX + 12, botY + 8);
-      ctx.moveTo(leftX - 7, botY + 12);
-      ctx.lineTo(leftX + 7, botY + 12);
-      ctx.moveTo(leftX - 2, botY + 16);
-      ctx.lineTo(leftX + 2, botY + 16);
-      ctx.stroke();
-
-      // Labels
-      ctx.font = '600 12px Inter';
-      ctx.fillStyle = SUB;
-      ctx.textAlign = 'left';
-      ctx.fillText('Vs: ' + vs + 'V', leftX + 10, topY - 6);
-
-      // Big LED visual indicator (center-left area)
-      const ledVisX = w * 0.32;
-      const ledVisY = h * 0.45;
-      const ledVisR = 45;
+      // ========== LEFT SIDE: Big LED indicator ==========
+      const ledVisX = halfW * 0.5;
+      const ledVisY = h * 0.38;
+      const ledVisR = compact ? 38 : 52;
 
       // Outer ring
       ctx.beginPath();
       ctx.arc(ledVisX, ledVisY, ledVisR + 5, 0, Math.PI * 2);
       ctx.strokeStyle = '#d4d4d8';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // LED body
+      // Main LED circle
       ctx.beginPath();
       ctx.arc(ledVisX, ledVisY, ledVisR, 0, Math.PI * 2);
-      const ledAlpha = isValid ? (0.15 + brightness * 0.85) : 0.15;
+      const ledAlpha = isValid ? (0.12 + brightness * 0.88) : 0.12;
       ctx.fillStyle = led.hex;
       ctx.globalAlpha = ledAlpha;
       ctx.fill();
       ctx.globalAlpha = 1;
       ctx.strokeStyle = LINE;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       // Glow rings
       if (isValid && brightness > 0) {
         for (let ring = 1; ring <= 3; ring++) {
           ctx.beginPath();
-          ctx.arc(ledVisX, ledVisY, ledVisR + 10 + ring * 12, 0, Math.PI * 2);
+          ctx.arc(ledVisX, ledVisY, ledVisR + 8 + ring * 12, 0, Math.PI * 2);
           ctx.strokeStyle = led.glow;
-          ctx.globalAlpha = 0.15 * brightness / ring;
-          ctx.lineWidth = 2;
+          ctx.globalAlpha = 0.12 * brightness / ring;
+          ctx.lineWidth = 1.5;
           ctx.stroke();
           ctx.globalAlpha = 1;
         }
       }
 
-      // Brightness text
-      ctx.font = 'bold 18px Inter';
+      // Brightness percentage
+      ctx.font = 'bold ' + (compact ? 16 : 20) + 'px Inter';
       ctx.fillStyle = (led.name === 'White' || led.name === 'Yellow') ? '#18181b' : '#fff';
       ctx.globalAlpha = isValid ? 1 : 0.3;
       ctx.textAlign = 'center';
@@ -740,60 +1053,919 @@
       ctx.fillStyle = MUTED;
       ctx.fillText('Brightness', ledVisX, ledVisY + ledVisR + 20);
 
-      // PWM Waveform
-      const wfX = 30;
-      const wfY = h - 110;
-      const wfW = w * 0.45;
-      const wfH = 40;
+      // LED Color name
+      ctx.font = '500 10px Inter';
+      ctx.fillStyle = SUB;
+      ctx.fillText(led.name + ' LED', ledVisX, ledVisY + ledVisR + 36);
 
-      ctx.font = '600 10px Inter';
+      // ========== RIGHT SIDE: Circuit schematic ==========
+      const circuitLeft = dividerX + (compact ? 25 : 35);
+      const circuitRight = w - (compact ? 30 : 40);
+      const circuitCenterX = (circuitLeft + circuitRight) / 2;
+      const topY = compact ? 35 : 45;
+      const botY = h - (compact ? 85 : 95);
+
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'square';
+      ctx.lineJoin = 'miter';
+
+      // Current flow animation
+      if (isValid) {
+        ctx.beginPath();
+        ctx.strokeStyle = '#e4e4e7';
+        ctx.setLineDash([4, 8]);
+        ctx.lineDashOffset = animOffset;
+        ctx.lineWidth = 3;
+        ctx.moveTo(circuitLeft, topY);
+        ctx.lineTo(circuitLeft, botY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.lineWidth = 2.5;
+      }
+
+      ctx.strokeStyle = LINE;
+      ctx.setLineDash([]);
+
+      // Top wire
+      ctx.beginPath();
+      ctx.moveTo(circuitLeft, topY);
+      ctx.lineTo(circuitRight, topY);
+      ctx.stroke();
+
+      // Right vertical to resistor
+      ctx.beginPath();
+      ctx.moveTo(circuitRight, topY);
+      ctx.lineTo(circuitRight, topY + 35);
+      ctx.stroke();
+
+      // Resistor box
+      const rY = topY + 35;
+      const rH = 45;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(circuitRight - 11, rY, 22, rH);
+      ctx.strokeStyle = LINE;
+      ctx.strokeRect(circuitRight - 11, rY, 22, rH);
+
+      const ifMa = parseFloat(document.getElementById('if-ma').value) || 0;
+      const ifA = ifMa / 1000;
+      const R = isValid ? (vs - totalVf) / ifA : 0;
+      const e24R = R > 0 ? nearestE24(R) : 0;
+
+      const ledStartY = rY + rH;
+      ctx.strokeStyle = LINE;
+
+      const availSpace = botY - ledStartY - 40;
+      const ledSpacing = Math.min(55, availSpace / Math.max(n, 1));
+      const ledsStartY = ledStartY + 18;
+
+      for (let i = 0; i < n; i++) {
+        const ly = ledsStartY + i * ledSpacing;
+
+        ctx.beginPath();
+        ctx.strokeStyle = LINE;
+        ctx.moveTo(circuitRight, i === 0 ? ledStartY : ledsStartY + (i - 1) * ledSpacing + 26);
+        ctx.lineTo(circuitRight, ly);
+        ctx.stroke();
+
+        const triH = 18;
+        const triW = 14;
+        ctx.beginPath();
+        ctx.moveTo(circuitRight - triW / 2, ly);
+        ctx.lineTo(circuitRight + triW / 2, ly);
+        ctx.lineTo(circuitRight, ly + triH);
+        ctx.closePath();
+
+        const alpha = 0.3 + brightness * 0.7;
+        ctx.fillStyle = led.hex;
+        ctx.globalAlpha = isValid ? alpha : 0.2;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = LINE;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(circuitRight - triW / 2, ly + triH);
+        ctx.lineTo(circuitRight + triW / 2, ly + triH);
+        ctx.strokeStyle = LINE;
+        ctx.stroke();
+
+        if (isValid && brightness > 0) {
+          ctx.beginPath();
+          ctx.arc(circuitRight, ly + triH / 2, 22 * brightness, 0, Math.PI * 2);
+          ctx.fillStyle = led.glow;
+          ctx.globalAlpha = 0.12 * brightness;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+
+        if (isValid && brightness > 0.3) {
+          ctx.strokeStyle = led.hex;
+          ctx.lineWidth = 1.5;
+          const ax = circuitRight + triW / 2 + 6;
+          const ay = ly + 4;
+          ctx.beginPath();
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(ax + 8, ay - 6);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(ax + 2, ay + 4);
+          ctx.lineTo(ax + 10, ay - 2);
+          ctx.stroke();
+          ctx.lineWidth = 2.5;
+        }
+
+        ctx.strokeStyle = LINE;
+        ctx.beginPath();
+        ctx.moveTo(circuitRight, ly + triH);
+        ctx.lineTo(circuitRight, ly + 26);
+        ctx.stroke();
+      }
+
+      const lastLedBottom = ledsStartY + (n - 1) * ledSpacing + 26;
+      ctx.beginPath();
+      ctx.strokeStyle = LINE;
+      ctx.moveTo(circuitRight, lastLedBottom);
+      ctx.lineTo(circuitRight, botY);
+      ctx.lineTo(circuitLeft, botY);
+      ctx.lineTo(circuitLeft, topY);
+      ctx.stroke();
+
+      // Vcc terminal
+      ctx.beginPath();
+      ctx.arc(circuitLeft, topY, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = LINE;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.font = 'bold 14px Inter';
+      ctx.fillStyle = LINE;
+      ctx.textAlign = 'center';
+      ctx.fillText('+', circuitLeft, topY - 12);
+
+      // GND terminal
+      ctx.beginPath();
+      ctx.strokeStyle = LINE;
+      ctx.lineWidth = 2.5;
+      ctx.moveTo(circuitLeft - 10, botY + 7);
+      ctx.lineTo(circuitLeft + 10, botY + 7);
+      ctx.moveTo(circuitLeft - 6, botY + 11);
+      ctx.lineTo(circuitLeft + 6, botY + 11);
+      ctx.moveTo(circuitLeft - 2, botY + 15);
+      ctx.lineTo(circuitLeft + 2, botY + 15);
+      ctx.stroke();
+
+      // Source label
+      ctx.font = '600 11px Inter';
+      ctx.fillStyle = SUB;
+      ctx.textAlign = 'left';
+      ctx.fillText('Vs: ' + vs + 'V', circuitLeft + 12, topY - 8);
+
+      // ========== BOTTOM: PWM Waveform (full width) ==========
+      const wfX = compact ? 20 : 30;
+      const wfY = h - (compact ? 55 : 65);
+      const wfW = w - (compact ? 40 : 60);
+      const wfH = compact ? 28 : 35;
+
+      ctx.font = '600 9px Inter';
       ctx.fillStyle = MUTED;
       ctx.textAlign = 'left';
-      ctx.fillText('PWM Waveform (analogWrite ' + (parseInt(document.getElementById('pwm-slider').value)) + ')', wfX, wfY - 8);
+      ctx.fillText('PWM  analogWrite(' + pwm + ')', wfX, wfY - 6);
 
-      // Draw waveform
       const duty = pwm / 255;
-      const period = wfW / 4;
+      const period = wfW / 6;
       ctx.beginPath();
       ctx.strokeStyle = isValid ? led.hex : '#d4d4d8';
       ctx.lineWidth = 2;
       ctx.moveTo(wfX, wfY + wfH);
 
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 6; i++) {
         const px = wfX + i * period;
         const highW = period * duty;
-        // High
         ctx.lineTo(px, wfY + wfH);
         ctx.lineTo(px, wfY);
         ctx.lineTo(px + highW, wfY);
-        // Low
         ctx.lineTo(px + highW, wfY + wfH);
         ctx.lineTo(px + period, wfY + wfH);
       }
       ctx.stroke();
 
-      // Duty cycle fill
-      ctx.globalAlpha = 0.1;
+      ctx.globalAlpha = 0.08;
       ctx.fillStyle = isValid ? led.hex : '#d4d4d8';
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 6; i++) {
         const px = wfX + i * period;
         const highW = period * duty;
         ctx.fillRect(px, wfY, highW, wfH);
       }
       ctx.globalAlpha = 1;
+      ctx.lineWidth = 2.5;
+    }
+
+    // ========================
+    // RGB LED LOGIC
+    // ========================
+
+    const RGB_VF = { r: 2.0, g: 3.2, b: 3.2 };
+    let rgbType = 'cathode'; // 'cathode' or 'anode'
+    let rgbBoard = 'Arduino Uno';
+
+    const RGB_PRESETS = [
+      { name: 'White', r: 255, g: 255, b: 255 },
+      { name: 'Red', r: 255, g: 0, b: 0 },
+      { name: 'Green', r: 0, g: 255, b: 0 },
+      { name: 'Blue', r: 0, g: 0, b: 255 },
+      { name: 'Yellow', r: 255, g: 255, b: 0 },
+      { name: 'Cyan', r: 0, g: 255, b: 255 },
+      { name: 'Magenta', r: 255, g: 0, b: 255 },
+      { name: 'Orange', r: 255, g: 120, b: 0 },
+      { name: 'Purple', r: 128, g: 0, b: 255 },
+      { name: 'Pink', r: 255, g: 105, b: 180 },
+      { name: 'Warm', r: 255, g: 180, b: 80 },
+      { name: 'Lime', r: 180, g: 255, b: 0 },
+      { name: 'Teal', r: 0, g: 180, b: 180 },
+      { name: 'Coral', r: 255, g: 80, b: 80 },
+    ];
+
+    let activeRgbPreset = -1;
+
+    function initRgbPresets() {
+      // Presets are now in the color wheel modal
+    }
+
+    function applyRgbColor(index) {
+      activeRgbPreset = index;
+      const p = RGB_PRESETS[index];
+      document.getElementById('rgb-r').value = p.r;
+      document.getElementById('rgb-g').value = p.g;
+      document.getElementById('rgb-b').value = p.b;
+      updateRgbDisplays();
+      calculateRgb();
+      document.querySelectorAll('.rgb-preset').forEach((b, i) => b.classList.toggle('active', i === index));
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('tab-single').classList.toggle('active', mode === 'single');
+      document.getElementById('tab-rgb').classList.toggle('active', mode === 'rgb');
+      document.getElementById('single-led-panel').style.display = mode === 'single' ? '' : 'none';
+      document.getElementById('rgb-led-panel').style.display = mode === 'rgb' ? '' : 'none';
+      resizeCanvas();
+    }
+
+    function setRgbType(type) {
+      rgbType = type;
+      document.getElementById('type-cathode').classList.toggle('active', type === 'cathode');
+      document.getElementById('type-anode').classList.toggle('active', type === 'anode');
+      calculateRgb();
+    }
+
+    function applyRgbPreset(voltage, current, name) {
+      rgbBoard = name;
+      document.getElementById('rgb-vs').value = voltage;
+      document.getElementById('rgb-if').value = current;
+      document.querySelectorAll('#rgb-board-presets .preset-chip').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-board') === name);
+      });
+      calculateRgb();
+    }
+
+    function rgbSliderChanged() {
+      activeRgbPreset = -1;
+      document.querySelectorAll('.rgb-preset').forEach(b => b.classList.remove('active'));
+      updateRgbDisplays();
+      calculateRgb();
+    }
+
+    function updateRgbDisplays() {
+      const r = parseInt(document.getElementById('rgb-r').value) || 0;
+      const g = parseInt(document.getElementById('rgb-g').value) || 0;
+      const b = parseInt(document.getElementById('rgb-b').value) || 0;
+      document.getElementById('rgb-r-display').textContent = r;
+      document.getElementById('rgb-g-display').textContent = g;
+      document.getElementById('rgb-b-display').textContent = b;
+      const hex = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+      document.getElementById('rgb-hex').value = hex;
+      document.getElementById('rgb-preview').style.backgroundColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      document.getElementById('rgb-preview').style.borderColor = lum > 200 ? '#d4d4d8' : 'transparent';
+      // Update trigger button labels
+      const hexLabel = document.getElementById('rgb-hex-label');
+      const valsLabel = document.getElementById('rgb-vals-label');
+      if (hexLabel) hexLabel.textContent = '#' + hex;
+      if (valsLabel) valsLabel.textContent = 'R:' + r + ' G:' + g + ' B:' + b;
+    }
+
+    function hexToSliders() {
+      let hex = document.getElementById('rgb-hex').value.replace(/[^0-9a-fA-F]/g, '');
+      if (hex.length === 6) {
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        document.getElementById('rgb-r').value = r;
+        document.getElementById('rgb-g').value = g;
+        document.getElementById('rgb-b').value = b;
+        updateRgbDisplays();
+        calculateRgb();
+        activeRgbPreset = -1;
+        document.querySelectorAll('.rgb-preset').forEach(b => b.classList.remove('active'));
+      }
+    }
+
+    function applyGamma(val) {
+      return Math.round(Math.pow(val / 255, 2.2) * 255);
+    }
+
+    function calculateRgb() {
+      const vs = parseFloat(document.getElementById('rgb-vs').value) || 0;
+      const ifMa = parseFloat(document.getElementById('rgb-if').value) || 0;
+      const ifA = ifMa / 1000;
+
+      let r = parseInt(document.getElementById('rgb-r').value) || 0;
+      let g = parseInt(document.getElementById('rgb-g').value) || 0;
+      let b = parseInt(document.getElementById('rgb-b').value) || 0;
+
+      const errEl = document.getElementById('rgb-error-msg');
+      errEl.classList.add('hidden');
+
+      const channels = [
+        { key: 'r', vf: RGB_VF.r, pwm: r },
+        { key: 'g', vf: RGB_VF.g, pwm: g },
+        { key: 'b', vf: RGB_VF.b, pwm: b }
+      ];
+
+      let totalPower = 0;
+      let hasError = false;
+
+      channels.forEach(ch => {
+        const resEl = document.getElementById('rgb-res-' + ch.key);
+        const e24El = document.getElementById('rgb-e24-' + ch.key);
+
+        if (vs <= 0 || ifMa <= 0) {
+          resEl.textContent = '\u2014';
+          e24El.textContent = '\u2014';
+          return;
+        }
+
+        if (ch.vf >= vs) {
+          resEl.textContent = '\u221E';
+          e24El.textContent = '\u2014';
+          hasError = true;
+          return;
+        }
+
+        const R = (vs - ch.vf) / ifA;
+        const e24R = nearestE24(R);
+        const power = (vs - ch.vf) * ifA * 1000;
+        const duty = ch.pwm / 255;
+        const effectivePower = power * duty;
+        totalPower += effectivePower;
+
+        resEl.textContent = R.toFixed(1);
+        e24El.textContent = formatOhms(e24R);
+      });
+
+      if (hasError) {
+        errEl.textContent = 'Source voltage too low for one or more channels.';
+        errEl.classList.remove('hidden');
+      }
+
+      document.getElementById('rgb-total-power').textContent = totalPower.toFixed(1) + 'mW';
+      updateRgbArduinoCode();
+    }
+
+    function updateRgbArduinoCode() {
+      const vs = parseFloat(document.getElementById('rgb-vs').value) || 5;
+      const ifMa = parseFloat(document.getElementById('rgb-if').value) || 20;
+      const ifA = ifMa / 1000;
+
+      const r = parseInt(document.getElementById('rgb-r').value) || 0;
+      const g = parseInt(document.getElementById('rgb-g').value) || 0;
+      const b = parseInt(document.getElementById('rgb-b').value) || 0;
+
+      const isAnode = rgbType === 'anode';
+
+      const rRes = vs > RGB_VF.r && ifA > 0 ? formatOhms(nearestE24((vs - RGB_VF.r) / ifA)) : '\u2014';
+      const gRes = vs > RGB_VF.g && ifA > 0 ? formatOhms(nearestE24((vs - RGB_VF.g) / ifA)) : '\u2014';
+      const bRes = vs > RGB_VF.b && ifA > 0 ? formatOhms(nearestE24((vs - RGB_VF.b) / ifA)) : '\u2014';
+
+      let pwmR = isAnode ? 255 - r : r;
+      let pwmG = isAnode ? 255 - g : g;
+      let pwmB = isAnode ? 255 - b : b;
+
+      let code = '// ' + rgbBoard + ' + RGB LED (' + (isAnode ? 'Common Anode' : 'Common Cathode') + ')\n';
+      code += '// R_red = ' + rRes + ', R_green = ' + gRes + ', R_blue = ' + bRes + ' (E24)\n';
+      code += '// If = ' + ifMa + 'mA per channel\n\n';
+      code += 'const int RED_PIN   = 9;\n';
+      code += 'const int GREEN_PIN = 10;\n';
+      code += 'const int BLUE_PIN  = 11;\n\n';
+
+      code += 'void setColor(byte r, byte g, byte b) {\n';
+      if (isAnode) {
+        code += '  // Common Anode: invert PWM values\n';
+        code += '  analogWrite(RED_PIN,   255 - r);\n';
+        code += '  analogWrite(GREEN_PIN, 255 - g);\n';
+        code += '  analogWrite(BLUE_PIN,  255 - b);\n';
+      } else {
+        code += '  analogWrite(RED_PIN,   r);\n';
+        code += '  analogWrite(GREEN_PIN, g);\n';
+        code += '  analogWrite(BLUE_PIN,  b);\n';
+      }
+      code += '}\n\n';
+
+      code += 'void setup() {\n';
+      code += '  pinMode(RED_PIN,   OUTPUT);\n';
+      code += '  pinMode(GREEN_PIN, OUTPUT);\n';
+      code += '  pinMode(BLUE_PIN,  OUTPUT);\n';
+      code += '}\n\n';
+
+      code += 'void loop() {\n';
+      code += '  setColor(' + r + ', ' + g + ', ' + b + ');\n';
+      code += '}';
+
+      document.getElementById('rgb-arduino-code').innerHTML = highlightArduino(code);
+    }
+
+    function toggleRgbCodeView() {
+      const container = document.getElementById('rgb-code-container');
+      const btn = document.getElementById('rgb-show-code-btn');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> &lt;/Hide Sketch/&gt;';
+        updateRgbArduinoCode();
+      } else {
+        container.style.display = 'none';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg> &lt;/Arduino Sketch/&gt;';
+      }
+    }
+
+    function copyRgbCode() {
+      const code = document.getElementById('rgb-arduino-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('rgb-copy-btn');
+        const original = btn.innerHTML;
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+        setTimeout(() => { btn.innerHTML = original; }, 2000);
+      });
+    }
+
+    // ========================
+    // RGB Canvas Drawing
+    // ========================
+
+    function drawRgbCircuit() {
+      const w = parseFloat(canvas.style.width);
+      const h = parseFloat(canvas.style.height);
+      ctx.clearRect(0, 0, w, h);
+
+      const vs = parseFloat(document.getElementById('rgb-vs').value) || 0;
+      const ifMa = parseFloat(document.getElementById('rgb-if').value) || 0;
+      const ifA = ifMa / 1000;
+
+      const r = parseInt(document.getElementById('rgb-r').value) || 0;
+      const g = parseInt(document.getElementById('rgb-g').value) || 0;
+      const b = parseInt(document.getElementById('rgb-b').value) || 0;
+
+      const LINE = '#09090b';
+      const SUB = '#52525b';
+      const MUTED = '#a1a1aa';
+
+      const compact = w < 450;
+      const isAnode = rgbType === 'anode';
+      const halfW = w / 2;
+
+      // Subtle divider
+      ctx.beginPath();
+      ctx.strokeStyle = '#e4e4e7';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(halfW, 20);
+      ctx.lineTo(halfW, h - 70);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // ========== LEFT SIDE: Color preview ==========
+      const circX = halfW * 0.5;
+      const circY = compact ? h * 0.30 : h * 0.32;
+      const circR = compact ? 40 : 55;
+
+      ctx.beginPath();
+      ctx.arc(circX, circY, circR + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = '#d4d4d8';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(circX, circY, circR, 0, Math.PI * 2);
+      const anyOn = r > 0 || g > 0 || b > 0;
+      ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+      ctx.globalAlpha = anyOn ? 1 : 0.08;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = LINE;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      if (anyOn) {
+        const brightness = Math.max(r, g, b) / 255;
+        for (let ring = 1; ring <= 3; ring++) {
+          ctx.beginPath();
+          ctx.arc(circX, circY, circR + 8 + ring * 12, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+          ctx.globalAlpha = 0.1 * brightness / ring;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      ctx.font = 'bold ' + (compact ? 13 : 16) + 'px JetBrains Mono';
+      ctx.fillStyle = (lum > 128 || !anyOn) ? '#18181b' : '#ffffff';
+      ctx.globalAlpha = anyOn ? 1 : 0.3;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(hex, circX, circY);
+      ctx.globalAlpha = 1;
+
+      // Type label
+      ctx.font = 'bold 10px Inter';
+      ctx.fillStyle = isAnode ? '#f59e0b' : '#6366f1';
+      ctx.fillText(isAnode ? 'Common Anode' : 'Common Cathode', circX, circY + circR + 22);
+
+      // Channel values below
+      const channels = [
+        { label: 'R', val: r, color: '#ef4444', vf: RGB_VF.r, pin: 'Pin 9' },
+        { label: 'G', val: g, color: '#22c55e', vf: RGB_VF.g, pin: 'Pin 10' },
+        { label: 'B', val: b, color: '#3b82f6', vf: RGB_VF.b, pin: 'Pin 11' },
+      ];
+
+      const chY = circY + circR + 55;
+      const chSpacing = compact ? 60 : 70;
+      const chStartX = circX - chSpacing;
+
+      channels.forEach((ch, i) => {
+        const cx = chStartX + i * chSpacing;
+        ctx.beginPath();
+        ctx.arc(cx, chY, 5, 0, Math.PI * 2);
+        ctx.fillStyle = ch.color;
+        ctx.globalAlpha = ch.val > 0 ? 1 : 0.3;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        ctx.font = 'bold 14px JetBrains Mono';
+        ctx.fillStyle = LINE;
+        ctx.textAlign = 'center';
+        ctx.fillText(ch.val, cx, chY + 20);
+
+        if (vs > ch.vf && ifA > 0) {
+          const R = nearestE24((vs - ch.vf) / ifA);
+          ctx.font = '500 10px JetBrains Mono';
+          ctx.fillStyle = SUB;
+          ctx.fillText(formatOhms(R), cx, chY + 36);
+        }
+      });
+
+      // ========== RIGHT SIDE: Circuit schematic ==========
+      const circuitL = halfW + (compact ? 20 : 30);
+      const circuitR = w - (compact ? 20 : 30);
+      const circuitW = circuitR - circuitL;
+      const topY = compact ? 30 : 40;
+      const botY = h - (compact ? 85 : 95);
+      const circuitMidX = (circuitL + circuitR) / 2;
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // 3 parallel branches for R, G, B
+      const branchSpacing = compact ? 40 : 52;
+      const branchStartX = circuitMidX - branchSpacing;
+
+      // LED body: draw the 4-pin RGB LED package in the center
+      const ledPkgY = (topY + botY) * 0.52;
+      const ledPkgH = compact ? 60 : 70;
+      const ledPkgW = branchSpacing * 2 + 20;
+
+      // LED package rectangle
+      ctx.fillStyle = '#fafafa';
+      ctx.fillRect(circuitMidX - ledPkgW / 2, ledPkgY - ledPkgH / 2, ledPkgW, ledPkgH);
+      ctx.strokeStyle = '#d4d4d8';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(circuitMidX - ledPkgW / 2, ledPkgY - ledPkgH / 2, ledPkgW, ledPkgH);
+
+      // Draw 3 tiny LED triangles inside the package
+      channels.forEach((ch, i) => {
+        const bx = branchStartX + i * branchSpacing;
+        const triY = ledPkgY - 10;
+        const triH = 14;
+        const triW = 10;
+
+        // LED triangle
+        ctx.beginPath();
+        ctx.moveTo(bx - triW / 2, triY);
+        ctx.lineTo(bx + triW / 2, triY);
+        ctx.lineTo(bx, triY + triH);
+        ctx.closePath();
+        ctx.fillStyle = ch.color;
+        ctx.globalAlpha = ch.val > 0 ? (0.4 + (ch.val / 255) * 0.6) : 0.15;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Cathode bar
+        ctx.beginPath();
+        ctx.moveTo(bx - triW / 2, triY + triH);
+        ctx.lineTo(bx + triW / 2, triY + triH);
+        ctx.stroke();
+
+        // Glow
+        if (ch.val > 0) {
+          ctx.beginPath();
+          ctx.arc(bx, triY + triH / 2, 16 * (ch.val / 255), 0, Math.PI * 2);
+          ctx.fillStyle = ch.color;
+          ctx.globalAlpha = 0.1 * (ch.val / 255);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+
+        // Channel label inside package
+        ctx.font = 'bold 9px Inter';
+        ctx.fillStyle = ch.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(ch.label, bx, ledPkgY + ledPkgH / 2 - 8);
+      });
+
+      // Common pin label
+      ctx.font = '600 8px Inter';
+      ctx.fillStyle = MUTED;
+      ctx.textAlign = 'center';
+
+      if (isAnode) {
+        // ---- COMMON ANODE CIRCUIT ----
+        // V+ bus at top
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+
+        // V+ horizontal bus
+        ctx.beginPath();
+        ctx.moveTo(circuitL + 10, topY);
+        ctx.lineTo(circuitR - 10, topY);
+        ctx.stroke();
+
+        // V+ label
+        ctx.font = 'bold 12px Inter';
+        ctx.fillStyle = LINE;
+        ctx.textAlign = 'center';
+        ctx.fillText('+  Vs ' + vs + 'V', circuitMidX, topY - 10);
+
+        // Vcc terminal dot
+        ctx.beginPath();
+        ctx.arc(circuitL + 10, topY, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Common anode wire: from V+ bus center down to LED package top
+        const commonTopY = topY;
+        const commonBotY = ledPkgY - ledPkgH / 2;
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(circuitMidX, commonTopY);
+        ctx.lineTo(circuitMidX, commonBotY);
+        ctx.stroke();
+
+        // "A" label for anode
+        ctx.font = 'bold 9px Inter';
+        ctx.fillStyle = '#f59e0b';
+        ctx.textAlign = 'left';
+        ctx.fillText('A (common)', circuitMidX + 6, (commonTopY + commonBotY) / 2);
+
+        // Per-channel: LED bottom → Resistor → GND
+        const resistorY = ledPkgY + ledPkgH / 2 + 25;
+        const resistorH = compact ? 30 : 36;
+
+        channels.forEach((ch, i) => {
+          const bx = branchStartX + i * branchSpacing;
+
+          // Wire from LED package bottom to resistor
+          ctx.beginPath();
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 2;
+          ctx.moveTo(bx, ledPkgY + ledPkgH / 2);
+          ctx.lineTo(bx, resistorY);
+          ctx.stroke();
+
+          // Resistor box
+          const rBoxW = 18;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(bx - rBoxW / 2, resistorY, rBoxW, resistorH);
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(bx - rBoxW / 2, resistorY, rBoxW, resistorH);
+
+          // Wire from resistor to GND bus
+          ctx.beginPath();
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 2;
+          ctx.moveTo(bx, resistorY + resistorH);
+          ctx.lineTo(bx, botY);
+          ctx.stroke();
+        });
+
+        // GND bus at bottom
+        ctx.beginPath();
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        ctx.moveTo(branchStartX, botY);
+        ctx.lineTo(branchStartX + 2 * branchSpacing, botY);
+        ctx.stroke();
+
+        // GND symbol
+        ctx.beginPath();
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        ctx.moveTo(circuitMidX - 10, botY + 5);
+        ctx.lineTo(circuitMidX + 10, botY + 5);
+        ctx.moveTo(circuitMidX - 6, botY + 9);
+        ctx.lineTo(circuitMidX + 6, botY + 9);
+        ctx.moveTo(circuitMidX - 2, botY + 13);
+        ctx.lineTo(circuitMidX + 2, botY + 13);
+        ctx.stroke();
+
+        ctx.font = '600 9px Inter';
+        ctx.fillStyle = MUTED;
+        ctx.textAlign = 'center';
+        ctx.fillText('GND', circuitMidX, botY + 24);
+
+      } else {
+        // ---- COMMON CATHODE CIRCUIT ----
+        // V+ bus at top connects to 3 branches
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(circuitL + 10, topY);
+        ctx.lineTo(circuitR - 10, topY);
+        ctx.stroke();
+
+        // V+ label
+        ctx.font = 'bold 12px Inter';
+        ctx.fillStyle = LINE;
+        ctx.textAlign = 'center';
+        ctx.fillText('+  Vs ' + vs + 'V', circuitMidX, topY - 10);
+
+        // Vcc terminal dot
+        ctx.beginPath();
+        ctx.arc(circuitL + 10, topY, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Per-channel: V+ → Resistor → LED top
+        const resistorY = topY + 25;
+        const resistorH = compact ? 30 : 36;
+
+        channels.forEach((ch, i) => {
+          const bx = branchStartX + i * branchSpacing;
+
+          // Wire from V+ bus to resistor
+          ctx.beginPath();
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 2;
+          ctx.moveTo(bx, topY);
+          ctx.lineTo(bx, resistorY);
+          ctx.stroke();
+
+          // Resistor box
+          const rBoxW = 18;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(bx - rBoxW / 2, resistorY, rBoxW, resistorH);
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(bx - rBoxW / 2, resistorY, rBoxW, resistorH);
+
+          // Wire from resistor to LED package top
+          ctx.beginPath();
+          ctx.strokeStyle = ch.color;
+          ctx.lineWidth = 2;
+          ctx.moveTo(bx, resistorY + resistorH);
+          ctx.lineTo(bx, ledPkgY - ledPkgH / 2);
+          ctx.stroke();
+        });
+
+        // Common cathode wire: LED package bottom center → GND
+        const commonTopY = ledPkgY + ledPkgH / 2;
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(circuitMidX, commonTopY);
+        ctx.lineTo(circuitMidX, botY);
+        ctx.stroke();
+
+        // "K" label for cathode
+        ctx.font = 'bold 9px Inter';
+        ctx.fillStyle = '#6366f1';
+        ctx.textAlign = 'left';
+        ctx.fillText('K (common)', circuitMidX + 6, (commonTopY + botY) / 2);
+
+        // GND symbol
+        ctx.beginPath();
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        ctx.moveTo(circuitMidX - 10, botY + 5);
+        ctx.lineTo(circuitMidX + 10, botY + 5);
+        ctx.moveTo(circuitMidX - 6, botY + 9);
+        ctx.lineTo(circuitMidX + 6, botY + 9);
+        ctx.moveTo(circuitMidX - 2, botY + 13);
+        ctx.lineTo(circuitMidX + 2, botY + 13);
+        ctx.stroke();
+
+        ctx.font = '600 9px Inter';
+        ctx.fillStyle = MUTED;
+        ctx.textAlign = 'center';
+        ctx.fillText('GND', circuitMidX, botY + 24);
+      }
+
+      // ========== BOTTOM: PWM Waveforms (full width) ==========
+      const wfStartY = h - (compact ? 55 : 65);
+      const wfW = w - (compact ? 40 : 60);
+      const wfH = compact ? 14 : 16;
+      const wfX = compact ? 20 : 30;
+      const wfGap = compact ? 18 : 22;
+
+      channels.forEach((ch, i) => {
+        const wy = wfStartY + i * wfGap;
+        const duty = ch.val / 255;
+
+        ctx.font = '600 9px Inter';
+        ctx.fillStyle = ch.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(ch.label, wfX, wy + wfH / 2 + 1);
+
+        const sigX = wfX + 16;
+        const sigW = wfW - 16;
+        const period = sigW / 6;
+
+        ctx.beginPath();
+        ctx.strokeStyle = ch.val > 0 ? ch.color : '#d4d4d8';
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(sigX, wy + wfH);
+
+        for (let j = 0; j < 6; j++) {
+          const px = sigX + j * period;
+          const highW = period * duty;
+          ctx.lineTo(px, wy + wfH);
+          ctx.lineTo(px, wy);
+          ctx.lineTo(px + highW, wy);
+          ctx.lineTo(px + highW, wy + wfH);
+          ctx.lineTo(px + period, wy + wfH);
+        }
+        ctx.stroke();
+
+        ctx.globalAlpha = 0.06;
+        ctx.fillStyle = ch.val > 0 ? ch.color : '#d4d4d8';
+        for (let j = 0; j < 6; j++) {
+          const px = sigX + j * period;
+          const highW = period * duty;
+          ctx.fillRect(px, wy, highW, wfH);
+        }
+        ctx.globalAlpha = 1;
+      });
 
       ctx.lineWidth = 2.5;
     }
 
-    window.addEventListener('resize', () => { resizeCanvas(); drawCircuit(); });
+    // Resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        resizeCanvas();
+        if (currentMode === 'rgb') drawRgbCircuit();
+        else drawCircuit();
+      }, 80);
+    });
 
     // Init
+    let currentMode = 'single';
     initColorPicker();
+    initRgbPresets();
     resizeCanvas();
     calculate();
+    calculateRgb();
     requestAnimationFrame(animate);
 
-    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
+    // Mobile keyboard back-button fix
     let keyboardOpen = false;
     let historyStatePushed = false;
     document.querySelectorAll('input[type="number"]').forEach(input => {
@@ -811,14 +1983,346 @@
     });
     window.addEventListener('popstate', (e) => {
       if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
+        const active = document.activeElement;
+        if (active && active.tagName === 'INPUT') {
+          active.blur();
           history.pushState({ keyboardOpen: true }, '');
           e.preventDefault();
         }
       }
     });
+  </script>
+
+  <!-- ====== COLOR PICKER MODAL ====== -->
+  <div id="color-picker-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display:none;">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeColorPicker()"></div>
+    <!-- Modal -->
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-[340px] max-h-[90vh] overflow-y-auto overflow-x-hidden color-modal-enter">
+      <!-- Header -->
+      <div class="flex items-center justify-end px-5 pt-4 pb-2">
+        <button onclick="closeColorPicker()" class="w-9 h-9 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center transition-colors">
+          <svg width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none" class="text-zinc-500">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Color Wheel -->
+      <div class="px-5 flex justify-center">
+        <div class="relative">
+          <div class="rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.10),0_0_0_1px_rgba(0,0,0,0.04)] overflow-hidden">
+            <canvas id="colorWheelCanvas" width="260" height="260" class="cursor-crosshair block" style="width:260px;height:260px;"></canvas>
+          </div>
+          <!-- Selector loupe -->
+          <div id="wheelSelector" class="absolute pointer-events-none" style="top:120px;left:120px;width:28px;height:28px;">
+            <div class="w-full h-full rounded-full border-[3px] border-white shadow-[0_0_0_1.5px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.25)]" id="wheelSelectorInner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview + Hex + RGB -->
+      <div class="px-5 mt-4">
+        <div class="flex items-center gap-3">
+          <div id="cw-preview" class="w-16 h-16 rounded-2xl border-2 border-zinc-200/80 shadow-sm shrink-0 transition-colors duration-150" style="background:#000;"></div>
+          <div class="flex-1 space-y-2">
+            <div class="ios-input-wrapper flex items-center bg-zinc-50 border border-zinc-200 rounded-lg px-2.5 py-2">
+              <span class="text-xs font-medium text-zinc-400 shrink-0 select-none">#</span>
+              <input type="text" id="cw-hex" value="000000" maxlength="6" oninput="cwHexChanged()"
+                class="w-full bg-transparent border-none p-0 text-xs font-mono font-semibold focus:ring-0 text-zinc-900 outline-none ml-1">
+            </div>
+            <div class="flex gap-1.5">
+              <div class="flex-1 flex items-center bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-1.5">
+                <span class="text-[9px] font-bold text-red-400 mr-1">R</span>
+                <input type="number" id="cw-r" min="0" max="255" value="0" oninput="cwRgbChanged()"
+                  class="w-full bg-transparent border-none p-0 text-[11px] font-mono font-semibold text-right focus:ring-0 text-zinc-900 outline-none">
+              </div>
+              <div class="flex-1 flex items-center bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-1.5">
+                <span class="text-[9px] font-bold text-green-400 mr-1">G</span>
+                <input type="number" id="cw-g" min="0" max="255" value="0" oninput="cwRgbChanged()"
+                  class="w-full bg-transparent border-none p-0 text-[11px] font-mono font-semibold text-right focus:ring-0 text-zinc-900 outline-none">
+              </div>
+              <div class="flex-1 flex items-center bg-zinc-50 border border-zinc-200 rounded-lg px-2 py-1.5">
+                <span class="text-[9px] font-bold text-blue-400 mr-1">B</span>
+                <input type="number" id="cw-b" min="0" max="255" value="0" oninput="cwRgbChanged()"
+                  class="w-full bg-transparent border-none p-0 text-[11px] font-mono font-semibold text-right focus:ring-0 text-zinc-900 outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="px-5 mt-4 pb-6">
+        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Presets</span>
+        <div class="flex flex-wrap justify-center gap-2.5 mt-2.5" id="cw-presets"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .color-modal-enter {
+      animation: modalSlideUp 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    #colorWheelCanvas {
+      touch-action: none;
+    }
+    #wheelSelector {
+      transition: left 0.18s cubic-bezier(0.2, 0.8, 0.3, 1), top 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+    #wheelSelector.no-transition {
+      transition: none;
+    }
+  </style>
+
+  <script>
+    // ========================
+    // COLOR WHEEL LOGIC
+    // ========================
+    const cwCanvas = document.getElementById('colorWheelCanvas');
+    const cwCtx = cwCanvas.getContext('2d');
+    const cwDpr = window.devicePixelRatio || 1;
+    let cwHue = 0, cwSat = 0, cwBright = 100;
+    let cwDragging = false;
+    const CW_SIZE = 260;
+
+    // HiDPI setup
+    cwCanvas.width = CW_SIZE * cwDpr;
+    cwCanvas.height = CW_SIZE * cwDpr;
+    cwCtx.scale(cwDpr, cwDpr);
+
+    function drawColorWheel() {
+      const size = CW_SIZE;
+      const cx = size / 2, cy = size / 2, radius = size / 2 - 2;
+      cwCtx.setTransform(cwDpr, 0, 0, cwDpr, 0, 0);
+      cwCtx.clearRect(0, 0, size, size);
+
+      // Draw at 1x into offscreen canvas, then blit scaled
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = size;
+      offCanvas.height = size;
+      const offCtx = offCanvas.getContext('2d');
+      const imageData = offCtx.createImageData(size, size);
+      const data = imageData.data;
+      const bri = cwBright / 100;
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const dx = x - cx, dy = y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const idx = (y * size + x) * 4;
+
+          if (dist <= radius) {
+            const angle = Math.atan2(dy, dx);
+            const hue = ((angle * 180 / Math.PI) + 360) % 360;
+            const sat = dist / radius;
+            const rgb = hsbToRgb(hue, sat, bri);
+            data[idx] = rgb[0];
+            data[idx + 1] = rgb[1];
+            data[idx + 2] = rgb[2];
+            data[idx + 3] = 255;
+          } else {
+            // Soft anti-aliased edge (3px feather)
+            const edgeDist = dist - radius;
+            if (edgeDist < 3) {
+              const alpha = Math.max(0, 1 - edgeDist / 3);
+              const angle = Math.atan2(dy, dx);
+              const hue = ((angle * 180 / Math.PI) + 360) % 360;
+              const rgb = hsbToRgb(hue, 1, bri);
+              data[idx] = rgb[0];
+              data[idx + 1] = rgb[1];
+              data[idx + 2] = rgb[2];
+              data[idx + 3] = Math.round(alpha * alpha * 255);
+            }
+          }
+        }
+      }
+      offCtx.putImageData(imageData, 0, 0);
+      cwCtx.drawImage(offCanvas, 0, 0, size, size);
+    }
+
+    function hsbToRgb(h, s, b) {
+      const c = b * s;
+      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      const m = b - c;
+      let r, g, bl;
+      if (h < 60) { r = c; g = x; bl = 0; }
+      else if (h < 120) { r = x; g = c; bl = 0; }
+      else if (h < 180) { r = 0; g = c; bl = x; }
+      else if (h < 240) { r = 0; g = x; bl = c; }
+      else if (h < 300) { r = x; g = 0; bl = c; }
+      else { r = c; g = 0; bl = x; }
+      return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((bl + m) * 255)];
+    }
+
+    function rgbToHsb(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const d = max - min;
+      let h = 0, s = max === 0 ? 0 : d / max, v = max;
+      if (d !== 0) {
+        if (max === r) h = ((g - b) / d + 6) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60;
+      }
+      return [h, s, v];
+    }
+
+    function updateWheelSelector() {
+      const size = CW_SIZE;
+      const cx = size / 2, cy = size / 2, radius = size / 2 - 2;
+      const angle = cwHue * Math.PI / 180;
+      const dist = cwSat * radius;
+      const sx = cx + Math.cos(angle) * dist - 14;
+      const sy = cy + Math.sin(angle) * dist - 14;
+      const sel = document.getElementById('wheelSelector');
+      sel.style.left = sx + 'px';
+      sel.style.top = sy + 'px';
+      const rgb = hsbToRgb(cwHue, cwSat, cwBright / 100);
+      document.getElementById('wheelSelectorInner').style.backgroundColor = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    }
+
+    function cwUpdateFromWheel() {
+      const rgb = hsbToRgb(cwHue, cwSat, cwBright / 100);
+      document.getElementById('cw-r').value = rgb[0];
+      document.getElementById('cw-g').value = rgb[1];
+      document.getElementById('cw-b').value = rgb[2];
+      const hex = ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1).toUpperCase();
+      document.getElementById('cw-hex').value = hex;
+      document.getElementById('cw-preview').style.backgroundColor = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+      const lum = 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
+      document.getElementById('cw-preview').style.borderColor = lum > 200 ? '#d4d4d8' : 'transparent';
+      updateWheelSelector();
+      syncToMainRgb(rgb[0], rgb[1], rgb[2]);
+    }
+
+    function syncToMainRgb(r, g, b) {
+      document.getElementById('rgb-r').value = r;
+      document.getElementById('rgb-g').value = g;
+      document.getElementById('rgb-b').value = b;
+      updateRgbDisplays();
+      calculateRgb();
+    }
+
+    function handleWheelPointer(e) {
+      const rect = cwCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const size = CW_SIZE;
+      const cx = size / 2, cy = size / 2, radius = size / 2 - 2;
+      const dx = x - cx, dy = y - cy;
+      let dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > radius) dist = radius;
+      cwHue = ((Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360;
+      cwSat = dist / radius;
+      cwUpdateFromWheel();
+    }
+
+    cwCanvas.addEventListener('pointerdown', (e) => {
+      cwDragging = true;
+      document.getElementById('wheelSelector').classList.add('no-transition');
+      cwCanvas.setPointerCapture(e.pointerId);
+      handleWheelPointer(e);
+    });
+    cwCanvas.addEventListener('pointermove', (e) => {
+      if (cwDragging) handleWheelPointer(e);
+    });
+    cwCanvas.addEventListener('pointerup', () => { cwDragging = false; document.getElementById('wheelSelector').classList.remove('no-transition'); });
+    cwCanvas.addEventListener('pointercancel', () => { cwDragging = false; document.getElementById('wheelSelector').classList.remove('no-transition'); });
+
+    function cwBrightnessChanged() {
+      // brightness slider removed
+    }
+
+    function cwHexChanged() {
+      let hex = document.getElementById('cw-hex').value.replace(/[^0-9a-fA-F]/g, '');
+      if (hex.length === 6) {
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const hsb = rgbToHsb(r, g, b);
+        cwHue = hsb[0]; cwSat = hsb[1]; cwBright = Math.round(hsb[2] * 100);
+        document.getElementById('cw-r').value = r;
+        document.getElementById('cw-g').value = g;
+        document.getElementById('cw-b').value = b;
+        document.getElementById('cw-preview').style.backgroundColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+        drawColorWheel();
+        updateWheelSelector();
+        syncToMainRgb(r, g, b);
+      }
+    }
+
+    function cwRgbChanged() {
+      let rv = parseInt(document.getElementById('cw-r').value) || 0;
+      let gv = parseInt(document.getElementById('cw-g').value) || 0;
+      let bv = parseInt(document.getElementById('cw-b').value) || 0;
+      rv = Math.min(255, Math.max(0, rv)); gv = Math.min(255, Math.max(0, gv)); bv = Math.min(255, Math.max(0, bv));
+      document.getElementById('cw-r').value = rv;
+      document.getElementById('cw-g').value = gv;
+      document.getElementById('cw-b').value = bv;
+      const hsb = rgbToHsb(rv, gv, bv);
+      cwHue = hsb[0]; cwSat = hsb[1]; cwBright = Math.round(hsb[2] * 100);
+      const hex = ((1 << 24) + (rv << 16) + (gv << 8) + bv).toString(16).slice(1).toUpperCase();
+      document.getElementById('cw-hex').value = hex;
+      document.getElementById('cw-preview').style.backgroundColor = 'rgb(' + rv + ',' + gv + ',' + bv + ')';
+      drawColorWheel();
+      updateWheelSelector();
+      syncToMainRgb(rv, gv, bv);
+    }
+
+    function openColorPicker() {
+      const r = parseInt(document.getElementById('rgb-r').value) || 0;
+      const g = parseInt(document.getElementById('rgb-g').value) || 0;
+      const b = parseInt(document.getElementById('rgb-b').value) || 0;
+      const hsb = rgbToHsb(r, g, b);
+      cwHue = hsb[0]; cwSat = hsb[1]; cwBright = Math.round(hsb[2] * 100);
+      document.getElementById('cw-r').value = r;
+      document.getElementById('cw-g').value = g;
+      document.getElementById('cw-b').value = b;
+      const hex = ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+      document.getElementById('cw-hex').value = hex;
+      document.getElementById('cw-preview').style.backgroundColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+      document.getElementById('color-picker-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      drawColorWheel();
+      updateWheelSelector();
+      initCwPresets();
+    }
+
+    function closeColorPicker() {
+      document.getElementById('color-picker-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    let cwPresetsInitialized = false;
+    function initCwPresets() {
+      if (cwPresetsInitialized) return;
+      cwPresetsInitialized = true;
+      const container = document.getElementById('cw-presets');
+      RGB_PRESETS.forEach((p, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'w-8 h-8 rounded-full border-2 border-zinc-200 hover:scale-110 active:scale-95 transition-transform cursor-pointer shadow-sm';
+        btn.style.backgroundColor = 'rgb(' + p.r + ',' + p.g + ',' + p.b + ')';
+        if (p.r > 230 && p.g > 230 && p.b > 230) btn.style.boxShadow = 'inset 0 0 0 1px rgba(0,0,0,0.08)';
+        btn.title = p.name;
+        btn.onclick = () => {
+          const hsb = rgbToHsb(p.r, p.g, p.b);
+          cwHue = hsb[0]; cwSat = hsb[1]; cwBright = Math.round(hsb[2] * 100);
+          drawColorWheel();
+          cwUpdateFromWheel();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // Mobile warning
+    window.addEventListener('load', checkMobileWarning);
   </script>
 </body>
 

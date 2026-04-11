@@ -1,5 +1,13 @@
 const changelogData = [
   {
+    version: "v1.3.0",
+    changes: [
+      "New tools: Pythagorean Theorem calculator, Matrix operations, LED resistor calculator, Gear ratio calculator, and Percentage calculator.",
+      "Voltage Divider: added E24 nearest standard resistor value suggestion.",
+      "Grid tool: added detailed explanations for series and parallel configurations."
+    ]
+  },
+  {
     version: "v1.2.0",
     changes: [
       "Improved design and solved bugs on Grid, Resistor decoder, and Unit converter.",
