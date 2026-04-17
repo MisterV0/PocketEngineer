@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battery Life Calculator — PocketEngineer</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons (Professional SVGs to replace emojis) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Clean, modern styling without fighting Tailwind */
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+    /* Modern Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #e4e4e7;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #0ea5e9;
+      border: 4px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    
+    /* Hide number input arrows */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    
+    /* Modal Transitions */
+    #appliancesModal { opacity: 0; pointer-events: none; transition: opacity 0.2s ease-out; }
+    #appliancesModal.active { opacity: 1; pointer-events: auto; }
+    .modal-content { transform: scale(0.95); transition: transform 0.2s ease-out; }
+    #appliancesModal.active .modal-content { transform: scale(1); }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-sky-200">
+
+  <!-- Header -->
+  <header class="flex-none bg-white border-b border-zinc-200">
+    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+      </a>
+      <h1 class="text-lg font-bold tracking-tight text-zinc-900">Power Station Runtime</h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 md:px-6 py-8">
+    
+    <!-- Grand Total Result Banner -->
+    <div class="bg-zinc-900 text-white rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+      <div>
+        <h2 class="text-zinc-400 font-medium tracking-wide uppercase text-sm mb-1">Estimated Total Runtime</h2>
+        <p class="text-sm text-zinc-400">Time until battery hits 0% with all connected devices running.</p>
+      </div>
+      <div class="text-center md:text-right">
+        <div id="grandTotalTime" class="text-5xl md:text-6xl font-light tracking-tighter text-sky-400">0h 0m</div>
+        <div id="grandTotalWatts" class="text-zinc-400 font-mono mt-2">Total Draw: 0W</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- LEFT COLUMN: Battery Setup -->
+      <section class="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 flex flex-col gap-8 shadow-sm">
+        <div class="flex items-center justify-between border-b border-zinc-100 pb-4">
+          <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="battery-charging" class="text-sky-500"></i> Battery Setup</h2>
+        </div>
+
+        <!-- Capacity Input -->
+        <div>
+          <label class="block text-sm font-bold text-zinc-500 uppercase tracking-wide mb-3">Total Capacity</label>
+          <div class="flex gap-2">
+            <input type="number" id="batteryCapacityInput" value="500" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-lg font-mono font-bold focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition-all">
+            <select id="batteryCapacityUnit" class="bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 font-bold text-zinc-700 outline-none focus:border-sky-500">
+              <option value="Wh">Wh</option>
+              <option value="kWh">kWh</option>
+            </select>
+          </div>
+          <p class="text-xs text-zinc-400 mt-2">Standard power stations range from 300Wh to 2000Wh.</p>
+        </div>
+
+        <!-- Level Slider -->
+        <div>
+          <div class="flex justify-between items-end mb-3">
+            <label class="block text-sm font-bold text-zinc-500 uppercase tracking-wide">Current Charge Level</label>
+            <div class="text-2xl font-mono font-bold text-zinc-900"><span id="levelDisplay">100</span><span class="text-zinc-400 text-lg">%</span></div>
+          </div>
+          <input type="range" id="batteryLevel" min="1" max="100" value="100" oninput="calculate()">
+          
+          <div class="mt-6 flex items-center justify-center bg-zinc-50 rounded-xl p-4">
+            <span class="text-sm text-zinc-500 font-medium">Available Energy: <strong id="availableWhDisplay" class="text-zinc-900 font-mono">500 Wh</strong></span>
+          </div>
+        </div>
+
+        <!-- Optional SVG Visual (Hidden by default, uncomment to use) -->
+        <!--
+        <div class="mt-auto pt-4 flex justify-center">
+           <object id="svgPowerStation" data="../resources/Images/power_station_front_view_2d.svg" type="image/svg+xml" class="h-48"></object>
+        </div>
+        -->
+      </section>
+
+      <!-- RIGHT COLUMN: Connected Devices -->
+      <section class="bg-white border border-zinc-200 rounded-3xl flex flex-col shadow-sm overflow-hidden h-[600px]">
+        <div class="flex items-center justify-between p-6 md:p-8 border-b border-zinc-100 bg-zinc-50/50">
+          <div>
+            <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="plug" class="text-sky-500"></i> Connected Devices</h2>
+            <p class="text-sm text-zinc-500 mt-1">Add devices to calculate total power draw.</p>
+          </div>
+          <button onclick="toggleModal('appliancesModal')" class="bg-zinc-900 hover:bg-zinc-800 text-white rounded-full w-12 h-12 flex items-center justify-center transition-transform hover:scale-105 shadow-md">
+            <i data-lucide="plus"></i>
+          </button>
+        </div>
+
+        <!-- Selected Devices List -->
+        <div id="selectedAppliancesList" class="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-3 bg-zinc-50/30">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Appliances Selection Modal -->
+  <div id="appliancesModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-sm">
+    <div class="modal-content bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+      
+      <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
+        <h2 class="text-xl font-bold">Add Device</h2>
+        <button onclick="toggleModal('appliancesModal')" class="w-8 h-8 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="appliancesSelectGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Appliance Database (Replaced Emojis with Lucide Icon names)
+    const APPLIANCES = [
+      { id: 'led-lamp', name: 'LED Lamp', watts: 10, icon: 'lightbulb' },
+      { id: 'smartphone', name: 'Phone Charger', watts: 15, icon: 'smartphone' },
+      { id: 'laptop', name: 'Laptop', watts: 65, icon: 'laptop' },
+      { id: 'desk-fan', name: 'Desk Fan', watts: 30, icon: 'fan' },
+      { id: 'tv', name: 'Television', watts: 120, icon: 'tv' },
+      { id: 'mini-fridge', name: 'Mini Fridge', watts: 80, icon: 'refrigerator' },
+      { id: 'console', name: 'Game Console', watts: 150, icon: 'gamepad-2' },
+      { id: 'cpap', name: 'CPAP Machine', watts: 40, icon: 'activity' },
+      { id: 'coffee', name: 'Coffee Maker', watts: 800, icon: 'coffee' },
+      { id: 'microwave', name: 'Microwave', watts: 1000, icon: 'microwave' }
+    ].sort((a, b) => a.watts - b.watts);
+
+    // State
+    let state = {
+      capacityRaw: 500,
+      unit: 'Wh',
+      level: 100,
+      selected: []
+    };
+
+    // DOM Elements
+    const els = {
+      capInput: document.getElementById('batteryCapacityInput'),
+      unitSelect: document.getElementById('batteryCapacityUnit'),
+      levelSlider: document.getElementById('batteryLevel'),
+      levelDisplay: document.getElementById('levelDisplay'),
+      availWhDisplay: document.getElementById('availableWhDisplay'),
+      grandTime: document.getElementById('grandTotalTime'),
+      grandWatts: document.getElementById('grandTotalWatts'),
+      selectedList: document.getElementById('selectedAppliancesList'),
+      grid: document.getElementById('appliancesSelectGrid')
+    };
+
+    // Initialize Event Listeners
+    els.capInput.addEventListener('input', calculate);
+    els.unitSelect.addEventListener('change', calculate);
+    
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('active');
+    }
+
+    // Close modal on background click
+    document.getElementById('appliancesModal').addEventListener('click', e => {
+      if(e.target === e.currentTarget) toggleModal('appliancesModal');
+    });
+
+    // Populate Modal Grid
+    function renderGrid() {
+      els.grid.innerHTML = APPLIANCES.map(app => `
+        <button onclick="addAppliance('${app.id}')" class="flex flex-col items-center justify-center p-4 border-2 border-zinc-100 rounded-2xl hover:border-sky-500 hover:bg-sky-50 transition-all group">
+          <i data-lucide="${app.icon}" class="w-8 h-8 text-zinc-400 group-hover:text-sky-500 mb-3 transition-colors"></i>
+          <span class="font-semibold text-sm text-zinc-800">${app.name}</span>
+          <span class="text-xs font-mono text-zinc-500 mt-1">${app.watts}W</span>
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addAppliance(id) {
+      const app = APPLIANCES.find(a => a.id === id);
+      state.selected.push({ ...app, uuid: Math.random().toString(36).substr(2, 9) });
+      toggleModal('appliancesModal');
+      calculate();
+    }
+
+    function removeAppliance(uuid) {
+      state.selected = state.selected.filter(a => a.uuid !== uuid);
+      calculate();
+    }
+
+    // THE REAL LOGIC FIX:
+    function calculate() {
+      // 1. Get Battery Data
+      state.capacityRaw = parseFloat(els.capInput.value) || 0;
+      state.unit = els.unitSelect.value;
+      state.level = parseInt(els.levelSlider.value);
+      
+      let totalCapacityWh = state.unit === 'kWh' ? state.capacityRaw * 1000 : state.capacityRaw;
+      let availableWh = totalCapacityWh * (state.level / 100);
+
+      // Update UI for Battery
+      els.levelDisplay.innerText = state.level;
+      els.availWhDisplay.innerText = `${Math.round(availableWh)} Wh`;
+
+      // 2. Calculate TOTAL Power Draw
+      let totalWatts = state.selected.reduce((sum, app) => sum + app.watts, 0);
+      els.grandWatts.innerText = `Total Draw: ${totalWatts}W`;
+
+      // 3. Calculate Global Runtime
+      if (totalWatts === 0) {
+        els.grandTime.innerText = "—";
+      } else {
+        let hoursRemaining = availableWh / totalWatts;
+        els.grandTime.innerText = formatTime(hoursRemaining);
+      }
+
+      renderSelected();
+    }
+
+    function renderSelected() {
+      if (state.selected.length === 0) {
+        els.selectedList.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-zinc-400 gap-3">
+            <i data-lucide="plug-zap" class="w-12 h-12 opacity-20"></i>
+            <p class="text-sm">No devices connected</p>
+          </div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      els.selectedList.innerHTML = state.selected.map(app => `
+        <div class="bg-white border border-zinc-200 p-4 rounded-2xl flex items-center justify-between shadow-sm group">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500">
+              <i data-lucide="${app.icon}" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-zinc-900">${app.name}</div>
+              <div class="text-xs font-mono text-zinc-500">${app.watts}W draw</div>
+            </div>
+          </div>
+          <button onclick="removeAppliance('${app.uuid}')" class="text-zinc-300 hover:text-red-500 p-2 transition-colors">
+            <i data-lucide="trash-2" class="w-5 h-5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function formatTime(hours) {
+      if (hours < 1) return `${Math.round(hours * 60)}m`;
+      if (hours > 99) return `99h+`;
+      const h = Math.floor(hours);
+      const m = Math.round((hours - h) * 60);
+      return m === 0 ? `${h}h` : `${h}h ${m}m`;
+    }
+
+    // Boot
+    renderGrid();
+    calculate();
+  </script>
+</body>
+</html>

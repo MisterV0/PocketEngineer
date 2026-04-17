@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCD Screen Designer for Arduino — PocketEngineer</title>
+    <meta name="description" content="Design your HD44780 LCD screen visually. Pick characters, preview the display, and get instant Arduino code for 16x2 and 20x4 LCDs.">
+    <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+    <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+    <script src="../resources/app.js?v=1.2.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Pockeng Common Styles */
+            --bg-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --danger-color: #ef4444;
+            --radius-md: 8px;
+            --radius-sm: 4px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-modal: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            
+            /* LCD Variables */
+            --lcd-bezel: #2a3028;
+            --lcd-gap: #1c241c;
+            --lcd-bg: #3a5a00;
+            --lcd-char: #b8ff00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin: 0;
+        }
+
+        /* --- Panel & Toolbar --- */
+        .panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #f1f5f9;
+        }
+
+        .btn.active {
+            background: var(--text-main);
+            color: #fff;
+            border-color: var(--text-main);
+        }
+
+        .btn-danger {
+            color: var(--danger-color);
+            border-color: #fecaca;
+        }
+        .btn-danger:hover {
+            background: #fef2f2;
+        }
+
+        .color-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.active { border-color: var(--text-main); }
+
+        .bg-green { background: #3a5a00; }
+        .bg-blue { background: #0022cc; }
+        .bg-yellow { background: #99b822; }
+
+        /* --- LCD Simulation --- */
+        .lcd-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            padding: 1rem;
+        }
+
+        .lcd-bezel-box {
+            background-color: var(--lcd-bezel);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 10px 15px -3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .lcd-glare {
+            position: absolute;
+            top: 1rem; left: 1.25rem; right: 1.25rem; bottom: 1rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .lcd-screen {
+            display: grid;
+            gap: 2px;
+            background-color: var(--lcd-gap);
+            border: 2px solid var(--lcd-gap);
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(12px, 3vw, 20px);
+        }
+
+        .lcd-cell {
+            background-color: var(--lcd-bg);
+            color: var(--lcd-char);
+            width: 1.4em;
+            height: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            text-shadow: 0 0 4px rgba(var(--lcd-char-rgb), 0.4);
+            transition: opacity 0.1s;
+        }
+
+        .lcd-cell:hover {
+            opacity: 0.8;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+        }
+
+        /* LCD Themes */
+        .theme-green {
+            --lcd-bezel: #2a3028;
+            --lcd-gap: #1c241c;
+            --lcd-bg: #3a5a00;
+            --lcd-char: #b8ff00;
+        }
+        .theme-blue {
+            --lcd-bezel: #1e1e24;
+            --lcd-gap: #001166;
+            --lcd-bg: #0022cc;
+            --lcd-char: #ffffff;
+        }
+        .theme-yellow {
+            --lcd-bezel: #2c2c2a;
+            --lcd-gap: #667711;
+            --lcd-bg: #99b822;
+            --lcd-char: #112200;
+        }
+
+        /* --- Code Panel --- */
+        .code-disclosure-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn-disclosure {
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
+            padding: 0.5rem 1.4rem;
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn-disclosure:hover {
+            background: #f9fafb;
+            color: #111;
+        }
+
+        .mono-icon {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .code-container {
+            background: #1a1a2e;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+
+        .code-container.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            margin-bottom: 2rem;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d0d1a;
+            padding: 0.6rem 1rem;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #28c840; }
+
+        .btn-copy {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #a0a0b0;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-copy:hover { 
+            background: rgba(255,255,255,0.13); 
+            color: #fff; 
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            line-height: 1.5;
+        }
+
+        /* Syntax Highlighting */
+        .c-keyword { color: #60b0ff; }
+        .c-string { color: #a8ff60; }
+        .c-comment { color: #6b7280; font-style: italic; }
+        .c-num { color: #fca5a5; }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-modal);
+            width: 90%;
+            max-width: 480px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* Confirm Modal */
+        #confirm-modal .modal-content {
+            padding: 2rem;
+            text-align: center;
+            max-width: 360px;
+        }
+        .confirm-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* Picker Modal */
+        .picker-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .picker-preview {
+            width: 3em;
+            height: 3.5em;
+            background: var(--lcd-bg);
+            color: var(--lcd-char);
+            border: 2px solid var(--lcd-gap);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .picker-controls {
+            flex: 1;
+        }
+
+        .picker-controls input {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+        .picker-controls input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            border-color: var(--danger-color) !important;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+            40%, 60% { transform: translate3d(3px, 0, 0); }
+        }
+
+        .picker-body {
+            padding: 1.25rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .picker-group-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .picker-group-title:first-child { margin-top: 0; }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+            gap: 6px;
+        }
+
+        .char-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .char-btn:hover { background: #e2e8f0; }
+
+        .btn-clear-cell {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.6rem;
+        }
+
+        /* --- Custom Character Crafter --- */
+        .custom-char-svg {
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+        }
+
+        .crafter-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 36px);
+            gap: 4px;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .crafter-cell {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .crafter-cell.active {
+            background: var(--text-main);
+            border-color: var(--text-main);
+        }
+
+        .crafter-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        #picker-crafter-view {
+            display: none;
+            padding: 1.25rem;
+            flex: 1;
+        }
+
+        @media (max-width: 640px) {
+            header {
+                gap: 0.5rem;
+            }
+
+            .header-top {
+                gap: 0.75rem;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            body {
+                padding: 1rem 0.75rem;
+            }
+
+            .panel {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                line-height: 1.4;
+            }
+
+            .toolbar {
+                gap: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .toolbar-group {
+                width: 100%;
+            }
+
+            .toolbar-group:first-child {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .btn {
+                padding: 0.35rem 0.6rem;
+                font-size: 0.8rem;
+                flex: 1;
+                text-align: center;
+            }
+
+            .color-swatch {
+                width: 20px;
+                height: 20px;
+            }
+
+            .lcd-wrapper {
+                padding: 0.5rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .lcd-bezel-box {
+                padding: 0.75rem;
+                min-width: 100%;
+            }
+
+            .lcd-screen {
+                gap: 1px;
+            }
+
+            .lcd-cell {
+                width: 1.2em;
+                height: 1.6em;
+                font-size: clamp(10px, 2vw, 16px);
+            }
+
+            .crafter-grid {
+                grid-template-columns: repeat(5, 28px);
+            }
+
+            .crafter-cell {
+                width: 28px;
+                height: 28px;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-width: 90vw;
+            }
+
+            .picker-header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .picker-preview {
+                width: 2.5em;
+                height: 3em;
+            }
+
+            .picker-controls input {
+                padding: 0.4rem;
+                font-size: 0.85rem;
+            }
+
+            .char-grid {
+                grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+                gap: 4px;
+            }
+
+            .char-btn {
+                height: 32px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .header-top {
+                gap: 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .subtitle {
+                font-size: 0.7rem;
+            }
+
+            .btn {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .toolbar {
+                gap: 0.5rem;
+            }
+
+            .lcd-cell {
+                font-size: clamp(8px, 1.5vw, 12px);
+            }
+
+            .crafter-grid {
+                grid-template-columns: repeat(5, 24px);
+                gap: 3px;
+            }
+
+            .crafter-cell {
+                width: 24px;
+                height: 24px;
+            }
+
+            pre {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <a href="../index.html" class="back-button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                    Back
+                </a>
+                <h1>LCD Designer</h1>
+            </div>
+            <p class="subtitle">Visually design HD44780 LCD screens for Arduino. Pick valid ROM A00 characters and instantly generate copy-ready I2C code. 16×2 20×4</p>
+        </header>
+
+        <main>
+            <div class="panel">
+                <div class="toolbar">
+                    <div class="toolbar-group">
+                        <button class="btn active" id="btn-size-16">16×2</button>
+                        <button class="btn" id="btn-size-20">20×4</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <div class="color-swatch bg-green active" data-theme="theme-green" title="Green"></div>
+                        <div class="color-swatch bg-blue" data-theme="theme-blue" title="Blue"></div>
+                        <div class="color-swatch bg-yellow" data-theme="theme-yellow" title="Yellow-Green"></div>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="btn" id="btn-demo">Fill Demo</button>
+                        <button class="btn btn-danger" id="btn-clear-all">Clear All</button>
+                    </div>
+                </div>
+
+                <div class="lcd-wrapper">
+                    <div class="lcd-bezel-box theme-green" id="lcd-container">
+                        <div class="lcd-glare"></div>
+                        <div class="lcd-screen" id="lcd-screen">
+                            <!-- Cells generated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-disclosure-wrapper">
+                <button id="btn-toggle-code" class="btn-disclosure">
+                    <span class="mono-icon">{ }</span> <span id="toggle-code-text">View Arduino Code</span>
+                </button>
+            </div>
+
+            <div class="code-container" id="code-container">
+                <div class="code-header">
+                    <div class="window-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <button class="btn-copy" id="btn-copy">Copy Code</button>
+                </div>
+                <pre><code id="code-output"></code></pre>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 0.5rem;">Change LCD Size?</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Switching the display size will clear the current layout. Continue?</p>
+            <div class="confirm-actions">
+                <button class="btn" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="picker-modal">
+        <div class="modal-content">
+            <div class="picker-header">
+                <div class="picker-preview theme-green" id="picker-preview-box">
+                    <span id="picker-preview-char"></span>
+                </div>
+                <div class="picker-controls">
+                    <input type="text" id="picker-input" maxlength="1" placeholder="Type character here..." autocomplete="off">
+                    <p style="font-size: 0.75rem; color: var(--text-muted);" id="picker-hint">Or pick from the valid HD44780 sets below.</p>
+                </div>
+            </div>
+
+            <div class="picker-body" id="picker-main-view">
+                <div class="picker-group-title">Custom Memory Slots (CGRAM)</div>
+                <div class="char-grid" id="picker-custom-slots"></div>
+
+                <div class="picker-group-title">Space / Clear</div>
+                <button class="btn btn-clear-cell" id="btn-clear-cell" style="margin-top: 0;">Set Empty (Space)</button>
+
+                <div class="picker-group-title">Group 1 — Basic ASCII (0x20 - 0x7E)</div>
+                <div class="char-grid" id="picker-group1"></div>
+
+                <div class="picker-group-title">Group 2 — ROM A00 Extended (0xA0 - 0xFF)</div>
+                <div class="char-grid" id="picker-group2"></div>
+            </div>
+
+            <div id="picker-crafter-view">
+                <h3 style="font-size: 1.1rem; text-align: center;">Craft Custom Glyph</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 0.2rem;">Draw pixels to instantly generate C++ arrays.</p>
+                
+                <div class="crafter-grid" id="crafter-grid"></div>
+                
+                <div class="crafter-actions">
+                    <button class="btn" id="btn-crafter-back">Back</button>
+                    <button class="btn active" id="btn-crafter-use">Insert to Screen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ROM A00 Character Map
+        const romA00 = {
+            // Group 1: 0x20 - 0x7F
+            0x20: ' ', 0x21: '!', 0x22: '"', 0x23: '#', 0x24: '$', 0x25: '%', 0x26: '&', 0x27: "'", 
+            0x28: '(', 0x29: ')', 0x2A: '*', 0x2B: '+', 0x2C: ',', 0x2D: '-', 0x2E: '.', 0x2F: '/', 
+            0x30: '0', 0x31: '1', 0x32: '2', 0x33: '3', 0x34: '4', 0x35: '5', 0x36: '6', 0x37: '7', 
+            0x38: '8', 0x39: '9', 0x3A: ':', 0x3B: ';', 0x3C: '<', 0x3D: '=', 0x3E: '>', 0x3F: '?', 
+            0x40: '@', 0x41: 'A', 0x42: 'B', 0x43: 'C', 0x44: 'D', 0x45: 'E', 0x46: 'F', 0x47: 'G', 
+            0x48: 'H', 0x49: 'I', 0x4A: 'J', 0x4B: 'K', 0x4C: 'L', 0x4D: 'M', 0x4E: 'N', 0x4F: 'O', 
+            0x50: 'P', 0x51: 'Q', 0x52: 'R', 0x53: 'S', 0x54: 'T', 0x55: 'U', 0x56: 'V', 0x57: 'W', 
+            0x58: 'X', 0x59: 'Y', 0x5A: 'Z', 0x5B: '[', 0x5C: '¥', 0x5D: ']', 0x5E: '^', 0x5F: '_', 
+            0x60: '`', 0x61: 'a', 0x62: 'b', 0x63: 'c', 0x64: 'd', 0x65: 'e', 0x66: 'f', 0x67: 'g', 
+            0x68: 'h', 0x69: 'i', 0x6A: 'j', 0x6B: 'k', 0x6C: 'l', 0x6D: 'm', 0x6E: 'n', 0x6F: 'o', 
+            0x70: 'p', 0x71: 'q', 0x72: 'r', 0x73: 's', 0x74: 't', 0x75: 'u', 0x76: 'v', 0x77: 'w', 
+            0x78: 'x', 0x79: 'y', 0x7A: 'z', 0x7B: '{', 0x7C: '|', 0x7D: '}', 0x7E: '→', 0x7F: '←',
+            // Group 2: 0xA0 - 0xFF
+            0xA0: ' ', 0xA1: '｡', 0xA2: '｢', 0xA3: '｣', 0xA4: '､', 0xA5: '･', 0xA6: 'ｦ', 0xA7: 'ｧ', 
+            0xA8: 'ｨ', 0xA9: 'ｩ', 0xAA: 'ｪ', 0xAB: 'ｫ', 0xAC: 'ｬ', 0xAD: 'ｭ', 0xAE: 'ｮ', 0xAF: 'ｯ', 
+            0xB0: 'ｰ', 0xB1: 'ｱ', 0xB2: 'ｲ', 0xB3: 'ｳ', 0xB4: 'ｴ', 0xB5: 'ｵ', 0xB6: 'ｶ', 0xB7: 'ｷ', 
+            0xB8: 'ｸ', 0xB9: 'ｹ', 0xBA: 'ｺ', 0xBB: 'ｻ', 0xBC: 'ｼ', 0xBD: 'ｽ', 0xBE: 'ｾ', 0xBF: 'ｿ', 
+            0xC0: 'ﾀ', 0xC1: 'ﾁ', 0xC2: 'ﾂ', 0xC3: 'ﾃ', 0xC4: 'ﾄ', 0xC5: 'ﾅ', 0xC6: 'ﾆ', 0xC7: 'ﾇ', 
+            0xC8: 'ﾈ', 0xC9: 'ﾉ', 0xCA: 'ﾊ', 0xCB: 'ﾋ', 0xCC: 'ﾌ', 0xCD: 'ﾍ', 0xCE: 'ﾎ', 0xCF: 'ﾏ', 
+            0xD0: 'ﾐ', 0xD1: 'ﾑ', 0xD2: 'ﾒ', 0xD3: 'ﾓ', 0xD4: 'ﾔ', 0xD5: 'ﾕ', 0xD6: 'ﾖ', 0xD7: 'ﾗ', 
+            0xD8: 'ﾘ', 0xD9: 'ﾙ', 0xDA: 'ﾚ', 0xDB: 'ﾛ', 0xDC: 'ﾜ', 0xDD: 'ﾝ', 0xDE: 'ﾞ', 0xDF: 'ﾟ', 
+            0xE0: 'α', 0xE1: 'ä', 0xE2: 'β', 0xE3: 'ε', 0xE4: 'μ', 0xE5: 'σ', 0xE6: 'ρ', 0xE7: 'g', 
+            0xE8: '√', 0xE9: '⁻¹',0xEA: 'j', 0xEB: 'ˣ', 0xEC: '¢', 0xED: '£', 0xEE: 'ñ', 0xEF: 'ö', 
+            0xF0: 'p', 0xF1: 'q', 0xF2: 'θ', 0xF3: '∞', 0xF4: 'Ω', 0xF5: 'ü', 0xF6: 'Σ', 0xF7: 'π', 
+            0xF8: 'x̄', 0xF9: 'y', 0xFA: '千', 0xFB: '万', 0xFC: '円', 0xFD: '÷', 0xFE: '█', 0xFF: ' '
+        };
+
+        // Reverse lookup for typing mapping
+        const charToHexMap = {};
+        for (let hex in romA00) {
+            if (romA00[hex] !== ' ' || hex === '32') { 
+                charToHexMap[romA00[hex]] = parseInt(hex);
+            }
+        }
+        charToHexMap[' '] = 0x20;
+
+        // State
+        let currentCols = 16;
+        let currentRows = 2;
+        let gridData = [];
+        let activeTheme = 'theme-green';
+        
+        let activeCellRow = 0;
+        let activeCellCol = 0;
+
+        // Custom Characters (0-7): 8 arrays of 8 integers (5-bit values)
+        let customChars = Array.from({length: 8}, () => Array(8).fill(0));
+        let activeCustomSlot = 0;
+
+        // Elements
+        const lcdScreen = document.getElementById('lcd-screen');
+        const lcdContainer = document.getElementById('lcd-container');
+        const codeOutput = document.getElementById('code-output');
+        
+        // Initialization
+        function init() {
+            initBackButtons();
+            buildPicker();
+            setupGrid(16, 2);
+            attachEvents();
+        }
+
+        // --- Grid & LCD ---
+        function setupGrid(cols, rows) {
+            currentCols = cols;
+            currentRows = rows;
+            gridData = Array.from({length: rows}, () => Array(cols).fill(0x20));
+            
+            lcdScreen.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            lcdScreen.innerHTML = '';
+            
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'lcd-cell';
+                    cell.textContent = ' ';
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+                    cell.onclick = () => openPicker(r, c);
+                    lcdScreen.appendChild(cell);
+                }
+            }
+            updateCode();
+        }
+
+        function isGridEmpty() {
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    if (gridData[r][c] !== 0x20) return false;
+                }
+            }
+            return true;
+        }
+
+        function getCustomCharSVG(idx) {
+            let svg = `<svg class="custom-char-svg" viewBox="0 0 5 8" xmlns="http://www.w3.org/2000/svg">`;
+            const data = customChars[idx];
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 5; c++) {
+                    if ((data[r] >> (4 - c)) & 1) {
+                        svg += `<rect x="${c}" y="${r}" width="1" height="1"/>`;
+                    }
+                }
+            }
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function updateDisplay() {
+            const cells = lcdScreen.children;
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    const idx = r * currentCols + c;
+                    const code = gridData[r][c];
+                    
+                    if (code >= 0 && code <= 7) {
+                        cells[idx].innerHTML = getCustomCharSVG(code);
+                    } else {
+                        cells[idx].innerHTML = '';
+                        cells[idx].textContent = romA00[code];
+                    }
+                }
+            }
+            updateCode();
+        }
+
+        function fillDemo() {
+            gridData = Array.from({length: currentRows}, () => Array(currentCols).fill(0x20));
+            const msg1 = "Hello World!";
+            const msg2 = currentCols === 16 ? "PocketEngineer" : "Welcome to";
+            const msg3 = "PocketEngineer";
+            const msg4 = "LCD Designer";
+
+            const applyMsg = (row, text) => {
+                const start = Math.floor((currentCols - text.length) / 2);
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    gridData[row][start + i] = charToHexMap[char] || 0x20;
+                }
+            };
+
+            if (currentRows === 2) {
+                applyMsg(0, msg1);
+                applyMsg(1, msg2);
+            } else {
+                applyMsg(0, msg1);
+                applyMsg(1, msg2);
+                applyMsg(2, msg3);
+                applyMsg(3, msg4);
+            }
+            updateDisplay();
+        }
+
+        // --- Code Generation ---
+        function getHexStr(hexNum) {
+            return "0x" + hexNum.toString(16).toUpperCase().padStart(2, '0');
+        }
+
+        function generateCodeText() {
+            // Find which custom characters are actively used on the screen
+            let usedCustoms = new Set();
+            for(let r=0; r<currentRows; r++) {
+                for(let c=0; c<currentCols; c++) {
+                    if(gridData[r][c] >= 0 && gridData[r][c] <= 7) {
+                        usedCustoms.add(gridData[r][c]);
+                    }
+                }
+            }
+
+            let customArraysStr = "";
+            let customSetupsStr = "";
+            
+            if (usedCustoms.size > 0) {
+                Array.from(usedCustoms).sort().forEach(idx => {
+                    customArraysStr += `byte customChar${idx}[8] = {\n`;
+                    const data = customChars[idx];
+                    customArraysStr += data.map(val => `  B${val.toString(2).padStart(5, '0')}`).join(',\n');
+                    customArraysStr += `\n};\n\n`;
+                    
+                    customSetupsStr += `  lcd.createChar(${idx}, customChar${idx});\n`;
+                });
+            }
+
+            let coreLogic = "";
+            for (let r = 0; r < currentRows; r++) {
+                let lastIndex = -1;
+                for (let c = currentCols - 1; c >= 0; c--) {
+                    if (gridData[r][c] !== 0x20) {
+                        lastIndex = c;
+                        break;
+                    }
+                }
+
+                if (lastIndex === -1) {
+                    coreLogic += `  // row ${r} is empty\n`;
+                    continue;
+                }
+
+                coreLogic += `  lcd.setCursor(0, ${r});\n`;
+                let stringAcc = "";
+
+                for (let c = 0; c <= lastIndex; c++) {
+                    const code = gridData[r][c];
+                    
+                    if (code >= 0 && code <= 7) {
+                        // Flush accumulated string before writing byte
+                        if (stringAcc.length > 0) {
+                            coreLogic += `  lcd.print("${stringAcc}");\n`;
+                            stringAcc = "";
+                        }
+                        coreLogic += `  lcd.write(byte(${code}));\n`;
+                    } else if (code >= 0x20 && code <= 0x7D && code !== 0x5C) { 
+                        if (code === 0x22) stringAcc += '\\"'; // Escape quote
+                        else stringAcc += String.fromCharCode(code);
+                    } else {
+                        // Flush accumulated string before writing special hex
+                        if (stringAcc.length > 0) {
+                            coreLogic += `  lcd.print("${stringAcc}");\n`;
+                            stringAcc = "";
+                        }
+                        coreLogic += `  lcd.write(${getHexStr(code)});\n`;
+                    }
+                }
+                if (stringAcc.length > 0) {
+                    coreLogic += `  lcd.print("${stringAcc}");\n`;
+                }
+            }
+
+            return `#include <LiquidCrystal_I2C.h>
+
+// I2C Address 0x27 is most common; try 0x3F if it doesn't work
+LiquidCrystal_I2C lcd(0x27, ${currentCols}, ${currentRows});
+
+${customArraysStr}void setup() {
+  lcd.init();
+  lcd.backlight();
+  
+${customSetupsStr}
+${coreLogic}}
+
+void loop() {
+  // put your main code here
+}
+`;
+        }
+
+        function highlightSyntax(code) {
+            let html = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Comments
+            html = html.replace(/(\/\/.*)/g, '<span class="c-comment">$1</span>');
+            // Strings
+            html = html.replace(/(".*?")/g, '<span class="c-string">$1</span>');
+            // Numbers (Hex and Decimal and Binary)
+            html = html.replace(/\b(0x[0-9A-Fa-f]+|B[01]+|\d+)\b/g, '<span class="c-num">$1</span>');
+            // Keywords
+            html = html.replace(/\b(void|setup|loop|include|byte)\b/g, '<span class="c-keyword">$1</span>');
+            return html;
+        }
+
+        function updateCode() {
+            const rawCode = `// Generated by PocketEngineer LCD Designer\n// https://www.pockeng.com/lcd.html\n\n` + generateCodeText();
+            codeOutput.innerHTML = highlightSyntax(rawCode);
+        }
+
+        // --- Picker Modal ---
+        function buildPicker() {
+            const group1 = document.getElementById('picker-group1');
+            const group2 = document.getElementById('picker-group2');
+            const customSlots = document.getElementById('picker-custom-slots');
+
+            // Custom Slots
+            for (let i = 0; i < 8; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'char-btn';
+                btn.id = `custom-slot-btn-${i}`;
+                btn.title = `Custom Slot ${i}`;
+                btn.onclick = () => openCrafter(i);
+                customSlots.appendChild(btn);
+            }
+            updateCustomSlotPreviews();
+
+            // ROM A00
+            const createBtn = (hex, container) => {
+                if(hex === 0x20) return; // Skip base space, handled separately
+                const btn = document.createElement('button');
+                btn.className = 'char-btn';
+                btn.textContent = romA00[hex];
+                btn.title = `Hex: ${getHexStr(hex)}`;
+                btn.onclick = () => selectCharacter(hex);
+                container.appendChild(btn);
+            };
+
+            for (let hex = 0x20; hex <= 0x7F; hex++) {
+                if(romA00[hex]) createBtn(hex, group1);
+            }
+            for (let hex = 0xA0; hex <= 0xFF; hex++) {
+                if(romA00[hex]) createBtn(hex, group2);
+            }
+        }
+
+        function updateCustomSlotPreviews() {
+            for (let i = 0; i < 8; i++) {
+                const btn = document.getElementById(`custom-slot-btn-${i}`);
+                btn.innerHTML = getCustomCharSVG(i);
+            }
+        }
+
+        function updateModalPreview(code) {
+            const previewBox = document.getElementById('picker-preview-char');
+            if (code >= 0 && code <= 7) {
+                previewBox.innerHTML = getCustomCharSVG(code);
+            } else {
+                previewBox.innerHTML = '';
+                previewBox.textContent = romA00[code] || ' ';
+            }
+        }
+
+        function openPicker(r, c) {
+            activeCellRow = r;
+            activeCellCol = c;
+            
+            const currentHex = gridData[r][c];
+            updateModalPreview(currentHex);
+            
+            document.getElementById('picker-input').value = '';
+            document.getElementById('picker-preview-box').className = `picker-preview ${activeTheme}`;
+            
+            // Show main view, hide crafter
+            document.getElementById('picker-main-view').style.display = 'block';
+            document.getElementById('picker-crafter-view').style.display = 'none';
+
+            document.getElementById('picker-modal').classList.add('active');
+            document.getElementById('picker-input').focus();
+        }
+
+        function closePicker() {
+            document.getElementById('picker-modal').classList.remove('active');
+        }
+
+        function selectCharacter(code) {
+            gridData[activeCellRow][activeCellCol] = code;
+            updateDisplay();
+            closePicker();
+        }
+
+        function handlePickerInput(e) {
+            const inputEl = e.target;
+            const val = inputEl.value;
+            if (!val) return;
+
+            const hex = charToHexMap[val];
+            if (hex !== undefined) {
+                selectCharacter(hex);
+            } else {
+                inputEl.classList.remove('shake');
+                void inputEl.offsetWidth; // trigger reflow
+                inputEl.classList.add('shake');
+                document.getElementById('picker-hint').textContent = "Character not available on HD44780!";
+                document.getElementById('picker-hint').style.color = "var(--danger-color)";
+                
+                setTimeout(() => {
+                    inputEl.classList.remove('shake');
+                    document.getElementById('picker-hint').textContent = "Or pick from the valid HD44780 sets below.";
+                    document.getElementById('picker-hint').style.color = "var(--text-muted)";
+                    inputEl.value = '';
+                }, 500);
+            }
+        }
+
+        // --- Crafter Interface ---
+        function openCrafter(slotIdx) {
+            activeCustomSlot = slotIdx;
+            
+            document.getElementById('picker-main-view').style.display = 'none';
+            document.getElementById('picker-crafter-view').style.display = 'block';
+            
+            updateModalPreview(activeCustomSlot);
+            buildCrafterGrid();
+        }
+
+        function buildCrafterGrid() {
+            const grid = document.getElementById('crafter-grid');
+            grid.innerHTML = '';
+            const data = customChars[activeCustomSlot];
+            
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 5; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'crafter-cell';
+                    if ((data[r] >> (4 - c)) & 1) cell.classList.add('active');
+                    
+                    cell.onclick = () => {
+                        // Toggle bit
+                        customChars[activeCustomSlot][r] ^= (1 << (4 - c));
+                        cell.classList.toggle('active');
+                        
+                        // Live update everywhere
+                        updateModalPreview(activeCustomSlot);
+                        updateCustomSlotPreviews();
+                        updateDisplay(); 
+                    };
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        // --- Custom Confirm Modal ---
+        function confirmSizeSwitch(newCols, newRows) {
+            if (isGridEmpty()) {
+                setupGrid(newCols, newRows);
+                updateSizeButtons(newCols);
+                return;
+            }
+
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('active');
+
+            const handleOk = () => {
+                setupGrid(newCols, newRows);
+                updateSizeButtons(newCols);
+                cleanup();
+            };
+            const handleCancel = () => cleanup();
+
+            const cleanup = () => {
+                modal.classList.remove('active');
+                document.getElementById('confirm-ok').removeEventListener('click', handleOk);
+                document.getElementById('confirm-cancel').removeEventListener('click', handleCancel);
+            };
+
+            document.getElementById('confirm-ok').addEventListener('click', handleOk);
+            document.getElementById('confirm-cancel').addEventListener('click', handleCancel);
+        }
+
+        function updateSizeButtons(cols) {
+            document.getElementById('btn-size-16').classList.toggle('active', cols === 16);
+            document.getElementById('btn-size-20').classList.toggle('active', cols === 20);
+        }
+
+        // --- Events ---
+        function attachEvents() {
+            // Toolbar - Size
+            document.getElementById('btn-size-16').onclick = () => {
+                if (currentCols !== 16) confirmSizeSwitch(16, 2);
+            };
+            document.getElementById('btn-size-20').onclick = () => {
+                if (currentCols !== 20) confirmSizeSwitch(20, 4);
+            };
+
+            // Toolbar - Colors
+            const swatches = document.querySelectorAll('.color-swatch');
+            swatches.forEach(swatch => {
+                swatch.onclick = () => {
+                    swatches.forEach(s => s.classList.remove('active'));
+                    swatch.classList.add('active');
+                    lcdContainer.className = `lcd-bezel-box ${swatch.dataset.theme}`;
+                    activeTheme = swatch.dataset.theme;
+                    
+                    // Update preview box theme if open
+                    document.getElementById('picker-preview-box').className = `picker-preview ${activeTheme}`;
+                };
+            });
+
+            // Toolbar - Actions
+            document.getElementById('btn-demo').onclick = fillDemo;
+            document.getElementById('btn-clear-all').onclick = () => {
+                gridData = Array.from({length: currentRows}, () => Array(currentCols).fill(0x20));
+                updateDisplay();
+            };
+
+            // Code Panel Toggle
+            const btnToggleCode = document.getElementById('btn-toggle-code');
+            const codeContainerEl = document.getElementById('code-container');
+            const toggleText = document.getElementById('toggle-code-text');
+            let codeVisible = false;
+
+            btnToggleCode.onclick = () => {
+                codeVisible = !codeVisible;
+                if (codeVisible) {
+                    codeContainerEl.classList.add('expanded');
+                    toggleText.textContent = "Hide Arduino Code";
+                } else {
+                    codeContainerEl.classList.remove('expanded');
+                    toggleText.textContent = "View Arduino Code";
+                }
+            };
+
+            // Copy Code
+            const btnCopy = document.getElementById('btn-copy');
+            btnCopy.onclick = () => {
+                const codeText = codeOutput.innerText;
+                navigator.clipboard.writeText(codeText).then(() => {
+                    const orig = btnCopy.textContent;
+                    btnCopy.textContent = "Copied!";
+                    setTimeout(() => btnCopy.textContent = orig, 2000);
+                });
+            };
+
+            // Picker Events
+            document.getElementById('btn-clear-cell').onclick = () => selectCharacter(0x20);
+            document.getElementById('picker-input').addEventListener('input', handlePickerInput);
+            
+            // Crafter Buttons
+            document.getElementById('btn-crafter-back').onclick = () => {
+                document.getElementById('picker-main-view').style.display = 'block';
+                document.getElementById('picker-crafter-view').style.display = 'none';
+                updateModalPreview(gridData[activeCellRow][activeCellCol]); // Revert preview to what's actually in the cell
+            };
+            
+            document.getElementById('btn-crafter-use').onclick = () => {
+                selectCharacter(activeCustomSlot);
+            };
+
+            // Close Modals on Overlay Click or Esc
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('mousedown', (e) => {
+                    if(e.target === overlay) overlay.classList.remove('active');
+                });
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                }
+            });
+        }
+
+        // Run
+        init();
+    </script>
+</body>
+</html>
