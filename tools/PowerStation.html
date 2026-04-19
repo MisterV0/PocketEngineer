@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <title>Power Station Runtime Calculator — PocketEngineer</title>
+  <meta name="description" content="Calculate battery runtime with multiple devices. Enter battery capacity and select connected devices to get instant power station depletion estimates.">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Common JS -->
+  <script src="../resources/app.js?v=1.2.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+
+  <style>
+    /* Apple-inspired Design System */
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      letter-spacing: -0.01em;
+    }
+    
+    /* Back Button */
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #71717a;
+      border: 1px solid #e4e4e7;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .back-button:hover {
+      color: #18181b;
+      border-color: #71717a;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    .back-button:active {
+      transform: scale(0.96);
+    }
+    
+    /* Modern Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e5e7eb;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #0ea5e9;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    input[type=range]::-webkit-slider-thumb:hover { 
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+      transform: scale(1.1);
+    }
+    
+    /* Hide number input arrows */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
+    
+    /* Modal & Animations */
+    #appliancesModal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease-out; }
+    #appliancesModal.active { opacity: 1; pointer-events: auto; }
+    .modal-content { transform: scale(0.95) translateY(10px); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    #appliancesModal.active .modal-content { transform: scale(1) translateY(0); }
+    
+    /* Smooth List Animations */
+    .device-item { animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-sky-200 pb-20">
+
+  <!-- Header -->
+  <header class="flex-none bg-white/80 backdrop-blur-md border-b border-zinc-200/40 relative z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-center relative">
+      <a href="../index.html" class="back-button absolute left-6" title="Back to home">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i> Back
+      </a>
+      <h1 class="text-lg font-light tracking-tight text-zinc-900">Power Station <span class="font-semibold">Runtime</span></h1>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8">
+    
+    <!-- STICKY BANNER: Grand Total Result -->
+    <div id="resultBanner" class="sticky top-4 z-40 bg-zinc-900/95 backdrop-blur-xl text-white rounded-3xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl transition-all duration-500 border border-zinc-800">
+      <div>
+        <h2 class="text-zinc-400 font-medium tracking-wide uppercase text-xs md:text-sm mb-1">Estimated Total Runtime</h2>
+        <p class="text-xs md:text-sm text-zinc-400 max-w-sm" id="bannerDesc">Time until battery hits 0% with all connected devices running.</p>
+      </div>
+      <div class="text-center md:text-right">
+        <div id="grandTotalTime" class="text-5xl md:text-6xl font-light tracking-tighter text-sky-400 transition-colors duration-300">0h 0m</div>
+        <div class="mt-2 flex items-center justify-center md:justify-end gap-2">
+          <div id="grandTotalWatts" class="text-zinc-300 font-mono text-sm bg-black/30 px-3 py-1 rounded-lg border border-zinc-700">Total Draw: 0W</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- LEFT COLUMN: Battery Setup -->
+      <section class="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 flex flex-col gap-8 shadow-sm h-fit">
+        <div class="flex items-center justify-between border-b border-zinc-100 pb-4">
+          <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="battery-charging" class="text-sky-500"></i> Battery Profile</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Capacity Input -->
+          <div>
+            <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2">Total Capacity</label>
+            <div class="flex gap-2">
+              <input type="number" id="batteryCapacityInput" value="500" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-lg font-mono font-bold focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition-all w-full">
+              <select id="batteryCapacityUnit" class="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-3 font-bold text-zinc-700 outline-none focus:border-sky-500">
+                <option value="Wh">Wh</option>
+                <option value="kWh">kWh</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Max Output Limit -->
+          <div>
+            <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2 flex items-center justify-between">
+              Max Output Limit
+              <i data-lucide="info" class="w-3 h-3 text-zinc-400" title="The maximum continuous wattage your inverter can handle before shutting down."></i>
+            </label>
+            <div class="flex gap-2">
+              <input type="number" id="maxOutputInput" value="600" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-lg font-mono font-bold focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition-all w-full">
+              <div class="bg-zinc-100 border border-zinc-200 rounded-xl px-4 py-3 font-bold text-zinc-500 flex items-center">W</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Level Slider -->
+        <div class="bg-zinc-50 rounded-2xl p-6 border border-zinc-100">
+          <div class="flex justify-between items-end mb-4">
+            <label class="block text-sm font-bold text-zinc-600 uppercase tracking-wide">Current Charge Level</label>
+            <div class="text-3xl font-light tracking-tighter text-zinc-900"><span id="levelDisplay">100</span><span class="text-zinc-400 text-xl font-normal">%</span></div>
+          </div>
+          <input type="range" id="batteryLevel" min="1" max="100" value="100" oninput="calculate()">
+          
+          <div class="mt-4 pt-4 border-t border-zinc-200 flex justify-between items-center">
+            <span class="text-xs text-zinc-500">Available Energy:</span>
+            <span id="availableWhDisplay" class="text-sm text-zinc-900 font-mono font-bold bg-white px-3 py-1 rounded-lg border border-zinc-200 shadow-sm">425 Wh</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: Connected Devices -->
+      <section class="bg-white border border-zinc-200 rounded-3xl flex flex-col shadow-sm overflow-hidden h-[600px]">
+        <div class="flex items-center justify-between p-6 md:p-8 border-b border-zinc-100 bg-zinc-50/50">
+          <div>
+            <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="plug" class="text-sky-500"></i> Connected Devices</h2>
+            <p class="text-sm text-zinc-500 mt-1">Add devices pulling power from the AC outlets.</p>
+          </div>
+          
+          <div class="flex items-center gap-3 md:gap-4">
+            <button id="clearAllBtn" onclick="clearAll()" class="text-xs font-bold text-zinc-400 hover:text-red-500 uppercase tracking-wider transition-all opacity-0 pointer-events-none">
+              Clear All
+            </button>
+            <button onclick="toggleModal('appliancesModal')" class="bg-zinc-900 hover:bg-sky-500 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all hover:scale-105 shadow-md">
+              <i data-lucide="plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Devices List -->
+        <div id="selectedAppliancesList" class="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-3 bg-zinc-50/30">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Appliances Selection Modal -->
+  <div id="appliancesModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
+    <div class="modal-content bg-white w-full max-w-3xl rounded-[2rem] shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+      
+      <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/80 backdrop-blur-sm">
+        <div>
+          <h2 class="text-xl font-bold text-zinc-900">Add Appliance</h2>
+          <p class="text-xs text-zinc-500 mt-1">Select an item to add its continuous wattage draw.</p>
+        </div>
+        <button onclick="toggleModal('appliancesModal')" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto bg-zinc-50/30">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="appliancesSelectGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Device Modal -->
+  <div id="customDeviceModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md" style="display: none;">
+    <div class="modal-content bg-white w-full max-w-md rounded-[2rem] shadow-2xl flex flex-col">
+      
+      <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/80">
+        <h2 class="text-xl font-bold text-zinc-900">Custom Device</h2>
+        <button onclick="closeCustomModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-bold text-zinc-700 mb-2">Device Name</label>
+          <input type="text" id="customDeviceName" placeholder="e.g., Drill, Air Fryer..." class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-bold text-zinc-700 mb-2">Power (Watts)</label>
+          <input type="number" id="customDeviceWatts" placeholder="0" min="1" max="10000" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button onclick="closeCustomModal()" class="flex-1 px-4 py-2 border border-zinc-200 rounded-lg text-zinc-700 font-medium hover:bg-zinc-50 transition-colors">Cancel</button>
+          <button onclick="submitCustomDevice()" class="flex-1 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Professionally Expanded Appliance Database (Corrected Icons)
+    const APPLIANCES = [
+      // Lighting & Tech
+      { id: 'led-lamp', name: 'LED Lamp', watts: 10, icon: 'lightbulb' },
+      { id: 'smartphone', name: 'Phone Charger', watts: 15, icon: 'smartphone-charging' },
+      { id: 'wifi-router', name: 'Wi-Fi Router', watts: 10, icon: 'router' },
+      { id: 'laptop', name: 'Laptop', watts: 65, icon: 'laptop' },
+      { id: 'monitor', name: 'Desktop Monitor', watts: 35, icon: 'monitor' },
+      
+      // Entertainment
+      { id: 'radio', name: 'Radio', watts: 20, icon: 'radio' },
+      { id: 'tv', name: 'Television', watts: 120, icon: 'tv' },
+      { id: 'stereo', name: 'Stereo', watts: 100, icon: 'speaker' },
+      { id: 'console', name: 'Game Console', watts: 150, icon: 'gamepad-2' },
+      
+      // Climate & Comfort
+      { id: 'fan', name: 'Standing Fan', watts: 45, icon: 'fan' },
+      { id: 'heater', name: 'Space Heater', watts: 1500, icon: 'heater' },
+      { id: 'ac', name: 'Portable A/C', watts: 1200, icon: 'snowflake' },
+      
+      // Kitchen & Household
+      { id: 'fridge', name: 'Refrigerator', watts: 150, icon: 'refrigerator' },
+      { id: 'blender', name: 'Blender', watts: 400, icon: 'cup-soda' },
+      { id: 'coffee', name: 'Coffee Maker', watts: 800, icon: 'coffee' },
+      { id: 'microwave', name: 'Microwave', watts: 1000, icon: 'microwave' },
+      { id: 'induction-stove', name: 'Induction Stove', watts: 2000, icon: 'cooking-pot' },
+      { id: 'electrical-oven', name: 'Electrical Oven', watts: 2500, icon: 'chef-hat' },
+      { id: 'washing-machine', name: 'Washing Machine', watts: 1800, icon: 'washing-machine' },
+      { id: 'hair-dryer', name: 'Hair Dryer', watts: 1600, icon: 'wind' },
+      { id: 'iron', name: 'Electric Iron', watts: 1200, icon: 'shirt' },
+      { id: 'humidifier', name: 'Humidifier', watts: 400, icon: 'droplets' },
+      { id: 'dishwasher', name: 'Dishwasher', watts: 1800, icon: 'utensils' },
+      { id: 'clothes-dryer', name: 'Clothes Dryer', watts: 3000, icon: 'washing-machine' },
+      { id: 'custom', name: 'Custom Device', watts: 0, icon: 'plus-circle', isCustom: true }
+    ].sort((a, b) => a.watts - b.watts);
+
+    // State
+    let state = {
+      capacityRaw: 500,
+      unit: 'Wh',
+      maxOutput: 600,
+      level: 100,
+      selected: []
+    };
+
+    // DOM Elements
+    const els = {
+      capInput: document.getElementById('batteryCapacityInput'),
+      unitSelect: document.getElementById('batteryCapacityUnit'),
+      maxOutputInput: document.getElementById('maxOutputInput'),
+      levelSlider: document.getElementById('batteryLevel'),
+      levelDisplay: document.getElementById('levelDisplay'),
+      availWhDisplay: document.getElementById('availableWhDisplay'),
+      grandTime: document.getElementById('grandTotalTime'),
+      grandWatts: document.getElementById('grandTotalWatts'),
+      resultBanner: document.getElementById('resultBanner'),
+      bannerDesc: document.getElementById('bannerDesc'),
+      selectedList: document.getElementById('selectedAppliancesList'),
+      grid: document.getElementById('appliancesSelectGrid'),
+      clearBtn: document.getElementById('clearAllBtn')
+    };
+
+    // Initialize Event Listeners
+    els.capInput.addEventListener('input', calculate);
+    els.unitSelect.addEventListener('change', calculate);
+    els.maxOutputInput.addEventListener('input', calculate);
+    
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('active');
+    }
+
+    // Close modal on background click
+    document.getElementById('appliancesModal').addEventListener('click', e => {
+      if(e.target === e.currentTarget) toggleModal('appliancesModal');
+    });
+
+    document.getElementById('customDeviceModal').addEventListener('click', e => {
+      if(e.target === e.currentTarget) closeCustomModal();
+    });
+
+    // Allow Enter key to submit custom device
+    document.getElementById('customDeviceWatts').addEventListener('keypress', e => {
+      if(e.key === 'Enter') submitCustomDevice();
+    });
+
+    function renderGrid() {
+      els.grid.innerHTML = APPLIANCES.map(app => `
+        <button onclick="addAppliance('${app.id}')" class="flex flex-col items-center justify-center p-4 bg-white border border-zinc-200 rounded-2xl hover:border-sky-500 hover:shadow-md hover:-translate-y-1 transition-all group">
+          <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center mb-3 group-hover:bg-sky-50 transition-colors">
+            <i data-lucide="${app.icon}" class="w-6 h-6 text-zinc-500 group-hover:text-sky-500 transition-colors"></i>
+          </div>
+          <span class="font-semibold text-sm text-zinc-800 text-center leading-tight">${app.name}</span>
+          <span class="text-xs font-mono font-medium text-zinc-400 mt-1">${app.watts}W</span>
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function addAppliance(id) {
+      const app = APPLIANCES.find(a => a.id === id);
+      
+      if (app.isCustom) {
+        // Show custom device modal instead
+        toggleModal('appliancesModal');
+        document.getElementById('customDeviceModal').style.display = 'flex';
+        document.getElementById('customDeviceName').focus();
+      } else {
+        state.selected.push({ ...app, uuid: Math.random().toString(36).substr(2, 9) });
+        toggleModal('appliancesModal');
+        calculate();
+      }
+    }
+
+    function closeCustomModal() {
+      document.getElementById('customDeviceModal').style.display = 'none';
+      document.getElementById('customDeviceName').value = '';
+      document.getElementById('customDeviceWatts').value = '';
+    }
+
+    function submitCustomDevice() {
+      const name = document.getElementById('customDeviceName').value.trim();
+      const watts = parseInt(document.getElementById('customDeviceWatts').value);
+
+      if (!name) {
+        alert('Please enter a device name');
+        return;
+      }
+
+      if (!watts || watts < 1) {
+        alert('Please enter a valid wattage (must be > 0)');
+        return;
+      }
+
+      const customApp = {
+        id: 'custom-' + Math.random().toString(36).substr(2, 9),
+        name: name,
+        watts: watts,
+        icon: 'plus-circle',
+        uuid: Math.random().toString(36).substr(2, 9)
+      };
+
+      state.selected.push(customApp);
+      closeCustomModal();
+      calculate();
+    }
+
+    function removeAppliance(uuid) {
+      state.selected = state.selected.filter(a => a.uuid !== uuid);
+      calculate();
+    }
+
+    function clearAll() {
+      state.selected = [];
+      calculate();
+    }
+
+    function calculate() {
+      // 1. Get Battery & Output Data
+      state.capacityRaw = parseFloat(els.capInput.value) || 0;
+      state.unit = els.unitSelect.value;
+      state.level = parseInt(els.levelSlider.value);
+      state.maxOutput = parseFloat(els.maxOutputInput.value) || 0;
+      
+      let totalCapacityWh = state.unit === 'kWh' ? state.capacityRaw * 1000 : state.capacityRaw;
+      
+      let availableWh = totalCapacityWh * (state.level / 100);
+
+      // Update UI for Battery Profile
+      els.levelDisplay.innerText = state.level;
+      els.availWhDisplay.innerText = `${Math.round(availableWh)} Wh`;
+
+      // 2. Calculate TOTAL Power Draw
+      let totalWatts = state.selected.reduce((sum, app) => sum + app.watts, 0);
+      
+      // 3. Status Check & UI Update
+      if (totalWatts === 0) {
+        // Empty State
+        els.grandTime.innerText = "—";
+        els.grandTime.className = "text-5xl md:text-6xl font-light tracking-tighter text-sky-400 transition-colors duration-300";
+        els.grandWatts.innerHTML = `Total Draw: 0W <span class="text-zinc-500 ml-1">/ ${state.maxOutput}W Limit</span>`;
+        els.resultBanner.className = "sticky top-4 z-40 bg-zinc-900/95 backdrop-blur-xl text-white rounded-3xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl transition-all duration-500 border border-zinc-800";
+        els.bannerDesc.innerText = "Time until battery hits 0% with all connected devices running.";
+      } else if (totalWatts > state.maxOutput) {
+        // Overload State (Exceeds Inverter Limit)
+        els.grandTime.innerText = "OVERLOAD";
+        els.grandTime.className = "text-5xl md:text-6xl font-bold tracking-tighter text-red-500 transition-colors duration-300";
+        els.grandWatts.innerHTML = `<span class="text-red-400 font-bold">${totalWatts}W</span> / ${state.maxOutput}W Limit`;
+        els.resultBanner.className = "sticky top-4 z-40 bg-red-950/95 backdrop-blur-xl text-white rounded-3xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl transition-all duration-500 border border-red-900/50";
+        els.bannerDesc.innerText = "Warning: Devices exceed the maximum output limit. The power station will shut down.";
+      } else {
+        // Normal Calculation State
+        let hoursRemaining = availableWh / totalWatts;
+        els.grandTime.innerText = formatTime(hoursRemaining);
+        els.grandTime.className = "text-5xl md:text-6xl font-light tracking-tighter text-sky-400 transition-colors duration-300";
+        els.grandWatts.innerHTML = `<span class="text-white">${totalWatts}W</span> / <span class="text-zinc-500">${state.maxOutput}W Limit</span>`;
+        els.resultBanner.className = "sticky top-4 z-40 bg-zinc-900/95 backdrop-blur-xl text-white rounded-3xl p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl transition-all duration-500 border border-zinc-800";
+        els.bannerDesc.innerText = "Estimated runtime based on current battery level and total power draw."
+      }
+
+      // Handle Clear Button Visibility
+      if (state.selected.length > 0) {
+        els.clearBtn.classList.remove('opacity-0', 'pointer-events-none');
+        els.clearBtn.classList.add('opacity-100', 'pointer-events-auto');
+      } else {
+        els.clearBtn.classList.add('opacity-0', 'pointer-events-none');
+        els.clearBtn.classList.remove('opacity-100', 'pointer-events-auto');
+      }
+
+      renderSelected();
+    }
+
+    function renderSelected() {
+      if (state.selected.length === 0) {
+        els.selectedList.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-zinc-400 gap-3">
+            <div class="w-16 h-16 rounded-full bg-zinc-100 flex items-center justify-center border border-zinc-200">
+               <i data-lucide="plug-zap" class="w-8 h-8 text-zinc-300"></i>
+            </div>
+            <p class="text-sm font-medium">No devices connected</p>
+            <button onclick="toggleModal('appliancesModal')" class="mt-2 text-xs font-bold text-sky-500 bg-sky-50 px-4 py-2 rounded-full hover:bg-sky-100 transition-colors">Add your first device</button>
+          </div>`;
+        lucide.createIcons();
+        return;
+      }
+
+      els.selectedList.innerHTML = state.selected.map(app => `
+        <div class="device-item bg-white border border-zinc-200 p-4 rounded-2xl flex items-center justify-between shadow-sm group hover:border-zinc-300 transition-colors">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-zinc-50 flex items-center justify-center text-zinc-500 group-hover:text-sky-500 transition-colors">
+              <i data-lucide="${app.icon}" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="font-bold text-zinc-900">${app.name}</div>
+              <div class="text-xs font-mono font-medium text-zinc-500">${app.watts}W continuous draw</div>
+            </div>
+          </div>
+          <button onclick="removeAppliance('${app.uuid}')" class="text-zinc-300 hover:text-red-500 bg-zinc-50 hover:bg-red-50 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).reverse().join(''); // Reversing to show newest at top
+      
+      lucide.createIcons();
+    }
+
+    function formatTime(hours) {
+      if (hours < 1) {
+        const mins = Math.round(hours * 60);
+        return mins <= 0 ? `<1m` : `${mins}m`;
+      }
+      if (hours > 99) return `99h+`;
+      const h = Math.floor(hours);
+      const m = Math.round((hours - h) * 60);
+      return m === 0 ? `${h}h` : `${h}h ${m}m`;
+    }
+
+    // Boot
+    document.addEventListener('DOMContentLoaded', function () {
+      initBackButtons();
+      renderGrid();
+      calculate();
+    });
+  </script>
+</body>
+</html>

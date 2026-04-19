@@ -191,15 +191,6 @@
           </button>
           <button
             class="filter-btn flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-            data-category="Physics">
-            <span>Physics</span>
-            <svg class="w-4 h-4 check-icon opacity-0 scale-75 transition-all duration-200 text-zinc-400" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </button>
-          <button
-            class="filter-btn flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
             data-category="Mechanical">
             <span>Mechanical</span>
             <svg class="w-4 h-4 check-icon opacity-0 scale-75 transition-all duration-200 text-zinc-400" fill="none"
@@ -518,6 +509,22 @@
         </div>
         <div
           class="absolute -bottom-10 -right-10 w-40 h-40 bg-cyan-50 rounded-full blur-3xl group-hover:bg-cyan-100 transition-colors duration-700">
+        </div>
+      </a>
+
+      <!-- 21. Power Station Runtime -->
+      <a href="tools/PowerStation.html"
+        class="group relative bg-white rounded-2xl border border-zinc-200 p-8 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-zinc-300 overflow-hidden flex flex-col">
+        <div class="flex-1">
+          <div class="text-xs font-mono text-zinc-500 mb-2 uppercase tracking-wider">Electronics</div>
+          <h2 class="text-xl font-medium text-zinc-900 mb-3">Power Station Runtime</h2>
+          <p class="text-zinc-500 text-sm leading-relaxed max-w-xs">Calculate battery depletion time with multiple connected devices. Instantly estimate power station runtime for any device combination.</p>
+        </div>
+        <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out">
+          <span class="bg-zinc-900 text-white text-xs font-medium px-4 py-2 rounded-full">Launch</span>
+        </div>
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-50 rounded-full blur-3xl group-hover:bg-blue-100 transition-colors duration-700">
         </div>
       </a>
 
@@ -924,7 +931,7 @@
             if (!cardCatEl) return;
 
             const cardCat = cardCatEl.textContent.trim();
-            const matchedCat = ['Electronics', 'Geometry', 'Programming', 'Utilities', 'Math', 'Physics', 'Mechanical'].find(c => cardCat.toLowerCase() === c.toLowerCase());
+            const matchedCat = ['Electronics', 'Geometry', 'Programming', 'Utilities', 'Math', 'Mechanical'].find(c => cardCat.toLowerCase() === c.toLowerCase());
 
             if (activeCategories.has('All') || activeCategories.has(matchedCat)) {
               card.style.display = 'flex';
