@@ -7,9 +7,9 @@
   <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
   <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-  <title>Resistor Color Code Calculator — PocketEngineer</title>
+  <title>Resistor Color Code Calculator & Decoder — PocketEngineer</title>
   <meta name="description"
-    content="Decode any 4-band or 5-band resistor color code instantly. Interactive 3D resistor visualization shows resistance value, tolerance percentage, and actual range. Includes color reference table.">
+    content="Instantly decode 4-band and 5-band resistor color codes with interactive 3D visualization. See resistance value, tolerance, and actual range in real-time. Perfect for electronics engineers and hobbyists.">
   <link rel="canonical" href="https://www.pockeng.com/tools/resistor.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pockeng.com/tools/resistor.html">
@@ -104,43 +104,51 @@
 
   <!-- Header: Toggle & Buttons -->
   <header
-    class="flex-none h-16 px-6 flex items-center justify-between z-10 bg-white/70 backdrop-blur-md border-b border-black/5 sticky top-0">
+    class="flex-none px-3 sm:px-6 flex items-center justify-between z-10 bg-white/70 backdrop-blur-md border-b border-black/5 sticky top-0 gap-2 sm:gap-4 min-h-16">
     <!-- Back Button -->
-    <a href="../index.html" class="back-button">
+    <a href="../index.html" class="back-button flex-shrink-0 whitespace-nowrap text-sm sm:text-base">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M15 18l-6-6 6-6" />
       </svg>
       Back
     </a>
 
-    <!-- Band Toggle -->
-    <div class="bg-zinc-200/60 p-1 rounded-lg flex relative h-9 w-[160px]">
-      <div id="toggle-indicator"
-        class="absolute left-1 top-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-[6px] shadow-sm transition-transform duration-300">
-      </div>
-      <button onclick="setBands(4)" class="relative z-10 w-1/2 text-xs font-semibold transition-colors duration-200"
-        id="btn-4">4 Bands</button>
-      <button onclick="setBands(5)"
-        class="relative z-10 w-1/2 text-xs font-semibold text-zinc-500 transition-colors duration-200" id="btn-5">5
-        Bands</button>
+    <!-- H1: SEO-Focused Title -->
+    <div class="flex-1 flex flex-col items-center gap-1 py-2 sm:py-4 min-w-0">
+      <h1 class="font-mono text-base sm:text-lg font-bold tracking-tight text-zinc-900 letter-spacing-wide text-center line-clamp-2">Resistor Color Code Calculator</h1>
     </div>
 
-    <!-- Info Button -->
-    <button onclick="toggleEdu(true)"
-      class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm active:scale-95"
-      aria-label="How it works">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-        stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-    </button>
+    <!-- Right Controls: Toggle & Info -->
+    <div class="flex-shrink-0 flex items-center gap-2 sm:gap-3">
+      <div class="bg-zinc-200/60 p-0.5 sm:p-1 rounded-lg flex relative h-8 sm:h-9 w-32 sm:w-[160px]">
+        <div id="toggle-indicator"
+          class="absolute left-0.5 sm:left-1 top-0.5 sm:top-1 w-[calc(50%-2px)] sm:w-[calc(50%-4px)] h-[calc(100%-4px)] sm:h-[calc(100%-8px)] bg-white rounded-[6px] shadow-sm transition-transform duration-300">
+        </div>
+        <button onclick="setBands(4)" class="relative z-10 w-1/2 text-[11px] sm:text-xs font-semibold text-zinc-900 transition-colors duration-200"
+          id="btn-4">4 Bands</button>
+        <button onclick="setBands(5)"
+          class="relative z-10 w-1/2 text-[11px] sm:text-xs font-semibold text-zinc-500 transition-colors duration-200" id="btn-5">5 Bands</button>
+      </div>
+      <button onclick="toggleEdu(true)"
+        class="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-white border border-zinc-200 text-zinc-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm active:scale-95"
+        aria-label="How it works">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </button>
+    </div>
   </header>
-  <h1 class="sr-only">Resistor Color Code Calculator</h1>
 
   <!-- Main Workspace -->
   <main class="flex-1 overflow-y-auto hide-scroll w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
+
+    <!-- Description -->
+    <div class="w-full max-w-2xl mb-8 text-center">
+      <p class="font-mono text-sm text-zinc-600 leading-relaxed">Decode resistor color bands instantly. Tap any band or select a preset — real-time 3D visualization reveals resistance value and tolerance.</p>
+    </div>
 
     <!-- Compact Popular Values Row -->
     <div class="w-full max-w-2xl mb-6">

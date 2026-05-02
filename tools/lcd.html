@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCD Screen Designer for Arduino — PocketEngineer</title>
-    <meta name="description" content="Design your HD44780 LCD screen visually. Pick characters, preview the display, and get instant Arduino code for 16x2 and 20x4 LCDs.">
+    <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
+    <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+    <title>Arduino LCD Display Designer & Simulator — PocketEngineer</title>
+    <meta name="description" content="Design 16x2 and 20x4 HD44780 LCD displays for Arduino projects. Simulate your layout visually without wiring, get instant Arduino code, and export designs.">
     <link rel="canonical" href="https://www.pockeng.com/tools/lcd.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.pockeng.com/tools/lcd.html">
-    <meta property="og:title" content="LCD Screen Designer for Arduino — PocketEngineer">
+    <meta property="og:title" content="Arduino LCD Display Designer & Simulator — PocketEngineer">
     <meta property="og:description" content="Design your HD44780 LCD screen visually. Pick characters, preview the display, and get instant Arduino code for 16x2 and 20x4 LCDs.">
     <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
     <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
@@ -81,16 +83,22 @@
         }
 
         h1 {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-size: clamp(1.5rem, 5vw, 2rem);
-            font-weight: 600;
+            font-weight: 700;
             margin: 0;
-            letter-spacing: -0.5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-main);
         }
 
         .subtitle {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             color: var(--text-muted);
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
             margin: 0;
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
         /* --- Panel & Toolbar --- */
@@ -891,9 +899,9 @@
                     </svg>
                     Back
                 </a>
-                <h1>LCD Designer</h1>
+                <h1>Arduino LCD Display Designer & Simulator</h1>
             </div>
-            <p class="subtitle">Visually design HD44780 LCD screens for Arduino. Pick valid ROM A00 characters and instantly generate copy-ready I2C code. 16×2 20×4</p>
+            <p class="subtitle">Design and simulate 16×2 and 20×4 Arduino displays in seconds. Preview your LCD layout, generate code instantly—no hardware required.</p>
         </header>
 
         <main>

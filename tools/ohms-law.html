@@ -7,9 +7,9 @@
   <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
   <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
   <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-  <title>Ohm's Law Calculator & Visualizer — PocketEngineer</title>
+  <title>Ohm's Law Calculator - Solve for Voltage, Current & Resistance</title>
   <meta name="description"
-    content="Interactive Ohm's Law calculator — enter any two of Voltage (V), Current (I), and Resistance (R) to solve for the third. Includes wattage calculation and animated physics visualization.">
+    content="Calculate voltage, current, resistance, and power instantly with our interactive Ohm's Law calculator. Enter any two values and solve the third with real-time visualization and formulas.">
   <link rel="canonical" href="https://www.pockeng.com/tools/ohms-law.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pockeng.com/tools/ohms-law.html">
@@ -154,29 +154,58 @@
 <body
   class="bg-[#fcfcfc] text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-black">
 
-  <!-- Pure Minimal Header -->
-  <header class="flex-none">
-    <div class="max-w-4xl mx-auto px-6 h-24 flex items-center justify-between">
-      <a href="../index.html" class="back-button">
+  <!-- Header with Visible H1 -->
+  <header class="flex-none border-b border-zinc-200/50 bg-white/70 backdrop-blur-md sticky top-0 z-20">
+    <div class="max-w-4xl mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 py-5 sm:py-7">
+      <a href="../index.html" class="back-button flex-shrink-0 whitespace-nowrap text-sm sm:text-base">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M15 18l-6-6 6-6" />
         </svg>
         Back
       </a>
+      <div class="flex-1 flex flex-col items-center gap-1 py-2 sm:py-3 min-w-0">
+        <h1 class="font-mono text-base sm:text-lg font-bold tracking-tight text-zinc-900 text-center line-clamp-2">Ohm's Law Solver explained</h1>
+      </div>
       <button onclick="toggleModal()"
-        class="btn-breathe px-6 py-3 rounded-full bg-white border border-zinc-200 hover:border-zinc-400 text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-600 hover:text-zinc-900 transition-colors">
-        Understand the Physics
+        class="flex-shrink-0 btn-breathe px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white border border-zinc-200 hover:border-zinc-400 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-600 hover:text-zinc-900 transition-all duration-300 shadow-sm hover:shadow-md">
+        How It Works
       </button>
     </div>
   </header>
-  <h1 class="sr-only">Ohm's Law Calculator & Visualizer</h1>
+
+  <!-- Hero Description -->
+  <div class="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-8 text-center border-b border-zinc-100">
+    <p class="font-mono text-sm sm:text-base text-zinc-600 leading-relaxed">Ohm's Law reveals how voltage, current, and resistance relate. Enter any two values to instantly calculate the third, plus power consumption.</p>
+  </div>
 
   <!-- Main Content -->
-  <main class="flex-1 flex items-center justify-center w-full px-6 -mt-12">
+  <main class="flex-1 flex items-center justify-center w-full px-3 sm:px-6">
     <div class="w-full max-w-4xl mx-auto">
 
+      <!-- Formula Display -->
+      <div class="w-full flex justify-center items-center py-6 sm:py-14">
+        <div class="bg-gradient-to-br from-white via-zinc-50 to-white border border-zinc-200 rounded-3xl p-6 sm:p-10 shadow-lg shadow-zinc-100 backdrop-blur-sm max-w-2xl">
+          <div class="flex items-center justify-center gap-4 sm:gap-7 flex-wrap">
+            <div class="text-center">
+              <div class="font-mono text-3xl sm:text-5xl font-bold text-zinc-900">V</div>
+              <div class="text-xs sm:text-sm text-zinc-500 mt-2 font-mono font-medium">Voltage</div>
+            </div>
+            <div class="text-zinc-300 text-2xl sm:text-4xl font-light">=</div>
+            <div class="text-center">
+              <div class="font-mono text-3xl sm:text-5xl font-bold text-zinc-900">I</div>
+              <div class="text-xs sm:text-sm text-zinc-500 mt-2 font-mono font-medium">Current</div>
+            </div>
+            <div class="text-zinc-300 text-2xl sm:text-4xl font-light">×</div>
+            <div class="text-center">
+              <div class="font-mono text-3xl sm:text-5xl font-bold text-zinc-900">R</div>
+              <div class="text-xs sm:text-sm text-zinc-500 mt-2 font-mono font-medium">Resistance</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Parameter Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 pt-4">
         <!-- Voltage -->
         <div id="v-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
           <div class="flex justify-between items-center mb-4 md:mb-6">
