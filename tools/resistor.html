@@ -146,8 +146,8 @@
   <main class="flex-1 overflow-y-auto hide-scroll w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
 
     <!-- Description -->
-    <div class="w-full max-w-2xl mb-8 text-center">
-      <p class="font-mono text-sm text-zinc-600 leading-relaxed">Decode resistor color bands instantly. Tap any band or select a preset — real-time 3D visualization reveals resistance value and tolerance.</p>
+    <div class="w-full max-w-2xl mb-6 sm:mb-8 text-center px-2">
+      <p class="font-mono text-xs sm:text-sm text-zinc-600 leading-relaxed">Decode resistor color bands instantly. Tap any band or select a preset — real-time 3D visualization reveals resistance value and tolerance.</p>
     </div>
 
     <!-- Compact Popular Values Row -->
@@ -242,20 +242,20 @@
 
     <!-- Results Card -->
     <div
-      class="w-full max-w-xl bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-glass p-8 flex flex-col items-center text-center transition-all mb-10">
-      <div class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Total Resistance</div>
-      <div class="flex items-baseline gap-2 mb-4">
-        <span class="font-mono text-6xl font-bold tracking-tighter text-zinc-900 drop-shadow-sm break-all"
+      class="w-full max-w-xl bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-glass p-4 sm:p-8 flex flex-col items-center text-center transition-all mb-10 mx-2">
+      <div class="text-[9px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Total Resistance</div>
+      <div class="flex items-baseline gap-2 mb-3 sm:mb-4">
+        <span class="font-mono text-4xl sm:text-6xl font-bold tracking-tighter text-zinc-900 drop-shadow-sm break-all"
           id="result-val">--</span>
       </div>
-      <div class="grid grid-cols-2 gap-3 w-full">
-        <div class="bg-white/50 rounded-2xl p-3 border border-white/50">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">Tolerance</div>
-          <div class="font-mono text-lg font-semibold text-zinc-700" id="result-tol">--</div>
+      <div class="grid grid-cols-2 gap-2 sm:gap-3 w-full">
+        <div class="bg-white/50 rounded-2xl p-2 sm:p-3 border border-white/50">
+          <div class="text-[8px] sm:text-[10px] text-zinc-400 uppercase font-bold mb-1">Tolerance</div>
+          <div class="font-mono text-xs sm:text-lg font-semibold text-zinc-700" id="result-tol">--</div>
         </div>
-        <div class="bg-white/50 rounded-2xl p-3 border border-white/50">
-          <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">Range</div>
-          <div class="font-mono text-sm font-semibold text-zinc-600 pt-1" id="result-range">--</div>
+        <div class="bg-white/50 rounded-2xl p-2 sm:p-3 border border-white/50">
+          <div class="text-[8px] sm:text-[10px] text-zinc-400 uppercase font-bold mb-1">Range</div>
+          <div class="font-mono text-xs sm:text-sm font-semibold text-zinc-600 pt-1" id="result-range">--</div>
         </div>
       </div>
     </div>
