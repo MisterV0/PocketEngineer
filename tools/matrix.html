@@ -4,26 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Matrix Calculator — PocketEngineer</title>
   <meta name="description"
-    content="Free online matrix calculator — add, subtract, multiply matrices, compute determinant, transpose, and inverse. Supports 2×2, 3×3, and 4×4 matrices with visual grid editor.">
+    content="Free online matrix calculator — add, subtract, multiply, scale and power matrices, plus determinant, inverse, transpose, trace and rank. Supports 2×2 to 5×5 with a visual grid editor.">
   <link rel="canonical" href="https://www.pockeng.com/tools/matrix.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pockeng.com/tools/matrix.html">
   <meta property="og:title" content="Matrix Calculator — PocketEngineer">
   <meta property="og:description"
-    content="Add, multiply, transpose, and invert matrices up to 4×4. Visual grid editor with instant results.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+    content="Add, multiply, transpose, invert and power matrices up to 5×5. Determinant, trace and rank included, with a visual grid editor and instant results.">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/matrix-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Matrix calculator showing a 2 by 2 matrix multiplication A times B equals C">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Matrix Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Add, multiply, transpose, invert and power matrices up to 5×5. Determinant, trace and rank included, with a visual grid editor and instant results.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/matrix-calculator.png">
+  <meta name="twitter:image:alt" content="Matrix calculator showing a 2 by 2 matrix multiplication A times B equals C">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       font-feature-settings: "cv05", "cv08", "ss01";
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     input[type=number]::-webkit-inner-spin-button {
@@ -34,18 +45,37 @@
       -moz-appearance: textfield;
     }
 
+    /* ---- Matrix grids: columns shrink to fit the screen, capped at their desktop size ---- */
+    .matrix-bracket {
+      --gap: 4px;
+      box-sizing: border-box;
+      padding: 8px 6px;
+      /* cells + gaps + horizontal padding (12px) */
+      width: calc(var(--n) * var(--cell-max) + (var(--n) - 1) * var(--gap) + 12px);
+      max-width: 100%;
+    }
+
+    .matrix-grid {
+      display: grid;
+      gap: var(--gap);
+      grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+      width: 100%;
+    }
+
     .matrix-cell {
-      width: 58px;
+      width: 100%;
+      min-width: 0;
       height: 42px;
       text-align: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 14px;
+      font-size: clamp(11px, 2.9vw, 14px);
       font-weight: 500;
       border: 1px solid #e4e4e7;
       border-radius: 8px;
       outline: none;
-      transition: all 0.2s ease;
+      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
       background: #fafafa;
+      padding: 0 2px;
     }
 
     .matrix-cell:focus {
@@ -54,136 +84,282 @@
       box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.08);
     }
 
-    .matrix-bracket {
-      border-left: 2px solid #d4d4d8;
-      border-right: 2px solid #d4d4d8;
-      border-radius: 3px;
-      padding: 8px 6px;
-    }
-
-    .op-pill {
-      transition: all 0.2s ease;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .op-pill.active {
-      background: #18181b;
-      color: white;
-      border-color: #18181b;
-    }
-
-    .op-pill:not(.active):hover {
-      background: #f4f4f5;
-      border-color: #d4d4d8;
-    }
-
     .result-cell {
-      width: 72px;
+      width: 100%;
+      min-width: 0;
       height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 15px;
+      font-size: clamp(10px, 2.7vw, 14px);
       font-weight: 600;
       background: white;
       border: 1px solid #e4e4e7;
       border-radius: 8px;
       color: #18181b;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 0 3px;
     }
 
+    @media (max-width: 640px) {
+      .matrix-cell {
+        height: 38px;
+      }
+
+      .result-cell {
+        height: 40px;
+      }
+    }
+
+    /* ---- Pills ---- */
+    .op-pill,
     .size-pill {
-      transition: all 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
       cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
     }
 
+    .op-pill.active,
     .size-pill.active {
       background: #18181b;
       color: white;
       border-color: #18181b;
     }
 
+    .op-pill:not(.active):hover,
     .size-pill:not(.active):hover {
       background: #f4f4f5;
+      border-color: #d4d4d8;
+    }
+
+    .op-pill:focus-visible,
+    .size-pill:focus-visible {
+      outline: 2px solid #18181b;
+      outline-offset: 2px;
+    }
+
+    /* ---- Shared tooltip: one compact box, positioned in JS so it never leaves the viewport ---- */
+    .op-tip {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 60;
+      width: max-content;
+      max-width: min(250px, calc(100vw - 16px));
+      background: #18181b;
+      color: #fff;
+      border-radius: 10px;
+      padding: 9px 11px;
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-3px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      pointer-events: none;
+      line-height: 1.45;
+    }
+
+    .op-tip.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .op-tip-title {
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .op-tip-desc {
+      font-size: 11px;
+      color: #d4d4d8;
+      margin-top: 2px;
+    }
+
+    .op-tip-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: #fafafa;
+      background: #27272a;
+      border-radius: 5px;
+      padding: 2px 6px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    .op-tip-note {
+      font-size: 10.5px;
+      color: #a1a1aa;
+      margin-top: 5px;
+    }
+
+    .op-tip-arrow {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #18181b;
+      transform: rotate(45deg);
+      top: -4px;
+    }
+
+    .op-tip.above .op-tip-arrow {
+      top: auto;
+      bottom: -4px;
+    }
+
+    /* Touch devices get the always-visible summary under the result instead */
+    @media (hover: none) {
+      .op-tip {
+        display: none;
+      }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Matrix Calculator",
+      "url": "https://www.pockeng.com/tools/matrix.html",
+      "description": "Free online matrix calculator — add, subtract, multiply, scale and power matrices, plus determinant, inverse, transpose, trace and rank. Supports 2×2 to 5×5 with a visual grid editor.",
+      "image": "https://www.pockeng.com/resources/social/matrix-calculator.png",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Matrix Calculator",
+      "item": "https://www.pockeng.com/tools/matrix.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-[#F5F5F7] text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-zinc-900">
+<body
+  class="pe-page text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-zinc-900">
 
   <!-- Header -->
-  <header class="flex-none px-8 pt-6 pb-2">
-    <div class="max-w-5xl mx-auto flex items-center gap-4">
-      <a href="../index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Back
-      </a>
-      <h1 class="text-lg font-bold tracking-tight text-zinc-900">Matrix Calculator</h1>
+  <header class="flex-none px-4 sm:px-8 pt-5 sm:pt-6 pb-2">
+    <div class="max-w-5xl mx-auto flex items-center gap-3 sm:gap-4">
+      <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
+      <h1 class="text-base sm:text-lg font-bold tracking-tight text-zinc-900">Matrix Calculator</h1>
     </div>
   </header>
 
   <!-- Main Card -->
-  <main class="flex-1 flex items-start justify-center px-6 py-4">
-    <div class="max-w-6xl w-full bg-white rounded-2xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] border border-zinc-100 overflow-hidden">
+  <main class="flex-1 flex items-start justify-center px-3 sm:px-6 py-3 sm:py-4">
+    <div
+      class="max-w-6xl w-full bg-white rounded-2xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] border border-zinc-100 overflow-hidden">
 
       <!-- Controls Bar -->
-      <div class="flex flex-wrap items-center gap-6 px-8 py-5 border-b border-zinc-100">
+      <div class="px-4 sm:px-8 py-4 sm:py-5 border-b border-zinc-100 space-y-3">
+
         <!-- Size -->
-        <div class="flex items-center gap-2">
-          <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Size</span>
-          <div class="flex gap-1.5">
-            <button class="size-pill active text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200" data-size="2" onclick="setSize(2)">2×2</button>
-            <button class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-size="3" onclick="setSize(3)">3×3</button>
-            <button class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-size="4" onclick="setSize(4)">4×4</button>
-            <button class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-size="5" onclick="setSize(5)">5×5</button>
+        <div class="flex items-start gap-2 sm:gap-3">
+          <span
+            class="text-[10px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-wider w-12 sm:w-14 shrink-0 pt-1">Size</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button class="size-pill active text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200"
+              data-size="2">2×2</button>
+            <button
+              class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-size="3">3×3</button>
+            <button
+              class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-size="4">4×4</button>
+            <button
+              class="size-pill text-[11px] font-semibold px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-size="5">5×5</button>
           </div>
         </div>
 
-        <div class="w-px h-5 bg-zinc-200"></div>
+        <!-- Operations on A and B -->
+        <div class="flex items-start gap-2 sm:gap-3">
+          <span
+            class="text-[10px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-wider w-12 sm:w-14 shrink-0 pt-1">A
+            &amp; B</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button class="op-pill active text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200"
+              data-op="add">A + B</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="sub">A − B</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="mul">A × B</button>
+          </div>
+        </div>
 
-        <!-- Operation -->
-        <div class="flex items-center gap-2">
-          <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Operation</span>
-          <div class="flex gap-1.5" id="op-selector">
-            <div class="relative group">
-              <button class="op-pill active text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200" data-op="add" onclick="setOp('add')">Addition</button>
-              <div class="pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-80 bg-zinc-900 text-white text-[12px] leading-loose rounded-xl p-5 shadow-xl z-50">
-                <p class="font-semibold text-[13px] mb-2">Addition</p>
-                <p class="text-zinc-400 mb-2.5">Add each value in A with the matching value in B.</p>
-                <p class="font-mono text-zinc-300 text-[11px] bg-zinc-800 rounded px-1.5 py-0.5 inline-block">Result = A + B</p>
-                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 rotate-45"></div>
-              </div>
-            </div>
-            <div class="relative group">
-              <button class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-op="sub" onclick="setOp('sub')">Subtraction</button>
-              <div class="pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-80 bg-zinc-900 text-white text-[12px] leading-loose rounded-xl p-5 shadow-xl z-50">
-                <p class="font-semibold text-[13px] mb-2">Subtraction</p>
-                <p class="text-zinc-400 mb-2.5">Subtract each value in B from the matching value in A.</p>
-                <p class="font-mono text-zinc-300 text-[11px] bg-zinc-800 rounded px-1.5 py-0.5 inline-block">Result = A − B</p>
-                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 rotate-45"></div>
-              </div>
-            </div>
-            <div class="relative group">
-              <button class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-op="mul" onclick="setOp('mul')">Multiply</button>
-              <div class="pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-80 bg-zinc-900 text-white text-[12px] leading-loose rounded-xl p-5 shadow-xl z-50">
-                <p class="font-semibold text-[13px] mb-2">Multiplication</p>
-                <p class="text-zinc-400 mb-2.5">Multiply rows of A by columns of B.</p>
-                <p class="font-mono text-zinc-300 text-[11px] bg-zinc-800 rounded px-1.5 py-0.5 inline-block">Result = A × B</p>
-                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 rotate-45"></div>
-              </div>
-            </div>
-            <div class="relative group">
-              <button class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500" data-op="trans" onclick="setOp('trans')">Transpose</button>
-              <div class="pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-80 bg-zinc-900 text-white text-[12px] leading-loose rounded-xl p-5 shadow-xl z-50">
-                <p class="font-semibold text-[13px] mb-2">Transpose</p>
-                <p class="text-zinc-400 mb-2.5">Flip rows and columns.</p>
-                <p class="font-mono text-zinc-300 text-[11px] bg-zinc-800 rounded px-1.5 py-0.5 inline-block">Rows ↔ Columns</p>
-                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-900 rotate-45"></div>
-              </div>
-            </div>
+        <!-- Operations on A alone -->
+        <div class="flex items-start gap-2 sm:gap-3">
+          <span
+            class="text-[10px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-wider w-12 sm:w-14 shrink-0 pt-1">A
+            only</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="trans">Aᵀ</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="inv">A⁻¹</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="pow">Aⁿ</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="scale">k · A</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="det">det A</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="trace">tr A</button>
+            <button
+              class="op-pill text-[11px] font-medium px-2.5 py-1 rounded-md border border-zinc-200 text-zinc-500"
+              data-op="rank">rank A</button>
+          </div>
+        </div>
+
+        <!-- Contextual parameter (k or n) -->
+        <div id="param-row" class="hidden items-start gap-2 sm:gap-3">
+          <span id="param-label"
+            class="text-[10px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-wider w-12 sm:w-14 shrink-0 pt-1.5"></span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <input type="number" id="param-input"
+              class="w-20 text-[12px] font-mono text-center px-2 py-1 rounded-md border border-zinc-200 bg-zinc-50 focus:bg-white focus:border-zinc-900 outline-none">
+            <span id="param-hint" class="text-[11px] text-zinc-400"></span>
           </div>
         </div>
       </div>
@@ -192,96 +368,295 @@
       <div class="flex flex-col lg:flex-row">
 
         <!-- Left: Inputs -->
-        <div class="flex-1 px-10 py-8 space-y-6 border-b lg:border-b-0 lg:border-r border-zinc-100">
+        <div
+          class="flex-1 min-w-0 px-4 sm:px-8 lg:px-10 py-6 sm:py-8 space-y-6 border-b lg:border-b-0 lg:border-r border-zinc-100">
           <!-- Matrix A -->
           <div>
-            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Matrix A</label>
-            <div class="flex justify-center gap-1.5 mb-2">
-              <button onclick="fillMatrix('a', 0)" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All 0</button>
-              <button onclick="fillMatrix('a', 1)" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All 1</button>
-              <button onclick="fillMatrix('a', 'identity')" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Identity</button>
-              <button onclick="fillMatrix('a', 'random')" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Random</button>
+            <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Matrix A</span>
+            <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+              <button data-fill="a" data-value="0"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All
+                0</button>
+              <button data-fill="a" data-value="1"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All
+                1</button>
+              <button data-fill="a" data-value="identity"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Identity</button>
+              <button data-fill="a" data-value="random"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Random</button>
             </div>
             <div class="flex justify-center">
-              <div class="matrix-bracket">
-                <div id="matrix-a" class="grid gap-1"></div>
+              <div class="matrix-bracket" id="bracket-a">
+                <div id="matrix-a" class="matrix-grid"></div>
               </div>
             </div>
           </div>
 
           <!-- Matrix B -->
           <div id="matrix-b-section">
-            <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Matrix B</label>
-            <div class="flex justify-center gap-1.5 mb-2">
-              <button onclick="fillMatrix('b', 0)" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All 0</button>
-              <button onclick="fillMatrix('b', 1)" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All 1</button>
-              <button onclick="fillMatrix('b', 'identity')" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Identity</button>
-              <button onclick="fillMatrix('b', 'random')" class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Random</button>
+            <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Matrix B</span>
+            <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+              <button data-fill="b" data-value="0"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All
+                0</button>
+              <button data-fill="b" data-value="1"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">All
+                1</button>
+              <button data-fill="b" data-value="identity"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Identity</button>
+              <button data-fill="b" data-value="random"
+                class="text-[10px] font-medium text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 px-2 py-0.5 rounded border border-zinc-200 transition-colors">Random</button>
             </div>
             <div class="flex justify-center">
-              <div class="matrix-bracket">
-                <div id="matrix-b" class="grid gap-1"></div>
+              <div class="matrix-bracket" id="bracket-b">
+                <div id="matrix-b" class="matrix-grid"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Right: Result -->
-        <div class="flex-1 flex items-center justify-center px-10 py-8 bg-[#fafafa]">
+        <div
+          class="flex-1 min-w-0 flex flex-col items-center justify-center px-4 sm:px-8 lg:px-10 py-6 sm:py-8 bg-[#fafafa]" aria-live="polite">
 
-          <!-- Matrix Result -->
-          <div id="matrix-result-section" class="text-center">
-            <p class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-4">Result</p>
-            <div class="flex justify-center">
-              <div class="matrix-bracket" style="border-color: #a1a1aa;">
-                <div id="matrix-result" class="grid gap-1"></div>
-              </div>
+          <p class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Result</p>
+          <p id="op-formula"
+            class="font-mono text-[11px] text-zinc-600 bg-white border border-zinc-200 rounded-md px-2 py-1 mb-4 text-center max-w-full"></p>
+
+          <!-- Matrix result -->
+          <div id="result-matrix-wrap" class="w-full flex justify-center">
+            <div class="matrix-bracket" id="bracket-result">
+              <div id="matrix-result" class="matrix-grid"></div>
             </div>
-            <div id="error-msg" class="text-xs text-red-500 mt-3 hidden"></div>
           </div>
 
+          <!-- Single-number result (determinant, trace, rank) -->
+          <div id="result-scalar-wrap" class="hidden text-center w-full">
+            <div id="result-scalar"
+              class="font-mono text-2xl sm:text-4xl font-semibold text-zinc-900 break-all leading-tight"></div>
+            <p id="result-scalar-note" class="text-[11px] text-zinc-400 mt-2"></p>
+          </div>
+
+          <p id="op-desc" class="text-[11px] text-zinc-500 text-center mt-4 max-w-[280px]"></p>
+          <div id="error-msg" class="text-xs text-red-500 mt-3 hidden text-center max-w-[280px]"></div>
         </div>
       </div>
 
     </div>
   </main>
 
+
+  <!-- One shared tooltip for every operation pill -->
+  <div id="op-tip" class="op-tip" role="tooltip">
+    <p class="op-tip-title" id="op-tip-title"></p>
+    <p class="op-tip-desc" id="op-tip-desc"></p>
+    <p class="op-tip-formula" id="op-tip-formula"></p>
+    <p class="op-tip-note" id="op-tip-note"></p>
+    <div class="op-tip-arrow" id="op-tip-arrow"></div>
+  </div>
+
   <script>
+
+    // ============================================
+    // OPERATION CATALOGUE
+    // kind:   'binary' uses B as well, 'unary' works on A alone
+    // out:    'matrix' fills the result grid, 'scalar' shows a single number
+    // param:  optional k / n input shown in the controls bar
+    // ============================================
+    const OPS = {
+      add: {
+        title: 'Addition', kind: 'binary', out: 'matrix',
+        desc: 'Adds the two matrices entry by entry.',
+        formula: 'C(i,j) = A(i,j) + B(i,j)',
+        note: 'Only defined when A and B share the same size.'
+      },
+      sub: {
+        title: 'Subtraction', kind: 'binary', out: 'matrix',
+        desc: 'Subtracts every entry of B from the matching entry of A.',
+        formula: 'C(i,j) = A(i,j) − B(i,j)',
+        note: 'A − B and B − A differ by a sign on every entry.'
+      },
+      mul: {
+        title: 'Multiplication', kind: 'binary', out: 'matrix',
+        desc: 'Each entry is a row of A dotted with a column of B.',
+        formula: 'C(i,j) = Σₖ A(i,k)·B(k,j)',
+        note: 'Order matters: A × B is usually not B × A.'
+      },
+      trans: {
+        title: 'Transpose', kind: 'unary', out: 'matrix',
+        desc: 'Mirrors A across its main diagonal, so rows become columns.',
+        formula: 'Aᵀ(i,j) = A(j,i)',
+        note: 'A is symmetric exactly when Aᵀ = A.'
+      },
+      inv: {
+        title: 'Inverse', kind: 'unary', out: 'matrix',
+        desc: 'The matrix that undoes A, found by Gauss-Jordan elimination.',
+        formula: 'A · A⁻¹ = I',
+        note: 'Exists only when det A ≠ 0.'
+      },
+      pow: {
+        title: 'Matrix power', kind: 'unary', out: 'matrix',
+        param: { key: 'n', label: 'n', def: 2, step: 1, min: -10, max: 10, hint: 'whole number from −10 to 10 (negative powers invert A first)' },
+        desc: 'Multiplies A by itself n times — not an entry-by-entry power.',
+        formula: 'Aⁿ = A · A · … · A',
+        note: 'A⁰ = I. Negative n needs A to be invertible.'
+      },
+      scale: {
+        title: 'Scalar multiple', kind: 'unary', out: 'matrix',
+        param: { key: 'k', label: 'k', def: 2, step: 'any', hint: 'any number, decimals allowed' },
+        desc: 'Multiplies every entry of A by the same number k.',
+        formula: 'C(i,j) = k · A(i,j)',
+        note: 'Scales the determinant by kⁿ, not by k.'
+      },
+      det: {
+        title: 'Determinant', kind: 'unary', out: 'scalar',
+        desc: 'One number: the factor by which A scales area or volume.',
+        formula: 'det A',
+        note: 'det A = 0 means the rows are dependent and A has no inverse.'
+      },
+      trace: {
+        title: 'Trace', kind: 'unary', out: 'scalar',
+        desc: 'Adds up the entries on the main diagonal of A.',
+        formula: 'tr A = Σᵢ A(i,i)',
+        note: 'Equals the sum of the eigenvalues of A.'
+      },
+      rank: {
+        title: 'Rank', kind: 'unary', out: 'scalar',
+        desc: 'How many rows of A are linearly independent, via row reduction.',
+        formula: 'rank A ≤ n',
+        note: 'rank A < n means A is singular — det A = 0.'
+      }
+    };
 
     let size = 2;
     let op = 'add';
-    const unaryOps = new Set(['trans']);
 
+    const $ = id => document.getElementById(id);
+
+    // ============================================
+    // CONTROLS
+    // ============================================
     function setSize(n) {
+      const previous = { a: snapshot('a'), b: snapshot('b') };
       size = n;
       document.querySelectorAll('[data-size]').forEach(b => {
-        b.classList.toggle('active', parseInt(b.dataset.size) === n);
-        b.classList.toggle('text-zinc-500', parseInt(b.dataset.size) !== n);
+        const isActive = parseInt(b.dataset.size, 10) === n;
+        b.classList.toggle('active', isActive);
+        b.classList.toggle('text-zinc-500', !isActive);
       });
       buildGrids();
+      restore('a', previous.a);
+      restore('b', previous.b);
       compute();
     }
 
     function setOp(o) {
       op = o;
+      const def = OPS[o];
       document.querySelectorAll('[data-op]').forEach(b => {
-        b.classList.toggle('active', b.dataset.op === o);
-        b.classList.toggle('text-zinc-500', b.dataset.op !== o);
+        const isActive = b.dataset.op === o;
+        b.classList.toggle('active', isActive);
+        b.classList.toggle('text-zinc-500', !isActive);
       });
-      document.getElementById('matrix-b-section').classList.toggle('hidden', unaryOps.has(o));
+
+      $('matrix-b-section').classList.toggle('hidden', def.kind !== 'binary');
+
+      // Contextual k / n field
+      const row = $('param-row');
+      if (def.param) {
+        const p = def.param;
+        row.classList.remove('hidden');
+        row.classList.add('flex');
+        $('param-label').textContent = p.label;
+        $('param-hint').textContent = p.hint;
+        const input = $('param-input');
+        input.step = p.step;
+        if (p.min !== undefined) input.min = p.min; else input.removeAttribute('min');
+        if (p.max !== undefined) input.max = p.max; else input.removeAttribute('max');
+        input.value = p.def;
+      } else {
+        row.classList.add('hidden');
+        row.classList.remove('flex');
+      }
+
+      // Always-visible explanation of what is being computed
+      $('op-formula').textContent = def.formula;
+      $('op-desc').textContent = def.desc;
+
+      // Swap between the grid and the single-number readout
+      const scalar = def.out === 'scalar';
+      $('result-matrix-wrap').classList.toggle('hidden', scalar);
+      $('result-scalar-wrap').classList.toggle('hidden', !scalar);
+
       compute();
     }
 
+    // ============================================
+    // GRID BUILDING
+    // ============================================
     function buildGrids() {
-      buildGrid('matrix-a', 'a');
-      buildGrid('matrix-b', 'b');
+      buildGrid('matrix-a', 'bracket-a', 'a');
+      buildGrid('matrix-b', 'bracket-b', 'b');
       buildResultGrid();
+    }
+
+    function sizeBracket(bracketId, cellMax) {
+      const bracket = $(bracketId);
+      bracket.style.setProperty('--n', size);
+      bracket.style.setProperty('--cell-max', cellMax + 'px');
+    }
+
+    function buildGrid(containerId, bracketId, prefix) {
+      sizeBracket(bracketId, 58);
+      const container = $(containerId);
+      container.innerHTML = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'matrix-cell';
+          input.id = prefix + '-' + r + '-' + c;
+          input.value = (r === c) ? 1 : 0;
+          input.setAttribute('aria-label', prefix.toUpperCase() + ' row ' + (r + 1) + ' column ' + (c + 1));
+          input.addEventListener('input', compute);
+          container.appendChild(input);
+        }
+      }
+    }
+
+    function buildResultGrid() {
+      sizeBracket('bracket-result', 72);
+      const container = $('matrix-result');
+      container.innerHTML = '';
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'result-cell';
+          cell.id = 'r-' + r + '-' + c;
+          cell.textContent = '0';
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    // Keep whatever the user already typed when the size changes
+    function snapshot(prefix) {
+      const values = {};
+      document.querySelectorAll('[id^="' + prefix + '-"]').forEach(el => { values[el.id] = el.value; });
+      return values;
+    }
+
+    function restore(prefix, values) {
+      Object.keys(values).forEach(id => {
+        const el = $(id);
+        if (el) el.value = values[id];
+      });
     }
 
     function fillMatrix(prefix, value) {
       for (let r = 0; r < size; r++) {
         for (let c = 0; c < size; c++) {
-          const el = document.getElementById(prefix + '-' + r + '-' + c);
+          const el = $(prefix + '-' + r + '-' + c);
           if (!el) continue;
           if (value === 'random') {
             el.value = Math.floor(Math.random() * 19) - 9;
@@ -295,89 +670,84 @@
       compute();
     }
 
-    function buildGrid(containerId, prefix) {
-      const container = document.getElementById(containerId);
-      container.style.gridTemplateColumns = 'repeat(' + size + ', 58px)';
-      container.innerHTML = '';
-      for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.className = 'matrix-cell';
-          input.id = prefix + '-' + r + '-' + c;
-          input.value = (r === c) ? 1 : 0;
-          input.addEventListener('input', compute);
-          container.appendChild(input);
-        }
-      }
-    }
-
-    function buildResultGrid() {
-      const container = document.getElementById('matrix-result');
-      container.style.gridTemplateColumns = 'repeat(' + size + ', 72px)';
-      container.innerHTML = '';
-      for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-          const cell = document.createElement('div');
-          cell.className = 'result-cell';
-          cell.id = 'r-' + r + '-' + c;
-          cell.textContent = '0';
-          container.appendChild(cell);
-        }
-      }
-    }
-
     function getMatrix(prefix) {
       const m = [];
       for (let r = 0; r < size; r++) {
         m[r] = [];
         for (let c = 0; c < size; c++) {
-          m[r][c] = parseFloat(document.getElementById(prefix + '-' + r + '-' + c).value) || 0;
+          const el = $(prefix + '-' + r + '-' + c);
+          m[r][c] = el ? (parseFloat(el.value) || 0) : 0;
         }
       }
       return m;
     }
 
-    function setResult(m) {
-      document.getElementById('error-msg').classList.add('hidden');
-      for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-          const cell = document.getElementById('r-' + r + '-' + c);
-          if (cell) cell.textContent = Number.isFinite(m[r][c]) ? parseFloat(m[r][c].toFixed(6)) : '—';
-        }
+    // ============================================
+    // OUTPUT
+    // ============================================
+    // Formats a number to at most `budget` characters, so it always fits its cell.
+    // Grid cells are narrow (72px on desktop, less on phones); the exact value is
+    // kept in the cell's title attribute.
+    function fmt(v, budget) {
+      if (!Number.isFinite(v)) return '—';
+      budget = budget || 7;
+      if (Math.abs(v) < 1e-10) return '0';                       // numerical dust
+      if (Math.abs(v) < 1e-6) return v.toExponential(1);         // tiny but genuinely non-zero
+      const rounded = Math.round(v * 1e6) / 1e6;
+      if (Number.isInteger(rounded) && Math.abs(rounded) < 1e6) return String(rounded);
+      const exact = String(rounded);
+      if (exact.length <= budget && exact.indexOf('e') === -1) return exact;
+      for (let digits = 6; digits >= 1; digits--) {
+        const text = String(parseFloat(rounded.toPrecision(digits)));
+        if (text.length <= budget && text.indexOf('e') === -1) return text;
       }
+      return rounded.toExponential(1);
+    }
+
+    function clearError() {
+      $('error-msg').classList.add('hidden');
     }
 
     function showError(msg) {
-      const el = document.getElementById('error-msg');
+      const el = $('error-msg');
       el.textContent = msg;
       el.classList.remove('hidden');
       for (let r = 0; r < size; r++) {
         for (let c = 0; c < size; c++) {
-          const cell = document.getElementById('r-' + r + '-' + c);
-          if (cell) cell.textContent = '—';
+          const cell = $('r-' + r + '-' + c);
+          if (cell) { cell.textContent = '—'; cell.removeAttribute('title'); }
+        }
+      }
+      $('result-scalar').textContent = '—';
+      $('result-scalar-note').textContent = '';
+    }
+
+    function setResult(m) {
+      clearError();
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          const cell = $('r-' + r + '-' + c);
+          if (!cell) continue;
+          const v = m[r][c];
+          cell.textContent = fmt(v);
+          // Full precision on hover / long-press, since cells are narrow
+          if (Number.isFinite(v)) cell.title = String(v); else cell.removeAttribute('title');
         }
       }
     }
 
-    function compute() {
-      const A = getMatrix('a');
-      const B = getMatrix('b');
+    function setScalar(value, note) {
+      clearError();
+      $('result-scalar').textContent = fmt(value, 12);
+      $('result-scalar').title = Number.isFinite(value) ? String(value) : '';
+      $('result-scalar-note').textContent = note || '';
+    }
 
-      if (op === 'add') {
-        const R = A.map((row, r) => row.map((v, c) => v + B[r][c]));
-        setResult(R);
-      } else if (op === 'sub') {
-        const R = A.map((row, r) => row.map((v, c) => v - B[r][c]));
-        setResult(R);
-      } else if (op === 'mul') {
-        const R = multiply(A, B);
-        setResult(R);
-      } else if (op === 'trans') {
-        const R = A[0].map((_, c) => A.map(row => row[c]));
-        setResult(R);
-      }
-
+    // ============================================
+    // MATH
+    // ============================================
+    function identity(n) {
+      return Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => i === j ? 1 : 0));
     }
 
     function multiply(A, B) {
@@ -390,72 +760,235 @@
       return R;
     }
 
+    // Scale-aware tolerance, so a matrix of large numbers is not judged by an absolute epsilon
+    function tolerance(M) {
+      let max = 0;
+      M.forEach(row => row.forEach(v => { max = Math.max(max, Math.abs(v)); }));
+      return 1e-9 * Math.max(1, max);
+    }
+
+    // Determinant by LU decomposition with partial pivoting
     function determinant(M) {
       const n = M.length;
-      if (n === 1) return M[0][0];
-      if (n === 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
-      let det = 0;
-      for (let c = 0; c < n; c++) {
-        det += ((c % 2 === 0 ? 1 : -1) * M[0][c] * determinant(minor(M, 0, c)));
+      const a = M.map(r => r.slice());
+      const tol = tolerance(M);
+      let det = 1;
+      for (let i = 0; i < n; i++) {
+        let p = i;
+        for (let r = i + 1; r < n; r++) if (Math.abs(a[r][i]) > Math.abs(a[p][i])) p = r;
+        if (Math.abs(a[p][i]) < tol) return 0;
+        if (p !== i) { const t = a[p]; a[p] = a[i]; a[i] = t; det = -det; }
+        det *= a[i][i];
+        for (let r = i + 1; r < n; r++) {
+          const f = a[r][i] / a[i][i];
+          for (let c = i; c < n; c++) a[r][c] -= f * a[i][c];
+        }
       }
       return det;
     }
 
-    function minor(M, row, col) {
-      return M.filter((_, r) => r !== row).map(r => r.filter((_, c) => c !== col));
-    }
-
+    // Inverse by Gauss-Jordan elimination; null when A is singular
     function inverse(M) {
       const n = M.length;
-      const det = determinant(M);
-      if (Math.abs(det) < 1e-10) return null;
-
-      // Cofactor matrix
-      const cof = Array.from({ length: n }, (_, i) =>
-        Array.from({ length: n }, (_, j) =>
-          ((i + j) % 2 === 0 ? 1 : -1) * determinant(minor(M, i, j))
-        )
-      );
-
-      // Transpose (adjugate)
-      const adj = cof[0].map((_, c) => cof.map(row => row[c]));
-
-      // Divide by determinant
-      return adj.map(row => row.map(v => v / det));
+      const tol = tolerance(M);
+      const a = M.map((row, i) => row.concat(identity(n)[i]));
+      for (let i = 0; i < n; i++) {
+        let p = i;
+        for (let r = i + 1; r < n; r++) if (Math.abs(a[r][i]) > Math.abs(a[p][i])) p = r;
+        if (Math.abs(a[p][i]) < tol) return null;
+        if (p !== i) { const t = a[p]; a[p] = a[i]; a[i] = t; }
+        const pivot = a[i][i];
+        for (let c = 0; c < 2 * n; c++) a[i][c] /= pivot;
+        for (let r = 0; r < n; r++) {
+          if (r === i) continue;
+          const f = a[r][i];
+          if (f === 0) continue;
+          for (let c = 0; c < 2 * n; c++) a[r][c] -= f * a[i][c];
+        }
+      }
+      return a.map(row => row.slice(n));
     }
 
-    buildGrids();
-    compute();
+    function rank(M) {
+      const n = M.length;
+      const a = M.map(r => r.slice());
+      const tol = tolerance(M);
+      let rk = 0;
+      for (let c = 0; c < n && rk < n; c++) {
+        let p = rk;
+        for (let r = rk + 1; r < n; r++) if (Math.abs(a[r][c]) > Math.abs(a[p][c])) p = r;
+        if (Math.abs(a[p][c]) < tol) continue;
+        const t = a[p]; a[p] = a[rk]; a[rk] = t;
+        for (let r = 0; r < n; r++) {
+          if (r === rk) continue;
+          const f = a[r][c] / a[rk][c];
+          for (let k = c; k < n; k++) a[r][k] -= f * a[rk][k];
+        }
+        rk++;
+      }
+      return rk;
+    }
 
-    // Mobile keyboard fix
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-    document.addEventListener('focusin', (e) => {
-      if (e.target.tagName === 'INPUT') {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
+    function matrixPower(A, n) {
+      if (!Number.isInteger(n)) throw new Error('The exponent n has to be a whole number.');
+      if (Math.abs(n) > 10) throw new Error('Keep the exponent between −10 and 10.');
+      let base = A;
+      if (n < 0) {
+        base = inverse(A);
+        if (!base) throw new Error('A is singular (det A = 0), so negative powers are undefined.');
+        n = -n;
+      }
+      let R = identity(A.length);
+      for (let i = 0; i < n; i++) R = multiply(R, base);
+      return R;
+    }
+
+    function paramValue() {
+      const raw = parseFloat($('param-input').value);
+      return Number.isFinite(raw) ? raw : 0;
+    }
+
+    // ============================================
+    // COMPUTE
+    // ============================================
+    function compute() {
+      const def = OPS[op];
+      const A = getMatrix('a');
+      let result;
+
+      try {
+        switch (op) {
+          case 'add': {
+            const B = getMatrix('b');
+            result = A.map((row, r) => row.map((v, c) => v + B[r][c]));
+            break;
+          }
+          case 'sub': {
+            const B = getMatrix('b');
+            result = A.map((row, r) => row.map((v, c) => v - B[r][c]));
+            break;
+          }
+          case 'mul':
+            result = multiply(A, getMatrix('b'));
+            break;
+          case 'trans':
+            result = A[0].map((_, c) => A.map(row => row[c]));
+            break;
+          case 'inv':
+            result = inverse(A);
+            if (!result) throw new Error('A is singular (det A = 0), so it has no inverse.');
+            break;
+          case 'pow':
+            result = matrixPower(A, paramValue());
+            break;
+          case 'scale': {
+            const k = paramValue();
+            result = A.map(row => row.map(v => k * v));
+            break;
+          }
+          case 'det': {
+            const d = determinant(A);
+            setScalar(d, Math.abs(d) < tolerance(A) ? 'Singular — A has no inverse.' : 'Non-zero — A is invertible.');
+            return;
+          }
+          case 'trace':
+            setScalar(A.reduce((sum, row, i) => sum + row[i], 0), 'Sum of the ' + size + ' diagonal entries.');
+            return;
+          case 'rank': {
+            const rk = rank(A);
+            setScalar(rk, rk === size ? 'Full rank — all rows independent.' : 'Rank-deficient — ' + (size - rk) + ' dependent row' + (size - rk === 1 ? '' : 's') + '.');
+            return;
+          }
         }
+      } catch (e) {
+        showError(e.message);
+        return;
+      }
+
+      if (def.out === 'matrix') setResult(result);
+    }
+
+    // ============================================
+    // SHARED TOOLTIP (desktop hover only)
+    // ============================================
+    const tip = $('op-tip');
+    const tipArrow = $('op-tip-arrow');
+    const canHover = window.matchMedia('(hover: hover)').matches;
+
+    function showTip(pill) {
+      const def = OPS[pill.dataset.op];
+      if (!def) return;
+      $('op-tip-title').textContent = def.title;
+      $('op-tip-desc').textContent = def.desc;
+      $('op-tip-formula').textContent = def.formula;
+      $('op-tip-note').textContent = def.note;
+
+      // Measure before placing, then clamp inside the viewport
+      tip.style.left = '0px';
+      tip.style.top = '0px';
+      tip.classList.add('show');
+
+      const pad = 8;
+      const r = pill.getBoundingClientRect();
+      const w = tip.offsetWidth;
+      const h = tip.offsetHeight;
+
+      let left = r.left + r.width / 2 - w / 2;
+      left = Math.max(pad, Math.min(left, window.innerWidth - w - pad));
+
+      let top = r.bottom + 9;
+      const above = top + h > window.innerHeight - pad;
+      if (above) top = Math.max(pad, r.top - h - 9);
+      tip.classList.toggle('above', above);
+
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+
+      // Point the arrow at the pill, kept inside the rounded corners
+      const arrow = Math.max(12, Math.min(r.left + r.width / 2 - left, w - 12)) - 4;
+      tipArrow.style.left = arrow + 'px';
+    }
+
+    function hideTip() {
+      tip.classList.remove('show');
+    }
+
+    // ============================================
+    // WIRING
+    // ============================================
+    document.querySelectorAll('[data-size]').forEach(btn => {
+      btn.addEventListener('click', () => setSize(parseInt(btn.dataset.size, 10)));
+    });
+
+    document.querySelectorAll('[data-op]').forEach(btn => {
+      btn.addEventListener('click', () => { setOp(btn.dataset.op); hideTip(); });
+      if (canHover) {
+        btn.addEventListener('mouseenter', () => showTip(btn));
+        btn.addEventListener('mouseleave', hideTip);
+        btn.addEventListener('focus', () => showTip(btn));
+        btn.addEventListener('blur', hideTip);
       }
     });
-    document.addEventListener('focusout', (e) => {
-      if (e.target.tagName === 'INPUT') {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      }
+
+    document.querySelectorAll('[data-fill]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const raw = btn.dataset.value;
+        fillMatrix(btn.dataset.fill, (raw === 'identity' || raw === 'random') ? raw : parseFloat(raw));
+      });
     });
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
+
+    $('param-input').addEventListener('input', compute);
+    window.addEventListener('scroll', hideTip, true);
+    window.addEventListener('resize', hideTip);
+
+    buildGrids();
+    setOp('add');
+
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

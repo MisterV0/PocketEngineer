@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-  <title>Ohm's Law Calculator - Solve for Voltage, Current & Resistance</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
+  <title>Ohm's Law Calculator (V, I, R, P) — PocketEngineer</title>
   <meta name="description"
     content="Calculate voltage, current, resistance, and power instantly with our interactive Ohm's Law calculator. Enter any two values and solve the third with real-time visualization and formulas.">
   <link rel="canonical" href="https://www.pockeng.com/tools/ohms-law.html">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Ohm's Law Calculator & Visualizer — PocketEngineer">
   <meta property="og:description"
     content="Enter any two values to solve Ohm's Law instantly. Visual fluid-dynamics simulation shows how voltage, current, and resistance relate.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/ohms-law-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Ohm's law calculator triangle showing voltage over current and resistance">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ohm's Law Calculator & Visualizer — PocketEngineer">
+  <meta name="twitter:description" content="Enter any two values to solve Ohm's Law instantly. Visual fluid-dynamics simulation shows how voltage, current, and resistance relate.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/ohms-law-calculator.png">
+  <meta name="twitter:image:alt" content="Ohm's law calculator triangle showing voltage over current and resistance">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -97,76 +107,69 @@
     }
 
     /* Back Button Styling - Enhanced */
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.875rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #71717a;
-      border: 1px solid #e4e4e7;
-      background-color: white;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
 
-    .back-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .back-button:hover {
-      color: #18181b;
-      border-color: #71717a;
-      background-color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .back-button:hover::before {
-      left: 100%;
-    }
-
-    .back-button:hover svg {
-      transform: translateX(-2px);
-    }
-
-    .back-button:active {
-      transform: scale(0.96);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Ohm's Law Calculator",
+      "url": "https://www.pockeng.com/tools/ohms-law.html",
+      "description": "Calculate voltage, current, resistance, and power instantly with our interactive Ohm's Law calculator. Enter any two values and solve the third with real-time visualization and formulas.",
+      "image": "https://www.pockeng.com/resources/social/ohms-law-calculator.png",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Ohm's Law Calculator",
+      "item": "https://www.pockeng.com/tools/ohms-law.html"
+    }
+  ]
+}
+  </script>
 </head>
 
 <body
-  class="bg-[#fcfcfc] text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-black">
+  class="pe-page text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-zinc-200 selection:text-black">
 
   <!-- Header with Visible H1 -->
   <header class="flex-none border-b border-zinc-200/50 bg-white/70 backdrop-blur-md sticky top-0 z-20">
     <div class="max-w-4xl mx-auto px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 py-5 sm:py-7">
-      <a href="../index.html" class="back-button flex-shrink-0 whitespace-nowrap text-sm sm:text-base">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Back
-      </a>
+      <a href="../" class="pe-back flex-shrink-0 whitespace-nowrap">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
       <div class="flex-1 flex flex-col items-center gap-1 py-2 sm:py-3 min-w-0">
-        <h1 class="font-mono text-base sm:text-lg font-bold tracking-tight text-zinc-900 text-center line-clamp-2">Ohm's Law Solver explained</h1>
+        <h1 class="font-mono text-base sm:text-lg font-bold tracking-tight text-zinc-900 text-center line-clamp-2">Ohm's Law Calculator</h1>
       </div>
-      <button onclick="toggleModal()"
+      <button type="button" onclick="toggleModal()" aria-haspopup="dialog"
         class="flex-shrink-0 btn-breathe px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white border border-zinc-200 hover:border-zinc-400 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-zinc-600 hover:text-zinc-900 transition-all duration-300 shadow-sm hover:shadow-md">
         How It Works
       </button>
@@ -207,9 +210,9 @@
       <!-- Parameter Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 pt-4">
         <!-- Voltage -->
-        <div id="v-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+        <div id="v-card" class="param-card p-4 md:p-8 rounded-3xl bg-white">
           <div class="flex justify-between items-center mb-4 md:mb-6">
-            <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Voltage</label>
+            <label for="voltage" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Voltage</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="v-formula">V</span>
           </div>
           <div class="relative">
@@ -218,12 +221,13 @@
               placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">V</span>
           </div>
+          <p id="voltage-eng" class="mt-2 h-4 text-xs font-mono text-zinc-400" aria-live="polite"></p>
         </div>
 
         <!-- Current -->
-        <div id="i-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+        <div id="i-card" class="param-card p-4 md:p-8 rounded-3xl bg-white">
           <div class="flex justify-between items-center mb-4 md:mb-6">
-            <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Current flow</label>
+            <label for="current" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Current flow</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="i-formula">I</span>
           </div>
           <div class="relative">
@@ -232,12 +236,13 @@
               placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">A</span>
           </div>
+          <p id="current-eng" class="mt-2 h-4 text-xs font-mono text-zinc-400" aria-live="polite"></p>
         </div>
 
         <!-- Resistance -->
-        <div id="r-card" class="param-card p-4 md:p-8 rounded-[2rem] bg-white">
+        <div id="r-card" class="param-card p-4 md:p-8 rounded-3xl bg-white">
           <div class="flex justify-between items-center mb-4 md:mb-6">
-            <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Resistance</label>
+            <label for="resistance" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Resistance</label>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="r-formula">R</span>
           </div>
           <div class="relative">
@@ -246,18 +251,19 @@
               placeholder="0">
             <span class="absolute right-0 bottom-2 text-lg md:text-xl font-mono text-zinc-300">Ω</span>
           </div>
+          <p id="resistance-eng" class="mt-2 h-4 text-xs font-mono text-zinc-400" aria-live="polite"></p>
         </div>
       </div>
 
       <!-- Action Area -->
       <div class="flex flex-col md:flex-row gap-6 items-stretch">
         <div
-          class="flex-1 bg-zinc-900 text-white rounded-[2rem] p-8 flex items-center justify-between shadow-2xl shadow-zinc-200/50">
+          class="flex-1 bg-zinc-900 text-white rounded-3xl p-8 flex items-center justify-between shadow-2xl shadow-zinc-200/50">
           <div>
             <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-2">Wattage (Power)</p>
-            <div class="flex items-baseline gap-3">
-              <span class="text-5xl font-mono font-medium" id="power-val">0.00</span>
-              <span class="text-xl text-zinc-500 font-mono">W</span>
+            <div class="flex items-baseline gap-3" aria-live="polite">
+              <span class="text-5xl font-mono font-medium" id="power-val">0</span>
+              <span class="text-xl text-zinc-500 font-mono" id="power-unit">W</span>
             </div>
           </div>
           <div class="text-right hidden sm:block">
@@ -268,7 +274,7 @@
 
         <div class="flex justify-center w-full sm:w-auto">
           <button onclick="resetCalc()"
-            class="bg-white border border-zinc-200 hover:border-zinc-900 px-10 rounded-[2rem] group transition-all duration-500 flex items-center justify-center gap-3 shadow-sm hover:shadow-lg w-1/3 sm:w-auto">
+            class="bg-white border border-zinc-200 hover:border-zinc-900 px-10 rounded-3xl group transition-all duration-500 flex items-center justify-center gap-3 shadow-sm hover:shadow-lg w-1/3 sm:w-auto">
             <span
               class="text-xs font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-900 transition-colors">Reset</span>
           </button>
@@ -277,11 +283,12 @@
     </div>
   </main>
 
+
   <!-- Engineering Briefing Modal -->
   <div id="modal"
     class="fixed inset-0 bg-white/60 backdrop-blur-xl z-50 items-center justify-center p-4 md:p-8 overflow-hidden transition-all duration-300">
     <div
-      class="max-w-6xl w-full bg-white border border-zinc-100 rounded-[3rem] shadow-2xl shadow-zinc-200/50 overflow-hidden flex flex-col h-[90vh] md:h-[800px]">
+      class="max-w-6xl w-full bg-white border border-zinc-100 rounded-3xl shadow-2xl shadow-zinc-200/50 overflow-hidden flex flex-col h-[90vh] md:h-[800px]">
 
       <!-- Modal Header -->
       <div class="flex justify-between items-center p-8 md:p-10 pb-0 shrink-0 z-10 relative">
@@ -387,6 +394,7 @@
       current: document.getElementById('current'),
       resistance: document.getElementById('resistance'),
       power: document.getElementById('power-val'),
+      powerUnit: document.getElementById('power-unit'),
       cards: {
         voltage: document.getElementById('v-card'),
         current: document.getElementById('i-card'),
@@ -440,8 +448,21 @@
           power = v * i;
         }
       }
-      els.power.textContent = (power && isFinite(power)) ? power.toFixed(2) : '0.00';
+      const p = engParts((power && isFinite(power)) ? power : 0, 4);
+      els.power.textContent = p.number;
+      els.powerUnit.textContent = p.prefix + 'W';
+      updateEngHints();
       updateUI(derivedId);
+    }
+
+    // "= 702.1 µA" under a field whenever an SI prefix makes the value easier to read
+    function updateEngHints() {
+      [['voltage', 'V'], ['current', 'A'], ['resistance', 'Ω']].forEach(([id, unit]) => {
+        const v = parseFloat(els[id].value);
+        const parts = engParts(v, 4);
+        document.getElementById(id + '-eng').textContent =
+          (isFinite(v) && v !== 0 && parts.prefix) ? '= ' + parts.number + ' ' + parts.prefix + unit : '';
+      });
     }
 
     function updateUI(derivedId) {
@@ -459,13 +480,8 @@
 
     function formatValue(num) {
       if (isNaN(num) || !isFinite(num)) return '';
-      // Format to up to 3 decimal places, removing trailing zeros
-      const rounded = Math.round(num * 1000) / 1000;
-      if (rounded % 1 === 0) {
-        return rounded.toString();
-      }
-      // Show up to 3 decimal places, remove trailing zeros
-      return rounded.toFixed(3).replace(/\.?0+$/, '');
+      // Significant figures, not fixed decimals: 0.00005 stays 0.00005
+      return formatSig(num, 5);
     }
 
     window.resetCalc = function () {
@@ -684,7 +700,7 @@
       simI.textContent = flowSpeed.toFixed(3) + ' A';
       simR.textContent = Math.round(rVal) + ' Ω';
 
-      animationId = requestAnimationFrame(runSimulation);
+      if (!prefersReducedMotion) animationId = requestAnimationFrame(runSimulation);
     }
 
     function toggleModal() {
@@ -694,50 +710,22 @@
       if (isOpen) {
         modal.classList.remove('active');
         cancelAnimationFrame(animationId);
+        closeModal(modal);
       } else {
         modal.classList.add('active');
         resizeCanvas();
         startTime = null;
         animationId = requestAnimationFrame(runSimulation);
+        openModal(modal, toggleModal);
       }
     }
 
-    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
-    // Prevent browser back navigation when keyboard is open
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-
-    // Track when inputs are focused (keyboard opens)
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-
-    // Intercept back button when keyboard is open
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        // Blur active input instead of navigating
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          // Push state back to prevent navigation
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
   </script>
 
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

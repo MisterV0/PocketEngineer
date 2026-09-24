@@ -4,40 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circuit Canvas — Series & Parallel Simulator — PocketEngineer</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+    <title>Series and Parallel Circuit Calculator — PocketEngineer</title>
     <meta name="description"
         content="Build and simulate series and parallel circuits with resistors, batteries, and solar panels. Visual circuit canvas with real-time calculations for total resistance, voltage, and current.">
     <link rel="canonical" href="https://www.pockeng.com/tools/grid.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.pockeng.com/tools/grid.html">
-    <meta property="og:title" content="Circuit Canvas — Series & Parallel Simulator — PocketEngineer">
+    <meta property="og:title" content="Series and Parallel Calculator — Circuit Canvas — PocketEngineer">
     <meta property="og:description"
         content="Drag-and-drop circuit builder with resistors, batteries, and solar panels. Calculates series and parallel totals in real time.">
-    <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-    <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-    <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
-    <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+    <meta property="og:image" content="https://www.pockeng.com/resources/social/series-parallel-circuit-simulator.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Series and parallel resistor circuit simulator with a battery and three resistors">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Series and Parallel Calculator — Circuit Canvas — PocketEngineer">
+    <meta name="twitter:description" content="Drag-and-drop circuit builder with resistors, batteries, and solar panels. Calculates series and parallel totals in real time.">
+    <meta name="twitter:image" content="https://www.pockeng.com/resources/social/series-parallel-circuit-simulator.png">
+    <meta name="twitter:image:alt" content="Series and parallel resistor circuit simulator with a battery and three resistors">
+    <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+    <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
+    <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
     <style>
         :root {
-            --bg-canvas: #f8fafc;
+            /* Mapped onto the shared tokens in common.css */
+            --bg-canvas: var(--pe-bg);
             --grid-color: #cbd5e1;
             --wire-color: #64748b;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --primary: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            /* Solar Color */
-            --surface: #ffffff;
-            --border: #e2e8f0;
+            --text-main: var(--pe-text);
+            --text-muted: var(--pe-muted);
+            --primary: var(--pe-accent);
+            --success: var(--pe-success);
+            --danger: var(--pe-danger);
+            --warning: var(--pe-warning);
+            --surface: var(--pe-surface);
+            --border: var(--pe-border);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: var(--pe-font-sans);
         }
 
         body {
@@ -178,7 +190,8 @@
             align-items: center;
         }
 
-        .stat label {
+        .stat label,
+        .stat .stat-label {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -222,11 +235,11 @@
             background: var(--border);
         }
 
-        .top-bar .back-button {
+        .top-bar .pe-back {
             position: absolute;
             left: 24px;
             top: 50%;
-            transform: translateY(-50%);
+            margin-top: -18px; /* half the button height; transform is kept free for the press effect */
         }
 
         .start-screen-back {
@@ -581,31 +594,75 @@
             background: var(--warning);
         }
     </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Series and Parallel Calculator",
+        "url": "https://www.pockeng.com/tools/grid.html",
+        "description": "Build and simulate series and parallel circuits with resistors, batteries, and solar panels. Visual circuit canvas with real-time calculations for total resistance, voltage, and current.",
+        "image": "https://www.pockeng.com/resources/social/series-parallel-circuit-simulator.png",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript and a modern web browser",
+        "isAccessibleForFree": true,
+        "inLanguage": "en",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "PocketEngineer",
+          "url": "https://www.pockeng.com/"
+        }
+      }
+    </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Series and Parallel Calculator",
+      "item": "https://www.pockeng.com/tools/grid.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body>
+<body class="pe-page">
 
     <!-- Start Screen -->
     <div id="start-screen">
-        <a href="../index.html" class="back-button start-screen-back">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M15 18l-6-6 6-6" />
-            </svg> Back
+        <a href="../" class="pe-back start-screen-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
-        <h1 class="start-title">Series & Parallel Simulator</h1>
+        <h1 class="start-title">Series and Parallel Calculator</h1>
         <div class="mode-cards">
-            <div class="mode-card" onclick="initApp('resistors')">
+            <div class="mode-card" role="button" tabindex="0" onclick="initApp('resistors')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); initApp('resistors'); }">
                 <div class="mode-icon ohm flex justify-center items-center"><img src="../resources/Images/resistor.png"
                         alt="Resistor circuit symbol for series and parallel resistance calculator" style="height: 64px; margin: 0 auto; display: block;" /></div>
                 <h2>Resistor Circuit</h2>
                 <p>Calculate Equivalent Resistance and Current using Ohm's Law.</p>
             </div>
-            <div class="mode-card battery" onclick="initApp('batteries')">
+            <div class="mode-card battery" role="button" tabindex="0" onclick="initApp('batteries')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); initApp('batteries'); }">
                 <div class="mode-icon" style="line-height: 64px; font-size: 56px;">🔋</div>
                 <h2>Battery Bank</h2>
                 <p>Combine batteries to calculate Total Voltage and Capacity (Ah).</p>
             </div>
-            <div class="mode-card solar" onclick="initApp('solar')">
+            <div class="mode-card solar" role="button" tabindex="0" onclick="initApp('solar')" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); initApp('solar'); }">
                 <div class="mode-icon flex justify-center items-center"><img src="../resources/Images/solar-cell.png"
                         alt="Solar panel icon for photovoltaic array voltage and current simulator" style="height: 64px; margin: 0 auto; display: block;" /></div>
                 <h2>Solar Array</h2>
@@ -720,11 +777,12 @@
             </div>
 
         </div>
+
     </div>
 
     <!-- Main App -->
     <div id="app-screen">
-        <header class="top-bar" id="top-bar" style="position: relative;">
+        <header class="top-bar" id="top-bar" style="position: relative;" aria-live="polite">
             <!-- Dynamic Top Bar injected here -->
         </header>
 
@@ -743,7 +801,7 @@
         </main>
     </div>
 
-    <script src="../resources/app.js?v=1.2.0"></script>
+    <script src="../resources/app.js?v=1.4.0"></script>
     <script>
         // --- Global State ---
         let appMode = 'resistors'; // 'resistors' | 'batteries' | 'solar'
@@ -785,21 +843,19 @@
 
         function renderTopBarResistors() {
             document.getElementById('top-bar').innerHTML = `
-                <a onclick="goBackToStartScreen()" class="back-button">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> Back
-                </a>
+                <button type="button" onclick="goBackToStartScreen()" class="pe-back"><span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span><span class="pe-back__label">Back</span></button>
                 <div class="stat">
-                    <label>Source Voltage (V)</label>
+                    <label for="global-voltage">Source Voltage (V)</label>
                     <input type="number" id="global-voltage" value="${globalVoltage}" min="0" oninput="updateGlobalVoltage(this.value)">
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <label>Equivalent Resistance</label>
+                    <span class="stat-label">Equivalent Resistance</span>
                     <div class="value"><span id="stat-req">100.00</span> Ω</div>
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <label>Total Current</label>
+                    <span class="stat-label">Total Current</span>
                     <div class="value"><span id="stat-current">0.120</span> A</div>
                 </div>
             `;
@@ -807,22 +863,20 @@
 
         function renderTopBarBatteries() {
             document.getElementById('top-bar').innerHTML = `
-                <a onclick="goBackToStartScreen()" class="back-button">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> Back
-                </a>
+                <button type="button" onclick="goBackToStartScreen()" class="pe-back"><span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span><span class="pe-back__label">Back</span></button>
                 <div class="stat">
-                    <label>Total Bank Voltage</label>
+                    <span class="stat-label">Total Bank Voltage</span>
                     <div class="value"><span id="stat-volts">12.0</span> V</div>
                 </div>
                 <div class="divider"></div>
                 <div class="stat" style="position: relative;">
-                    <label>Usable Capacity</label>
+                    <span class="stat-label">Usable Capacity</span>
                     <div class="value" id="stat-ah-container"><span id="stat-ah">100</span> Ah</div>
                     <div id="stat-warning" style="position: absolute; top: 100%; width: max-content; color: var(--warning); font-size: 11px; font-weight: 700; margin-top: 4px; display: none;"></div>
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <label>Total Energy</label>
+                    <span class="stat-label">Total Energy</span>
                     <div class="value"><span id="stat-wh">1200</span> Wh</div>
                 </div>
             `;
@@ -830,22 +884,20 @@
 
         function renderTopBarSolar() {
             document.getElementById('top-bar').innerHTML = `
-                <a onclick="goBackToStartScreen()" class="back-button">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> Back
-                </a>
+                <button type="button" onclick="goBackToStartScreen()" class="pe-back"><span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span><span class="pe-back__label">Back</span></button>
                 <div class="stat">
-                    <label>Array Voltage</label>
+                    <span class="stat-label">Array Voltage</span>
                     <div class="value"><span id="stat-solar-v">40.0</span> V</div>
                 </div>
                 <div class="divider"></div>
                 <div class="stat" style="position: relative;">
-                    <label>Array Current</label>
+                    <span class="stat-label">Array Current</span>
                     <div class="value" id="stat-solar-i-container"><span id="stat-solar-i">10.0</span> A</div>
                     <div id="stat-warning" style="position: absolute; top: 100%; width: max-content; color: var(--danger); font-size: 11px; font-weight: 700; margin-top: 4px; display: none;"></div>
                 </div>
                 <div class="divider"></div>
                 <div class="stat">
-                    <label>Total Power</label>
+                    <span class="stat-label">Total Power</span>
                     <div class="value"><span id="stat-solar-w">400</span> W</div>
                 </div>
             `;
@@ -1045,9 +1097,9 @@
         function updateStats() {
             if (appMode === 'resistors') {
                 let req = calcResistorSeries(circuit);
-                let currentText = req === 0 ? (globalVoltage > 0 ? "Infinity" : "0.000") : (globalVoltage / req).toFixed(3);
+                let currentText = req === 0 ? (globalVoltage > 0 ? "Infinity" : "0") : formatSig(globalVoltage / req, 4);
 
-                document.getElementById('stat-req').innerText = req.toFixed(2);
+                document.getElementById('stat-req').innerText = formatSig(req, 5);
                 document.getElementById('stat-current').innerText = currentText;
                 document.getElementById('stat-current').className = req === 0 && globalVoltage > 0 ? "value error" : "value";
 
@@ -1191,6 +1243,10 @@
 
         window.addEventListener('load', checkMobileWarning);
     </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

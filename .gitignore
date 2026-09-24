@@ -1,0 +1,8 @@
+# macOS folder metadata
+.DS_Store
+
+# Editor settings
+.vscode/
+
+# Tailwind standalone CLI (48 MB): download it instead of committing it, see src/Command.txt
+/tailwindcss

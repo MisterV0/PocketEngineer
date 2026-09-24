@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PocketEngineer — Social Card Generator</title>
+  <link rel="stylesheet" href="../resources/fonts.css">
+  <!--
+    Generates the 1200x630 social / thumbnail image for every tool.
+
+      Preview a single card : src/social-cards.html#voltage
+      Preview the full set  : src/social-cards.html#all
+      Render the PNG files  : python3 src/social-cards.py
+
+    Design: a datasheet page. Monochrome technical line drawing, one accent
+    colour used only on the computed answer, and a spec strip carrying a
+    worked example whose numbers must actually check out.
+  -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #52525b;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body.single { background: #fff; }
+
+    .card {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      background: #ffffff;
+      overflow: hidden;
+      flex-shrink: 0;
+      padding: 54px 64px 46px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- masthead ---- */
+    .top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #18181b;
+    }
+
+    .wordmark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: #18181b;
+    }
+
+    .cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: #a1a1aa;
+    }
+
+    /* ---- body ---- */
+    .body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 44px;
+      padding: 30px 0 0;
+    }
+
+    .left { width: 430px; flex-shrink: 0; }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.032em;
+      line-height: 1.06;
+      color: #18181b;
+    }
+
+    h1.long { font-size: 40px; }
+
+    p.tagline {
+      margin-top: 16px;
+      font-size: 20px;
+      line-height: 1.45;
+      color: #71717a;
+      max-width: 420px;
+    }
+
+    .right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+    }
+
+    .right svg { display: block; width: 100%; height: auto; }
+
+    /* ---- spec strip ---- */
+    .spec {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #e4e4e7;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      color: #71717a;
+      white-space: nowrap;
+    }
+
+    .spec b { font-weight: 600; color: #18181b; }
+    .spec .sep { color: #d4d4d8; padding: 0 2px; }
+    .spec .url { color: #a1a1aa; font-size: 14px; letter-spacing: 0.06em; }
+
+    /* ---- drawing primitives ---- */
+    .ink {
+      stroke: #18181b;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: butt;
+      stroke-linejoin: miter;
+    }
+
+    .ink-r { stroke-linecap: round; stroke-linejoin: round; }
+
+    .hair { stroke: #d4d4d8; stroke-width: 1; fill: none; }
+    .dash { stroke: #a1a1aa; stroke-width: 1; fill: none; stroke-dasharray: 5 4; }
+    .fillpale { fill: #fafafa; }
+    .fillnone { fill: none; }
+
+    /* the accent is reserved for the computed answer */
+    .acc { stroke: var(--accent); stroke-width: 2; fill: none; stroke-linecap: butt; }
+    .accfill { fill: var(--accent); }
+
+    .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      fill: #52525b;
+    }
+
+    .lbl-s {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      fill: #a1a1aa;
+      letter-spacing: 0.08em;
+    }
+
+    .lbl-a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      fill: var(--accent);
+    }
+
+    .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 30px;
+      font-weight: 600;
+      fill: #18181b;
+    }
+
+    .num-a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 30px;
+      font-weight: 600;
+      fill: var(--accent);
+    }
+
+    /* contact sheet */
+    .sheet { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 18px; }
+    .sheet .wrap { width: 600px; height: 315px; overflow: hidden; }
+    .sheet .card { transform: scale(0.5); transform-origin: top left; }
+    .sheet .name { color: #fff; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+
+<body>
+  <div id="stage"></div>
+
+  <script src="social-cards-data.js"></script>
+  <script>
+    function art(tool) {
+      const inner = tool.build ? tool.build(tool.art) : tool.art;
+      return '<svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">' + inner + '</svg>';
+    }
+
+    function cardHTML(tool) {
+      return `
+        <div class="card" style="--accent:${tool.accent}">
+          <div class="top">
+            <span class="wordmark">POCKETENGINEER</span>
+            <span class="cat">${tool.cat.toUpperCase()}</span>
+          </div>
+          <div class="body">
+            <div class="left">
+              <h1 class="${tool.name.length > 21 ? 'long' : ''}">${tool.name}</h1>
+              <p class="tagline">${tool.tagline}</p>
+            </div>
+            <div class="right">${art(tool)}</div>
+          </div>
+          <div class="spec">
+            <span>${tool.spec}</span>
+            <span class="url">pockeng.com</span>
+          </div>
+        </div>`;
+    }
+
+    const stage = document.getElementById('stage');
+    const hash = decodeURIComponent(location.hash.slice(1));
+
+    if (hash === 'all' || hash === '') {
+      stage.className = 'sheet';
+      stage.innerHTML = TOOLS.map(t =>
+        `<div class="name">${t.slug}.png &mdash; ${t.name}</div><div class="wrap">${cardHTML(t)}</div>`
+      ).join('');
+    } else {
+      const tool = TOOLS.find(t => t.slug === hash);
+      document.body.className = 'single';
+      stage.innerHTML = tool ? cardHTML(tool) : '<p style="padding:40px">Unknown card: ' + hash + '</p>';
+    }
+  </script>
+</body>
+
+</html>

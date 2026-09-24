@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-    <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
     <title>Arduino LCD Display Designer & Simulator — PocketEngineer</title>
     <meta name="description" content="Design 16x2 and 20x4 HD44780 LCD displays for Arduino projects. Simulate your layout visually without wiring, get instant Arduino code, and export designs.">
     <link rel="canonical" href="https://www.pockeng.com/tools/lcd.html">
@@ -12,10 +13,19 @@
     <meta property="og:url" content="https://www.pockeng.com/tools/lcd.html">
     <meta property="og:title" content="Arduino LCD Display Designer & Simulator — PocketEngineer">
     <meta property="og:description" content="Design your HD44780 LCD screen visually. Pick characters, preview the display, and get instant Arduino code for 16x2 and 20x4 LCDs.">
-    <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-    <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
-    <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-    <script src="../resources/app.js?v=1.2.0"></script>
+    <meta property="og:image" content="https://www.pockeng.com/resources/social/arduino-lcd-display-designer.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Arduino HD44780 16x2 LCD display designer showing a green character screen">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arduino LCD Display Designer & Simulator — PocketEngineer">
+    <meta name="twitter:description" content="Design your HD44780 LCD screen visually. Pick characters, preview the display, and get instant Arduino code for 16x2 and 20x4 LCDs.">
+    <meta name="twitter:image" content="https://www.pockeng.com/resources/social/arduino-lcd-display-designer.png">
+    <meta name="twitter:image:alt" content="Arduino HD44780 16x2 LCD display designer showing a green character screen">
+    <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
+    <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
+    <script src="../resources/app.js?v=1.4.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -23,16 +33,16 @@
         /* Mobile-responsive update — Agents 2/3/4 */
 
         :root {
-            /* Pockeng Common Styles */
-            --bg-color: #f8f9fa;
-            --surface-color: #ffffff;
-            --border-color: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --accent-color: #2563eb;
+            /* Mapped onto the shared tokens in common.css */
+            --bg-color: var(--pe-bg);
+            --surface-color: var(--pe-surface);
+            --border-color: var(--pe-border);
+            --text-main: var(--pe-text);
+            --text-muted: var(--pe-muted);
+            --accent-color: var(--pe-accent);
             --accent-hover: #1d4ed8;
-            --danger-color: #ef4444;
-            --radius-md: 8px;
+            --danger-color: var(--pe-danger);
+            --radius-md: var(--pe-radius-control);
             --radius-sm: 4px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
@@ -56,7 +66,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: var(--pe-font-sans);
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
@@ -365,13 +375,16 @@
             justify-content: center;
             z-index: 100;
             opacity: 0;
+            visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, visibility 0s linear 0.2s;
             overscroll-behavior: none;
         }
         .modal-overlay.active {
             opacity: 1;
             pointer-events: all;
+            visibility: visible;
+            transition-delay: 0s;
         }
 
         .modal-content {
@@ -887,18 +900,61 @@
         }
 
     </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Arduino LCD Display Designer & Simulator",
+        "url": "https://www.pockeng.com/tools/lcd.html",
+        "description": "Design 16x2 and 20x4 HD44780 LCD displays for Arduino projects. Simulate your layout visually without wiring, get instant Arduino code, and export designs.",
+        "image": "https://www.pockeng.com/resources/social/arduino-lcd-display-designer.png",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript and a modern web browser",
+        "isAccessibleForFree": true,
+        "inLanguage": "en",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "PocketEngineer",
+          "url": "https://www.pockeng.com/"
+        }
+      }
+    </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Arduino LCD Display Designer & Simulator",
+      "item": "https://www.pockeng.com/tools/lcd.html"
+    }
+  ]
+}
+  </script>
 </head>
-<body>
+<body class="pe-page">
 
     <div class="container">
         <header>
             <div class="header-top">
-                <a href="../index.html" class="back-button">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M15 18l-6-6 6-6" />
-                    </svg>
-                    Back
-                </a>
+                <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
                 <h1>Arduino LCD Display Designer & Simulator</h1>
             </div>
             <p class="subtitle">Design and simulate 16×2 and 20×4 Arduino displays in seconds. Preview your LCD layout, generate code instantly—no hardware required.</p>
@@ -952,19 +1008,20 @@
         </main>
     </div>
 
+
     <!-- Modals -->
     <div class="modal-overlay" id="confirm-modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 0.5rem;">Change LCD Size?</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Switching the display size will clear the current layout. Continue?</p>
             <div class="confirm-actions">
-                <button class="btn" id="confirm-cancel">Cancel</button>
-                <button class="btn btn-danger" id="confirm-ok">Continue</button>
+                <button type="button" class="btn" id="confirm-cancel">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-ok">Continue</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="picker-modal">
+    <div class="modal-overlay" id="picker-modal" aria-label="Choose a character">
         <div class="modal-content">
             <div class="picker-header">
                 <div class="picker-preview theme-green" id="picker-preview-box">
@@ -972,7 +1029,7 @@
                 </div>
                 <div class="picker-controls">
                     <input type="text" id="picker-input" maxlength="1" placeholder="Type character here..." autocomplete="off">
-                    <p style="font-size: 0.75rem; color: var(--text-muted);" id="picker-hint">Or pick from the valid HD44780 sets below.</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);" id="picker-hint" aria-live="polite">Or pick from the valid HD44780 sets below.</p>
                 </div>
             </div>
 
@@ -1339,12 +1396,15 @@ void loop() {
             document.getElementById('picker-main-view').style.display = 'block';
             document.getElementById('picker-crafter-view').style.display = 'none';
 
-            document.getElementById('picker-modal').classList.add('active');
-            document.getElementById('picker-input').focus();
+            const modal = document.getElementById('picker-modal');
+            modal.classList.add('active');
+            openModal(modal, closePicker, document.getElementById('picker-input'));
         }
 
         function closePicker() {
-            document.getElementById('picker-modal').classList.remove('active');
+            const modal = document.getElementById('picker-modal');
+            modal.classList.remove('active');
+            closeModal(modal);
         }
 
         function selectCharacter(code) {
@@ -1424,6 +1484,7 @@ void loop() {
 
             const modal = document.getElementById('confirm-modal');
             modal.classList.add('active');
+            openModal(modal, () => handleCancel(), document.getElementById('confirm-cancel'));
 
             const handleOk = () => {
                 setupGrid(newCols, newRows);
@@ -1434,6 +1495,7 @@ void loop() {
 
             const cleanup = () => {
                 modal.classList.remove('active');
+                closeModal(modal);
                 document.getElementById('confirm-ok').removeEventListener('click', handleOk);
                 document.getElementById('confirm-cancel').removeEventListener('click', handleCancel);
             };
@@ -1521,21 +1583,24 @@ void loop() {
                 selectCharacter(activeCustomSlot);
             };
 
-            // Close Modals on Overlay Click or Esc
-            document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('mousedown', (e) => {
-                    if(e.target === overlay) overlay.classList.remove('active');
-                });
+            // Close modals on overlay click (Escape is handled by the shared modal helper)
+            document.getElementById('picker-modal').addEventListener('mousedown', (e) => {
+                if (e.target === e.currentTarget) closePicker();
             });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-                }
+            document.getElementById('confirm-modal').addEventListener('mousedown', (e) => {
+                if (e.target === e.currentTarget) document.getElementById('confirm-cancel').click();
             });
         }
 
         // Run
         init();
+
+        // Shared mobile warning (this tool is built around a fixed-width canvas)
+        window.addEventListener('load', checkMobileWarning);
     </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 </html>

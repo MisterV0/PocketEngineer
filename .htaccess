@@ -1,0 +1,20 @@
+# PocketEngineer: site root (Apache)
+
+# One URL per page. The canonical home page is "/", so send /index.html there.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+
+  # URLs are case-sensitive on Linux hosts: send the lowercase spelling to the real page
+  RewriteRule ^tools/powerstation\.html$ /tools/PowerStation.html [R=301,L]
+</IfModule>
+
+# Build tooling and notes are not part of the website
+<FilesMatch "^(tailwindcss|tailwind\.config\.js|input\.css|Modifications\.txt|IMPROVEMENTS\.md|\.gitignore|\.gitattributes)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_alias.c>
+  RedirectMatch 404 ^/\.(git|vscode)(/|$)
+</IfModule>

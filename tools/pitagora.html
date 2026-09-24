@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Pythagorean Theorem Calculator — PocketEngineer</title>
   <meta name="description"
     content="Interactive Pythagorean theorem calculator — enter any two sides of a right triangle to instantly solve for the third. Includes real-time triangle visualization, angle calculation, area, and perimeter.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Pythagorean Theorem Calculator — PocketEngineer">
   <meta property="og:description"
     content="Enter any two sides of a right triangle to instantly calculate the third side, all angles, area, and perimeter with animated visualization.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/pythagorean-theorem-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Pythagorean theorem calculator with a right triangle labelled a, b and c">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pythagorean Theorem Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Enter any two sides of a right triangle to instantly calculate the third side, all angles, area, and perimeter with animated visualization.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/pythagorean-theorem-calculator.png">
+  <meta name="twitter:image:alt" content="Pythagorean theorem calculator with a right triangle labelled a, b and c">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       font-feature-settings: "cv05", "cv08", "ss01";
@@ -157,9 +167,54 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Pythagorean Theorem Calculator",
+      "url": "https://www.pockeng.com/tools/pitagora.html",
+      "description": "Interactive Pythagorean theorem calculator — enter any two sides of a right triangle to instantly solve for the third. Includes real-time triangle visualization, angle calculation, area, and perimeter.",
+      "image": "https://www.pockeng.com/resources/social/pythagorean-theorem-calculator.png",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Pythagorean Theorem Calculator",
+      "item": "https://www.pockeng.com/tools/pitagora.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
+<body class="pe-page text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
 
   <!-- Left Column: Controls -->
   <aside class="w-full md:w-[420px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative">
@@ -167,13 +222,11 @@
     <!-- Header -->
     <header class="flex-none p-8 pb-4 border-b border-zinc-100">
       <div class="flex items-center gap-4 mb-0">
-        <a href="../index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back
+        <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
-        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Pythagorean Theorem</h1>
+        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Pythagorean Theorem Calculator</h1>
       </div>
     </header>
 
@@ -212,7 +265,7 @@
           <div id="card-a" class="param-card px-4 py-3 rounded-xl bg-white">
             <div class="flex justify-between items-center mb-1.5">
               <div class="flex items-center gap-1.5">
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side a</label>
+                <label for="side-a" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side a</label>
                 <span class="card-badge" id="badge-a">INPUT</span>
               </div>
               <span class="text-[10px] font-mono font-bold text-zinc-300" id="a-formula">a</span>
@@ -227,7 +280,7 @@
           <div id="card-b" class="param-card px-4 py-3 rounded-xl bg-white">
             <div class="flex justify-between items-center mb-1.5">
               <div class="flex items-center gap-1.5">
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side b</label>
+                <label for="side-b" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side b</label>
                 <span class="card-badge" id="badge-b">INPUT</span>
               </div>
               <span class="text-[10px] font-mono font-bold text-zinc-300" id="b-formula">b</span>
@@ -243,7 +296,7 @@
         <div id="card-c" class="param-card px-4 py-3 rounded-xl bg-white">
           <div class="flex justify-between items-center mb-1.5">
             <div class="flex items-center gap-1.5">
-              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side c (hypotenuse)</label>
+              <label for="side-c" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Side c (hypotenuse)</label>
               <span class="card-badge" id="badge-c">CALCULATED</span>
             </div>
             <span class="text-[10px] font-mono font-bold text-zinc-300" id="c-formula">c</span>
@@ -257,8 +310,8 @@
 
       <!-- Properties -->
       <div>
-        <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Triangle Properties</label>
-        <div class="grid grid-cols-2 gap-3">
+        <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Triangle Properties</span>
+        <div class="grid grid-cols-2 gap-3" aria-live="polite">
           <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3 group relative cursor-help">
             <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Angle α</p>
             <p class="text-base font-mono font-semibold text-zinc-900" id="angle-alpha">—</p>
@@ -297,6 +350,7 @@
     </div>
   </main>
 
+
   <script>
     const canvas = document.getElementById('triangleCanvas');
     const ctx = canvas.getContext('2d');
@@ -327,36 +381,36 @@
       if (edited.has('a') && edited.has('b') && a && b) {
         solved = 'c';
         const cVal = Math.sqrt(a * a + b * b);
-        document.getElementById('side-c').value = cVal.toFixed(2);
+        document.getElementById('side-c').value = formatSig(cVal, 6);
         inputs.c = cVal;
       } else if (edited.has('a') && edited.has('c') && a && c) {
         if (c > a) {
           solved = 'b';
           const bVal = Math.sqrt(c * c - a * a);
-          document.getElementById('side-b').value = bVal.toFixed(2);
+          document.getElementById('side-b').value = formatSig(bVal, 6);
           inputs.b = bVal;
         }
       } else if (edited.has('b') && edited.has('c') && b && c) {
         if (c > b) {
           solved = 'a';
           const aVal = Math.sqrt(c * c - b * b);
-          document.getElementById('side-a').value = aVal.toFixed(2);
+          document.getElementById('side-a').value = formatSig(aVal, 6);
           inputs.a = aVal;
         }
       } else if (a && b && !c && currentlyEditing !== 'c') {
         solved = 'c';
         const cVal = Math.sqrt(a * a + b * b);
-        document.getElementById('side-c').value = cVal.toFixed(2);
+        document.getElementById('side-c').value = formatSig(cVal, 6);
         inputs.c = cVal;
       } else if (a && c && !b && c > a && currentlyEditing !== 'b') {
         solved = 'b';
         const bVal = Math.sqrt(c * c - a * a);
-        document.getElementById('side-b').value = bVal.toFixed(2);
+        document.getElementById('side-b').value = formatSig(bVal, 6);
         inputs.b = bVal;
       } else if (b && c && !a && c > b && currentlyEditing !== 'a') {
         solved = 'a';
         const aVal = Math.sqrt(c * c - b * b);
-        document.getElementById('side-a').value = aVal.toFixed(2);
+        document.getElementById('side-a').value = formatSig(aVal, 6);
         inputs.a = aVal;
       }
 
@@ -393,8 +447,8 @@
         const betaRad = Math.atan2(b, a);
         document.getElementById('angle-alpha').textContent = (alphaRad * 180 / Math.PI).toFixed(2) + '°';
         document.getElementById('angle-beta').textContent = (betaRad * 180 / Math.PI).toFixed(2) + '°';
-        document.getElementById('prop-area').textContent = ((a * b) / 2).toFixed(2);
-        document.getElementById('prop-perimeter').textContent = (a + b + c).toFixed(2);
+        document.getElementById('prop-area').textContent = formatSig((a * b) / 2, 6);
+        document.getElementById('prop-perimeter').textContent = formatSig(a + b + c, 6);
       } else {
         document.getElementById('angle-alpha').textContent = '—';
         document.getElementById('angle-beta').textContent = '—';
@@ -503,9 +557,7 @@
 
       // Helper: format number concisely
       function fmt(v) {
-        if (v >= 10000) return v.toFixed(0);
-        if (v >= 100) return v.toFixed(1);
-        return v.toFixed(2);
+        return formatSig(v, 4);
       }
 
       const labelSize = 13;
@@ -582,36 +634,14 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
 
     // --- MOBILE WARNING MODAL ---
     window.addEventListener('load', checkMobileWarning);
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

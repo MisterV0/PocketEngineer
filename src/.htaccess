@@ -1,0 +1,2 @@
+# Build tooling only — never serve anything in this folder.
+Require all denied

@@ -3,30 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-  <title>Power Station Battery Life Calculator - How Long Will Your Battery Last</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
+  <title>Power Station Runtime Calculator — PocketEngineer</title>
   <meta name="description" content="Calculate power station battery life and runtime with multiple devices. Estimate how long your battery lasts camping, off-grid, or as emergency backup. Check power consumption instantly.">
   <link rel="canonical" href="https://www.pockeng.com/tools/PowerStation.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pockeng.com/tools/PowerStation.html">
   <meta property="og:title" content="Power Station Battery Life Calculator - Runtime Estimator">
   <meta property="og:description" content="Calculate power station runtime and battery life for camping, emergency backup, and off-grid power. Get instant runtime estimates with multiple devices.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/power-station-battery-runtime-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Power station battery runtime calculator showing 62 percent charge and 8 hours 20 minutes left">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Power Station Battery Life Calculator - Runtime Estimator">
+  <meta name="twitter:description" content="Calculate power station runtime and battery life for camping, emergency backup, and off-grid power. Get instant runtime estimates with multiple devices.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/power-station-battery-runtime-calculator.png">
+  <meta name="twitter:image:alt" content="Power station battery runtime calculator showing 62 percent charge and 8 hours 20 minutes left">
   
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Icons: pinned, self-hosted subset of Lucide -->
+  <script src="../resources/lucide-icons.js?v=1.4.0"></script>
   
   <!-- Common JS -->
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
 
   <style>
+    /* Hover/focus tooltip. Lucide swaps the <i> placeholder for an <svg> and drops
+       its attributes, so the hint lives on this wrapper instead of a title="". */
+    .pe-tip { position: relative; display: inline-flex; align-items: center; cursor: help; outline: none; }
+
+    .pe-tip::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 9px);
+      right: -4px;
+      width: 242px;
+      background: #18181b;
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.45;
+      letter-spacing: 0;
+      text-transform: none;
+      text-align: left;
+      padding: 9px 11px;
+      border-radius: 9px;
+      box-shadow: 0 12px 26px -10px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-3px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .pe-tip::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 5px);
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      background: #18181b;
+      transform: rotate(45deg);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease;
+      z-index: 51;
+    }
+
+    .pe-tip:hover::after, .pe-tip:focus-visible::after,
+    .pe-tip:hover::before, .pe-tip:focus-visible::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) rotate(var(--r, 0deg));
+    }
+
+    .pe-tip:hover::before, .pe-tip:focus-visible::before { --r: 45deg; }
+
     /* Apple-inspired Design System */
     * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     body { 
@@ -41,35 +101,6 @@
       text-transform: uppercase;
     }
     
-    /* Back Button */
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.875rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #71717a;
-      border: 1px solid #e4e4e7;
-      background-color: white;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      position: relative;
-      overflow: hidden;
-    }
-    .back-button:hover {
-      color: #18181b;
-      border-color: #71717a;
-      background-color: #ffffff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-    .back-button:active {
-      transform: scale(0.96);
-    }
     
     /* Modern Slider */
     input[type=range] {
@@ -103,8 +134,8 @@
     input[type=number] { -moz-appearance: textfield; }
     
     /* Modal & Animations */
-    #appliancesModal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease-out; }
-    #appliancesModal.active { opacity: 1; pointer-events: auto; }
+    #appliancesModal { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease-out, visibility 0s linear 0.3s; }
+    #appliancesModal.active { opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
     .modal-content { transform: scale(0.95) translateY(10px); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     #appliancesModal.active .modal-content { transform: scale(1) translateY(0); }
     
@@ -115,16 +146,62 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Power Station Battery Life Calculator",
+      "url": "https://www.pockeng.com/tools/PowerStation.html",
+      "description": "Calculate power station battery life and runtime with multiple devices. Estimate how long your battery lasts camping, off-grid, or as emergency backup. Check power consumption instantly.",
+      "image": "https://www.pockeng.com/resources/social/power-station-battery-runtime-calculator.png",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Power Station Battery Life Calculator",
+      "item": "https://www.pockeng.com/tools/PowerStation.html"
+    }
+  ]
+}
+  </script>
 </head>
-<body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-sky-200 pb-20">
+<body class="pe-page text-zinc-900 min-h-screen flex flex-col antialiased selection:bg-sky-200 pb-20">
 
   <!-- Header -->
   <header class="flex-none bg-white/80 backdrop-blur-md border-b border-zinc-200/40 relative z-50">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-center relative">
-      <a href="../index.html" class="back-button absolute left-6" title="Back to home">
-        <i data-lucide="chevron-left" class="w-4 h-4"></i> Back
-      </a>
-      <h1 class="text-lg tracking-tight text-zinc-900">Battery Life Calculator</h1>
+      <a href="../" class="pe-back absolute left-6">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
+      <h1 class="text-lg tracking-tight text-zinc-900">Power Station Battery Life Calculator</h1>
     </div>
   </header>
 
@@ -144,7 +221,7 @@
         <h2 class="text-zinc-400 font-medium tracking-wide uppercase text-xs md:text-sm mb-1">Estimated Total Runtime</h2>
         <p class="text-xs md:text-sm text-zinc-400 max-w-sm" id="bannerDesc">Time until battery hits 0% with all connected devices running.</p>
       </div>
-      <div class="text-center md:text-right">
+      <div class="text-center md:text-right" aria-live="polite">
         <div id="grandTotalTime" class="text-5xl md:text-6xl font-light tracking-tighter text-sky-400 transition-colors duration-300">0h 0m</div>
         <div class="mt-2 flex items-center justify-center md:justify-end gap-2">
           <div id="grandTotalWatts" class="text-zinc-300 font-mono text-sm bg-black/30 px-3 py-1 rounded-lg border border-zinc-700">Total Draw: 0W</div>
@@ -163,7 +240,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Capacity Input -->
           <div>
-            <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2">Total Capacity</label>
+            <label for="batteryCapacityInput" class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2">Total Capacity</label>
             <div class="flex gap-2">
               <input type="number" id="batteryCapacityInput" value="500" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-lg font-mono font-bold focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition-all w-full">
               <select id="batteryCapacityUnit" class="bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-3 font-bold text-zinc-700 outline-none focus:border-sky-500">
@@ -175,9 +252,13 @@
 
           <!-- Max Output Limit -->
           <div>
-            <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2 flex items-center justify-between">
+            <label for="maxOutputInput" class="block text-xs font-bold text-zinc-500 uppercase tracking-wide mb-2 flex items-center justify-between">
               Max Output Limit
-              <i data-lucide="info" class="w-3 h-3 text-zinc-400" title="The maximum continuous wattage your inverter can handle before shutting down."></i>
+              <span class="pe-tip" tabindex="0" role="note"
+                aria-label="The maximum continuous wattage your inverter can supply before it shuts down. Check the label on your power station."
+                data-tip="The maximum continuous wattage your inverter can supply before it shuts down. Check the label on your power station.">
+                <i data-lucide="info" class="w-3 h-3 text-zinc-400"></i>
+              </span>
             </label>
             <div class="flex gap-2">
               <input type="number" id="maxOutputInput" value="600" class="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-lg font-mono font-bold focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none transition-all w-full">
@@ -189,7 +270,7 @@
         <!-- Level Slider -->
         <div class="bg-zinc-50 rounded-2xl p-6 border border-zinc-100">
           <div class="flex justify-between items-end mb-4">
-            <label class="block text-sm font-bold text-zinc-600 uppercase tracking-wide">Current Charge Level</label>
+            <label for="batteryLevel" class="block text-sm font-bold text-zinc-600 uppercase tracking-wide">Current Charge Level</label>
             <div class="text-3xl font-light tracking-tighter text-zinc-900"><span id="levelDisplay">100</span><span class="text-zinc-400 text-xl font-normal">%</span></div>
           </div>
           <input type="range" id="batteryLevel" min="1" max="100" value="100" oninput="calculate()">
@@ -213,7 +294,7 @@
             <button id="clearAllBtn" onclick="clearAll()" class="text-xs font-bold text-zinc-400 hover:text-red-500 uppercase tracking-wider transition-all opacity-0 pointer-events-none">
               Clear All
             </button>
-            <button onclick="toggleModal('appliancesModal')" class="bg-zinc-900 hover:bg-sky-500 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all hover:scale-105 shadow-md">
+            <button type="button" onclick="toggleModal('appliancesModal')" aria-label="Add device" class="bg-zinc-900 hover:bg-sky-500 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all hover:scale-105 shadow-md">
               <i data-lucide="plus"></i>
             </button>
           </div>
@@ -228,16 +309,17 @@
     </div>
   </main>
 
+
   <!-- Appliances Selection Modal -->
   <div id="appliancesModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md">
-    <div class="modal-content bg-white w-full max-w-3xl rounded-[2rem] shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
+    <div class="modal-content bg-white w-full max-w-3xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden">
       
       <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/80 backdrop-blur-sm">
         <div>
           <h2 class="text-xl font-bold text-zinc-900">Add Appliance</h2>
-          <p class="text-xs text-zinc-500 mt-1">Select an item to add its continuous wattage draw.</p>
+          <p class="text-xs text-zinc-500 mt-1">Tap items to add their continuous wattage draw. Tap again to add another.</p>
         </div>
-        <button onclick="toggleModal('appliancesModal')" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
+        <button type="button" onclick="toggleModal('appliancesModal')" aria-label="Close" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -247,33 +329,38 @@
           <!-- Populated by JS -->
         </div>
       </div>
+
+      <div class="px-6 py-4 border-t border-zinc-100 bg-white flex items-center justify-between gap-4">
+        <span id="addedCounter" class="text-sm font-medium text-zinc-500" aria-live="polite">Nothing added yet</span>
+        <button type="button" onclick="toggleModal('appliancesModal')" class="bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-colors">Done</button>
+      </div>
     </div>
   </div>
 
   <!-- Custom Device Modal -->
   <div id="customDeviceModal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-md" style="display: none;">
-    <div class="modal-content bg-white w-full max-w-md rounded-[2rem] shadow-2xl flex flex-col">
+    <div class="modal-content bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col">
       
       <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/80">
         <h2 class="text-xl font-bold text-zinc-900">Custom Device</h2>
-        <button onclick="closeCustomModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
+        <button type="button" onclick="closeCustomModal()" aria-label="Close" class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-200 hover:bg-zinc-300 text-zinc-600 transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
       <div class="p-6 space-y-4">
         <div>
-          <label class="block text-sm font-bold text-zinc-700 mb-2">Device Name</label>
+          <label for="customDeviceName" class="block text-sm font-bold text-zinc-700 mb-2">Device Name</label>
           <input type="text" id="customDeviceName" placeholder="e.g., Drill, Air Fryer..." class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
         </div>
         
         <div>
-          <label class="block text-sm font-bold text-zinc-700 mb-2">Power (Watts)</label>
+          <label for="customDeviceWatts" class="block text-sm font-bold text-zinc-700 mb-2">Power (Watts)</label>
           <input type="number" id="customDeviceWatts" placeholder="0" min="1" step="1" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:border-sky-500 focus:ring-2 focus:ring-sky-100 outline-none">
         </div>
 
         <div class="flex gap-3 pt-4">
-          <button onclick="closeCustomModal()" class="flex-1 px-4 py-2 border border-zinc-200 rounded-lg text-zinc-700 font-medium hover:bg-zinc-50 transition-colors">Cancel</button>
+          <button type="button" onclick="closeCustomModal()" class="flex-1 px-4 py-2 border border-zinc-200 rounded-lg text-zinc-700 font-medium hover:bg-zinc-50 transition-colors">Cancel</button>
           <button onclick="submitCustomDevice()" class="flex-1 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-medium rounded-lg transition-colors">Add</button>
         </div>
       </div>
@@ -281,8 +368,8 @@
   </div>
 
   <script>
-    // Initialize Lucide Icons
-    lucide.createIcons();
+    // Swap icon placeholders for inline SVG
+    peIcons();
 
     // Professionally Expanded Appliance Database
     const APPLIANCES = [
@@ -351,9 +438,27 @@
     els.unitSelect.addEventListener('change', calculate);
     els.maxOutputInput.addEventListener('input', calculate);
     
+    let addedThisVisit = 0;
+
     function toggleModal(id) {
       const modal = document.getElementById(id);
+      const opening = !modal.classList.contains('active');
       modal.classList.toggle('active');
+      if (opening) {
+        addedThisVisit = 0;
+        updateAddedCounter();
+        openModal(modal, () => toggleModal(id));
+      } else {
+        closeModal(modal);
+      }
+    }
+
+    function updateAddedCounter() {
+      const counter = document.getElementById('addedCounter');
+      counter.textContent = addedThisVisit === 0
+        ? 'Nothing added yet'
+        : `${addedThisVisit} added · ${state.selected.reduce((sum, a) => sum + a.watts * a.qty, 0)}W total`;
+      counter.className = addedThisVisit === 0 ? 'text-sm font-medium text-zinc-500' : 'text-sm font-semibold text-sky-600';
     }
 
     // Close modal on background click
@@ -380,17 +485,18 @@
           <span class="text-xs font-mono font-medium text-zinc-400 mt-1">${app.watts}W</span>
         </button>
       `).join('');
-      lucide.createIcons();
+      peIcons();
     }
 
     function addAppliance(id) {
       const app = APPLIANCES.find(a => a.id === id);
       
       if (app.isCustom) {
-        // Show custom device modal instead
+        // Close the picker (focus returns to the + button), then show the custom form
         toggleModal('appliancesModal');
-        document.getElementById('customDeviceModal').style.display = 'flex';
-        document.getElementById('customDeviceName').focus();
+        const customModal = document.getElementById('customDeviceModal');
+        customModal.style.display = 'flex';
+        openModal(customModal, closeCustomModal, document.getElementById('customDeviceName'));
       } else {
         // Check if device is already in the list
         const existing = state.selected.find(a => a.id === id);
@@ -399,14 +505,18 @@
         } else {
           state.selected.push({ ...app, qty: 1, uuid: Math.random().toString(36).substr(2, 9) });
         }
-        
-        toggleModal('appliancesModal');
+
+        // Picker stays open so several devices can be added in one go
+        addedThisVisit += 1;
         calculate();
+        updateAddedCounter();
       }
     }
 
     function closeCustomModal() {
-      document.getElementById('customDeviceModal').style.display = 'none';
+      const customModal = document.getElementById('customDeviceModal');
+      customModal.style.display = 'none';
+      closeModal(customModal);
       document.getElementById('customDeviceName').value = '';
       document.getElementById('customDeviceWatts').value = '';
     }
@@ -536,7 +646,7 @@
             <p class="text-sm font-medium">No devices connected</p>
             <button onclick="toggleModal('appliancesModal')" class="mt-2 text-xs font-bold text-sky-500 bg-sky-50 px-4 py-2 rounded-full hover:bg-sky-100 transition-colors">Add your first device</button>
           </div>`;
-        lucide.createIcons();
+        peIcons();
         return;
       }
 
@@ -547,30 +657,30 @@
               <i data-lucide="${app.icon}" class="w-6 h-6"></i>
             </div>
             <div>
-              <div class="font-bold text-zinc-900">${app.name}</div>
+              <div class="font-bold text-zinc-900">${escapeHtml(app.name)}</div>
               <div class="text-xs font-mono font-medium text-zinc-500">${app.watts}W each <span class="text-zinc-300 mx-1">&bull;</span> ${app.watts * app.qty}W total</div>
             </div>
           </div>
           
           <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pl-16 sm:pl-0">
             <div class="flex items-center bg-zinc-50 border border-zinc-200 rounded-lg overflow-hidden">
-              <button onclick="updateQty('${app.uuid}', -1)" class="w-8 h-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 transition-colors">
+              <button type="button" onclick="updateQty('${app.uuid}', -1)" aria-label="One less ${escapeHtml(app.name)}" class="w-8 h-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 transition-colors">
                 <i data-lucide="minus" class="w-3 h-3"></i>
               </button>
               <div class="w-8 text-center text-sm font-bold text-zinc-900 font-mono">${app.qty}</div>
-              <button onclick="updateQty('${app.uuid}', 1)" class="w-8 h-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 transition-colors">
+              <button type="button" onclick="updateQty('${app.uuid}', 1)" aria-label="One more ${escapeHtml(app.name)}" class="w-8 h-8 flex items-center justify-center text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 transition-colors">
                 <i data-lucide="plus" class="w-3 h-3"></i>
               </button>
             </div>
             
-            <button onclick="removeAppliance('${app.uuid}')" class="text-zinc-400 hover:text-red-500 bg-zinc-50 hover:bg-red-50 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors shrink-0">
+            <button type="button" onclick="removeAppliance('${app.uuid}')" aria-label="Remove ${escapeHtml(app.name)}" class="text-zinc-400 hover:text-red-500 bg-zinc-50 hover:bg-red-50 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors shrink-0">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </div>
         </div>
       `).reverse().join(''); // Reversing to show newest at top
       
-      lucide.createIcons();
+      peIcons();
     }
 
     function formatTime(hours) {
@@ -579,8 +689,9 @@
         return mins <= 0 ? `<1m` : `${mins}m`;
       }
       if (hours > 99) return `99h+`;
-      const h = Math.floor(hours);
-      const m = Math.round((hours - h) * 60);
+      const totalMinutes = Math.round(hours * 60);
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
       return m === 0 ? `${h}h` : `${h}h ${m}m`;
     }
 
@@ -591,5 +702,9 @@
       calculate();
     });
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 </html>

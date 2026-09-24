@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Percentage Calculator — PocketEngineer</title>
   <meta name="description"
     content="Free percentage calculator — compute X% of Y, what % X is of Y, percentage change, markup, discount, and tip. Instant results with visual bar breakdown.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Percentage Calculator — PocketEngineer">
   <meta property="og:description"
     content="Calculate percentages instantly — X% of Y, what percent, change, markup and discount. Visual bar breakdown included.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/percentage-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Percentage calculator donut chart showing 35 percent of 240 equals 84">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Percentage Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Calculate percentages instantly — X% of Y, what percent, change, markup and discount. Visual bar breakdown included.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/percentage-calculator.png">
+  <meta name="twitter:image:alt" content="Percentage calculator donut chart showing 35 percent of 240 equals 84">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       font-feature-settings: "cv05", "cv08", "ss01";
@@ -70,19 +80,62 @@
       animation: fadeSlideIn 0.3s ease-out;
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Percentage Calculator",
+      "url": "https://www.pockeng.com/tools/percentage.html",
+      "description": "Free percentage calculator — compute X% of Y, what % X is of Y, percentage change, markup, discount, and tip. Instant results with visual bar breakdown.",
+      "image": "https://www.pockeng.com/resources/social/percentage-calculator.png",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Percentage Calculator",
+      "item": "https://www.pockeng.com/tools/percentage.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="text-zinc-900 antialiased min-h-screen flex flex-col selection:bg-zinc-200 selection:text-zinc-900">
+<body class="pe-page text-zinc-900 antialiased min-h-screen flex flex-col selection:bg-zinc-200 selection:text-zinc-900">
 
   <!-- Header -->
   <header class="flex-none bg-white/80 backdrop-blur-sm border-b border-zinc-200/50 z-50 sticky top-0">
     <div class="max-w-lg mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="../index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Back
-      </a>
+      <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
       <h1 class="text-lg font-semibold text-zinc-900 tracking-tight">Percentage Calculator</h1>
       <div class="w-20"></div>
     </div>
@@ -99,7 +152,7 @@
         </div>
 
         <!-- Result Display -->
-        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl p-4 group transition-transform duration-500 hover:scale-[1.01]">
+        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl p-4 group transition-transform duration-500 hover:scale-[1.01]" aria-live="polite">
           <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
           <div class="relative z-10 flex items-center justify-between">
             <p class="text-zinc-400 text-xs font-semibold select-none" id="result-label">25% of 200</p>
@@ -117,7 +170,7 @@
 
         <!-- Mode Selector -->
         <div>
-          <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Mode</label>
+          <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-3">Mode</span>
           <div class="grid grid-cols-2 gap-1.5 bg-zinc-100 rounded-xl p-1.5" id="mode-selector">
             <button class="mode-btn active text-[11px] font-semibold px-3 py-2.5 rounded-lg" data-mode="of" onclick="setMode('of')">X% of Y</button>
             <button class="mode-btn text-[11px] font-semibold px-3 py-2.5 rounded-lg text-zinc-500" data-mode="what" onclick="setMode('what')">X is ?% of Y</button>
@@ -129,18 +182,18 @@
         <!-- Mode: X% of Y -->
         <div id="panel-of" class="panel-animate">
           <div class="flex items-center gap-2 mb-3">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</label>
+            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</span>
             <span class="h-px bg-zinc-100 flex-1"></span>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">X</label>
+              <label for="of-x" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">X</label>
               <input type="number" id="of-x" value="25" oninput="calcOf()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
               <span class="text-xs text-zinc-400 font-medium ml-2 w-4 text-center select-none">%</span>
             </div>
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">Y</label>
+              <label for="of-y" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">Y</label>
               <input type="number" id="of-y" value="200" oninput="calcOf()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
@@ -150,17 +203,17 @@
         <!-- Mode: X is ?% of Y -->
         <div id="panel-what" class="hidden">
           <div class="flex items-center gap-2 mb-3">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</label>
+            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</span>
             <span class="h-px bg-zinc-100 flex-1"></span>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">X</label>
+              <label for="what-x" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">X</label>
               <input type="number" id="what-x" value="50" oninput="calcWhat()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">Y</label>
+              <label for="what-y" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-6">Y</label>
               <input type="number" id="what-y" value="200" oninput="calcWhat()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
@@ -170,17 +223,17 @@
         <!-- Mode: % Change -->
         <div id="panel-change" class="hidden">
           <div class="flex items-center gap-2 mb-3">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</label>
+            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</span>
             <span class="h-px bg-zinc-100 flex-1"></span>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Old</label>
+              <label for="change-old" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Old</label>
               <input type="number" id="change-old" value="80" oninput="calcChange()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">New</label>
+              <label for="change-new" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">New</label>
               <input type="number" id="change-new" value="100" oninput="calcChange()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
@@ -190,17 +243,17 @@
         <!-- Mode: Markup / Discount -->
         <div id="panel-markup" class="hidden">
           <div class="flex items-center gap-2 mb-3">
-            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</label>
+            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Inputs</span>
             <span class="h-px bg-zinc-100 flex-1"></span>
           </div>
           <div class="grid grid-cols-2 gap-3 mb-3">
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Val</label>
+              <label for="markup-val" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Val</label>
               <input type="number" id="markup-val" value="100" oninput="calcMarkup()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
             </div>
             <div class="ios-input-wrapper flex items-center bg-white border border-zinc-200 rounded-lg px-3 py-2.5">
-              <label class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Rate</label>
+              <label for="markup-rate" class="text-sm font-medium text-zinc-500 shrink-0 select-none w-8">Rate</label>
               <input type="number" id="markup-rate" value="15" oninput="calcMarkup()"
                 class="text-right w-full bg-transparent border-none p-0 text-sm font-mono font-medium focus:ring-0 text-zinc-900 outline-none">
               <span class="text-xs text-zinc-400 font-medium ml-2 w-4 text-center select-none">%</span>
@@ -219,6 +272,7 @@
     <div class="w-full" id="breakdown"></div>
 
   </main>
+
 
   <script>
     const canvas = document.getElementById('percentCanvas');
@@ -276,9 +330,9 @@
       displayPercent = x;
       displayTotal = y;
       displayPart = result;
-      animTarget = Math.min(Math.abs(x), 100);
+      setAnimTarget(Math.min(Math.abs(x), 100));
       document.getElementById('result-label').textContent = x + '% of ' + y;
-      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '');
+      document.getElementById('display-result').textContent = fmtNum(result);
       updateBreakdown(x, y, result);
     }
 
@@ -289,9 +343,9 @@
       displayPercent = result;
       displayTotal = y;
       displayPart = x;
-      animTarget = Math.min(Math.abs(result), 100);
+      setAnimTarget(Math.min(Math.abs(result), 100));
       document.getElementById('result-label').textContent = x + ' is what % of ' + y;
-      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '') + '%';
+      document.getElementById('display-result').textContent = fmtNum(result) + '%';
       updateBreakdown(result, y, x);
     }
 
@@ -303,13 +357,13 @@
       displayPercent = Math.abs(change);
       displayTotal = oldVal;
       displayPart = newVal;
-      animTarget = Math.min(Math.abs(change), 100);
+      setAnimTarget(Math.min(Math.abs(change), 100));
       document.getElementById('result-label').textContent = 'Change from ' + oldVal + ' → ' + newVal;
       document.getElementById('display-result').textContent = sign + change.toFixed(2) + '%';
       document.getElementById('breakdown').innerHTML =
         '<div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3">' +
         '<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Difference</p>' +
-        '<p class="text-base font-mono font-semibold text-zinc-900">' + sign + (newVal - oldVal).toFixed(4).replace(/\.?0+$/, '') + '</p></div>';
+        '<p class="text-base font-mono font-semibold text-zinc-900">' + sign + fmtNum(newVal - oldVal) + '</p></div>';
     }
 
     function calcMarkup() {
@@ -320,10 +374,10 @@
       displayPercent = rate;
       displayTotal = val;
       displayPart = Math.abs(delta);
-      animTarget = Math.min(rate, 100);
+      setAnimTarget(Math.min(rate, 100));
       const label = markupDir === 1 ? 'Markup' : 'Discount';
       document.getElementById('result-label').textContent = label + ' ' + rate + '% on ' + val;
-      document.getElementById('display-result').textContent = result.toFixed(4).replace(/\.?0+$/, '');
+      document.getElementById('display-result').textContent = fmtNum(result);
       document.getElementById('breakdown').innerHTML =
         '<div class="grid grid-cols-2 gap-3">' +
         '<div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3">' +
@@ -334,16 +388,22 @@
         '<p class="text-base font-mono font-semibold text-zinc-900">' + (markupDir === 1 ? '+' : '−') + Math.abs(delta).toFixed(2) + '</p></div></div>';
     }
 
+    // Up to 4 decimals for normal values, significant figures for tiny ones
+    function fmtNum(v) {
+      if (v !== 0 && Math.abs(v) < 0.01) return formatSig(v, 4);
+      return v.toFixed(4).replace(/\.?0+$/, '');
+    }
+
     function updateBreakdown(pct, total, part) {
       const remainder = total - part;
       document.getElementById('breakdown').innerHTML =
         '<div class="grid grid-cols-2 gap-3">' +
         '<div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3">' +
         '<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Part</p>' +
-        '<p class="text-base font-mono font-semibold text-zinc-900">' + part.toFixed(4).replace(/\.?0+$/, '') + '</p></div>' +
+        '<p class="text-base font-mono font-semibold text-zinc-900">' + fmtNum(part) + '</p></div>' +
         '<div class="bg-zinc-50 border border-zinc-200 rounded-xl p-3">' +
         '<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wide mb-1">Remainder</p>' +
-        '<p class="text-base font-mono font-semibold text-zinc-900">' + remainder.toFixed(4).replace(/\.?0+$/, '') + '</p></div></div>';
+        '<p class="text-base font-mono font-semibold text-zinc-900">' + fmtNum(remainder) + '</p></div></div>';
     }
 
     // Canvas
@@ -358,10 +418,23 @@
       ctx.scale(dpr, dpr);
     }
 
+    let animRunning = false;
+
+    function setAnimTarget(value) {
+      animTarget = value;
+      if (!animRunning) {
+        animRunning = true;
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // Ease toward the target, then stop the loop until the value changes again
     function animate() {
       animCurrent += (animTarget - animCurrent) * 0.08;
+      if (prefersReducedMotion || Math.abs(animTarget - animCurrent) < 0.05) animCurrent = animTarget;
       drawVis();
-      requestAnimationFrame(animate);
+      if (animCurrent !== animTarget) requestAnimationFrame(animate);
+      else animRunning = false;
     }
 
     function drawVis() {
@@ -410,38 +483,17 @@
       ctx.fillText(currentMode === 'change' ? 'change' : 'of total', cx, cy + 14);
     }
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => { resizeCanvas(); drawVis(); });
     resizeCanvas();
     calcOf();
-    requestAnimationFrame(animate);
+    // Redraw once web fonts are ready so the center label uses JetBrains Mono
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawVis);
 
-    // Mobile keyboard fix
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

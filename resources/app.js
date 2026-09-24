@@ -5,8 +5,8 @@
 function goBackHome() {
   // Navigate to root index — works from any subdirectory
   const depth = window.location.pathname.split('/').filter(Boolean).length - 1;
-  const prefix = depth > 0 ? '../'.repeat(depth) : '';
-  window.location.href = prefix + 'index.html';
+  const prefix = depth > 0 ? '../'.repeat(depth) : './';
+  window.location.href = prefix;
 }
 
 /**
@@ -71,6 +71,113 @@ function formatWithSeparators(value, decimals = 2) {
     maximumFractionDigits: decimals
   });
 }
+
+/**
+ * Format a number to N significant figures, without exponent notation
+ * and without trailing zeros. Use this instead of toFixed() for results,
+ * so small values never collapse to 0.
+ *   formatSig(0.0000295735, 4) -> "0.00002957"
+ *   formatSig(5026.548, 5)     -> "5026.5"
+ * @param {number} value
+ * @param {number} sigFigs
+ * @returns {string}
+ */
+function formatSig(value, sigFigs = 6) {
+  if (value === null || value === undefined || !isFinite(value)) return '';
+  if (value === 0) return '0';
+  const rounded = Number(value.toPrecision(sigFigs));
+  const abs = Math.abs(rounded);
+  if (abs >= 1e21 || abs < 1e-15) return rounded.toExponential(sigFigs - 1).replace(/\.?0+e/, 'e');
+  const decimals = Math.max(0, sigFigs - 1 - Math.floor(Math.log10(abs)));
+  const text = rounded.toFixed(Math.min(decimals, 20));
+  return text.includes('.') ? text.replace(/\.?0+$/, '') : text;
+}
+
+const SI_PREFIXES = [
+  [1e12, 'T'], [1e9, 'G'], [1e6, 'M'], [1e3, 'k'], [1, ''],
+  [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p']
+];
+
+/**
+ * Split a value into a significant-figure mantissa and an SI prefix.
+ *   engParts(0.000702128) -> { number: "702.1", prefix: "µ" }
+ * @param {number} value
+ * @param {number} sigFigs
+ * @returns {{number: string, prefix: string}}
+ */
+function engParts(value, sigFigs = 4) {
+  if (value === null || value === undefined || !isFinite(value)) return { number: '—', prefix: '' };
+  if (value === 0) return { number: '0', prefix: '' };
+  const abs = Math.abs(value);
+  let i = SI_PREFIXES.findIndex(([scale]) => abs >= scale);
+  if (i === -1) i = SI_PREFIXES.length - 1;
+  let [scale, prefix] = SI_PREFIXES[i];
+  // Rounding can carry 999.96 up to 1000: step up one prefix when it does
+  if (Math.abs(Number((value / scale).toPrecision(sigFigs))) >= 1000 && i > 0) {
+    [scale, prefix] = SI_PREFIXES[i - 1];
+  }
+  return { number: formatSig(value / scale, sigFigs), prefix };
+}
+
+/**
+ * Engineering format with SI prefix and unit.
+ *   formatEng(0.000702128, 'A') -> "702.1 µA"
+ *   formatEng(4700, 'Ω')        -> "4.7 kΩ"
+ * @param {number} value
+ * @param {string} unit
+ * @param {number} sigFigs
+ * @returns {string}
+ */
+function formatEng(value, unit = '', sigFigs = 4) {
+  const { number, prefix } = engParts(value, sigFigs);
+  if (number === '—') return '—';
+  return `${number} ${prefix}${unit}`.trim();
+}
+
+/**
+ * Escape user-provided text before putting it into innerHTML.
+ * @param {string} text
+ * @returns {string}
+ */
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;'); // not &#39;: code highlighters treat # as a comment
+}
+
+/**
+ * Remove disallowed characters from a text input without jumping the caret
+ * to the end (assigning .value normally moves it there).
+ *   stripInvalidChars(input, /[^01]/g)
+ *   stripInvalidChars(input, /[^0-9a-f]/gi, s => s.toUpperCase())
+ * @param {HTMLInputElement} input
+ * @param {RegExp} disallowed - Must use the g flag
+ * @param {Function} [transform] - Length-preserving transform, e.g. toUpperCase
+ * @returns {string} The cleaned value
+ */
+function stripInvalidChars(input, disallowed, transform = s => s) {
+  const value = input.value;
+  const clean = transform(value.replace(disallowed, ''));
+  if (clean === value) return clean;
+  const caret = input.selectionStart ?? value.length;
+  const beforeCaret = value.slice(0, caret);
+  const removed = beforeCaret.length - beforeCaret.replace(disallowed, '').length;
+  input.value = clean;
+  const pos = Math.max(0, caret - removed);
+  try { input.setSelectionRange(pos, pos); } catch (e) { /* not a text input */ }
+  return clean;
+}
+
+/**
+ * True when the user asked the OS to reduce motion.
+ * Canvas loops check this and draw a single static frame instead.
+ */
+const prefersReducedMotion = window.matchMedia
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false;
 
 /**
  * Convert decimal to binary
@@ -170,6 +277,105 @@ function clearAppState(appName) {
   }
 }
 
+// ============================================
+// MODALS: Escape to close, focus trap, focus restore
+// ============================================
+
+const PE_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const peModalStack = [];
+
+function peVisibleFocusables(el) {
+  return Array.from(el.querySelectorAll(PE_FOCUSABLE))
+    .filter(node => (node.offsetParent !== null || node === document.activeElement)
+      && getComputedStyle(node).visibility !== 'hidden');
+}
+
+/**
+ * Register a modal that the page has just shown. The page keeps its own
+ * show/hide styling; this adds dialog semantics, moves focus inside,
+ * traps Tab, and makes Escape call `onClose`.
+ * @param {HTMLElement} el - The modal root (overlay) element
+ * @param {Function} onClose - The page's own close function
+ * @param {HTMLElement} [initialFocus] - Element to focus first
+ */
+function openModal(el, onClose, initialFocus) {
+  if (!el) return;
+  if (peModalStack.some(entry => entry.el === el)) return;
+
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
+  if (!el.hasAttribute('aria-labelledby') && !el.hasAttribute('aria-label')) {
+    const heading = el.querySelector('h1, h2, h3');
+    if (heading) {
+      if (!heading.id) heading.id = (el.id || 'pe-modal') + '-title';
+      el.setAttribute('aria-labelledby', heading.id);
+    }
+  }
+
+  peModalStack.push({ el, onClose, opener: document.activeElement });
+
+  // Focus right away; if the modal is still fading in, try once more shortly after
+  const moveFocus = () => {
+    const target = initialFocus || peVisibleFocusables(el)[0];
+    if (target) {
+      target.focus({ preventScroll: true });
+    } else {
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+      el.focus({ preventScroll: true });
+    }
+    return el.contains(document.activeElement);
+  };
+  if (!moveFocus()) setTimeout(moveFocus, 60);
+}
+
+/**
+ * Unregister a modal the page has just hidden and give focus back to
+ * whatever opened it.
+ * @param {HTMLElement} el - The modal root element
+ */
+function closeModal(el) {
+  const index = peModalStack.findIndex(entry => entry.el === el);
+  if (index === -1) return;
+  const [entry] = peModalStack.splice(index, 1);
+  const opener = entry.opener;
+  if (opener && document.contains(opener) && typeof opener.focus === 'function') {
+    opener.focus({ preventScroll: true });
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!peModalStack.length) return;
+  const top = peModalStack[peModalStack.length - 1];
+
+  if (e.key === 'Escape') {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof top.onClose === 'function') top.onClose();
+    else closeModal(top.el);
+    return;
+  }
+
+  if (e.key === 'Tab') {
+    const items = peVisibleFocusables(top.el);
+    if (!items.length) {
+      e.preventDefault();
+      return;
+    }
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (!top.el.contains(document.activeElement)) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+});
+
 // Auto-initialize back buttons on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initBackButtons();
@@ -230,10 +436,14 @@ function checkMobileWarning() {
 
     document.body.appendChild(modalContainer);
 
-    // Add close logic
-    document.getElementById('sharedMobileWarningBtn').addEventListener('click', () => {
-      document.getElementById('sharedMobileWarningModal').classList.remove('active');
+    // Add close logic (button, or Escape via the shared modal helper)
+    const dismiss = () => {
+      modalContainer.classList.remove('active');
       sessionStorage.setItem(modalShownKey, 'true');
-    });
+      closeModal(modalContainer);
+    };
+    document.getElementById('sharedMobileWarningBtn').addEventListener('click', dismiss);
+    modalContainer.setAttribute('aria-label', 'Small screen notice');
+    openModal(modalContainer, dismiss);
   }
 }

@@ -1,124 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.pockeng.com/</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/pocketengineer-engineering-tools.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/voltage.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/voltage-divider-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/ohms-law.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/ohms-law-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/resistor.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/resistor-color-code-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/grid.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/series-parallel-circuit-simulator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/unit-convertor.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/unit-converter.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/circle.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/circle-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/square.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/square-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/rectangle.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/rectangle-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/binary.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/binary-to-decimal-converter.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/hexa.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/hex-to-decimal-converter.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/median.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/median-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/bitoperations.html</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/bitwise-operations-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/pitagora.html</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/pythagorean-theorem-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/led.html</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/led-resistor-calculator.png</image:loc>
+    </image:image>
   </url>
 
   <url>
     <loc>https://www.pockeng.com/tools/gear.html</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/gear-ratio-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/percentage.html</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/percentage-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/matrix.html</loc>
-    <lastmod>2026-03-24</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/matrix-calculator.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/lcd.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/arduino-lcd-display-designer.png</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.pockeng.com/tools/PowerStation.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.pockeng.com/resources/social/power-station-battery-runtime-calculator.png</image:loc>
+    </image:image>
   </url>
 </urlset>

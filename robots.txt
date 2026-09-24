@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /Internal/
-Disallow: /resources/
+Disallow: /src/
 
 Sitemap: https://www.pockeng.com/sitemap.xml
 

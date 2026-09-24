@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Hexadecimal to Decimal Converter — PocketEngineer</title>
   <meta name="description"
     content="Convert between hexadecimal and decimal numbers instantly. Visual power-of-16 breakdown with step-by-step calculation. Supports values up to 64-bit (16 hex digits).">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Hexadecimal to Decimal Converter — PocketEngineer">
   <meta property="og:description"
     content="Hex ↔ Decimal converter with visual digit breakdown and step-by-step power-of-16 calculations.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/hex-to-decimal-converter.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Hexadecimal converter table showing FF as 255 decimal, 11111111 binary and 377 octal">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hexadecimal to Decimal Converter — PocketEngineer">
+  <meta name="twitter:description" content="Hex ↔ Decimal converter with visual digit breakdown and step-by-step power-of-16 calculations.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/hex-to-decimal-converter.png">
+  <meta name="twitter:image:alt" content="Hexadecimal converter table showing FF as 255 decimal, 11111111 binary and 377 octal">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -73,27 +83,72 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Hexadecimal to Decimal Converter",
+      "url": "https://www.pockeng.com/tools/hexa.html",
+      "description": "Convert between hexadecimal and decimal numbers instantly. Visual power-of-16 breakdown with step-by-step calculation. Supports values up to 64-bit (16 hex digits).",
+      "image": "https://www.pockeng.com/resources/social/hex-to-decimal-converter.png",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Hexadecimal to Decimal Converter",
+      "item": "https://www.pockeng.com/tools/hexa.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-zinc-50 text-zinc-900 min-h-screen flex flex-col antialiased">
+<body class="pe-page text-zinc-900 min-h-screen flex flex-col antialiased">
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
-      <a href="../index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Back
-      </a>
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
+        <div class="w-px h-6 bg-zinc-200 hidden sm:block"></div>
+        <h1 class="text-base sm:text-lg font-semibold text-zinc-900 tracking-tight truncate">Hexadecimal to Decimal Converter</h1>
+      </div>
 
       <div class="flex items-center gap-4">
-        <button onclick="resetCalc()"
-          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+        <button type="button" onclick="resetCalc()" class="pe-btn-reset">Reset</button>
       </div>
     </div>
   </header>
-  <h1 class="sr-only">Hexadecimal to Decimal Converter</h1>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-0">
 
@@ -104,7 +159,7 @@
 
         <!-- Decimal Input -->
         <div id="decimal-card" class="input-card rounded-xl p-5">
-          <label class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number (Base 10)</label>
+          <label for="decimal-input" class="text-[10px] font-bold text-blue-500 uppercase mb-2 block">Decimal Number (Base 10)</label>
           <div class="flex items-baseline gap-2">
             <input type="number" id="decimal-input" oninput="convertFromDecimal()"
               class="w-full bg-transparent font-mono text-3xl outline-none" placeholder="0" min="0">
@@ -114,7 +169,7 @@
 
         <!-- Hexadecimal Input -->
         <div id="hex-card" class="input-card rounded-xl p-5">
-          <label class="text-[10px] font-bold text-violet-500 uppercase mb-2 block">Hexadecimal Number (Base 16)</label>
+          <label for="hex-input" class="text-[10px] font-bold text-violet-500 uppercase mb-2 block">Hexadecimal Number (Base 16)</label>
           <div class="flex items-baseline gap-2">
             <span class="text-2xl font-mono text-zinc-400 font-bold">0x</span>
             <input type="text" id="hex-input" oninput="convertFromHex()"
@@ -126,7 +181,7 @@
 
         <!-- Bit Size Indicator -->
         <div>
-          <label class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 block">Required Size</label>
+          <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3 block">Required Size</span>
           <div class="grid grid-cols-4 gap-2">
             <div id="bit-8" class="byte-card px-3 py-2 rounded-lg text-center transition-all">
               <div class="text-xs font-bold text-zinc-900">8 bits</div>
@@ -160,7 +215,7 @@
     </div>
 
     <!-- Right: Visual Explanation -->
-    <div class="flex-1 bg-zinc-50 relative flex flex-col items-center justify-center p-6 overflow-hidden">
+    <div class="flex-1 bg-[var(--pe-bg)] relative flex flex-col items-center justify-center p-6 overflow-hidden">
 
       <!-- Canvas Backdrop -->
       <div class="absolute inset-0 pointer-events-none opacity-40"
@@ -171,7 +226,7 @@
         class="relative bg-white p-8 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 w-full max-w-2xl max-h-full overflow-y-auto">
         <div id="visualization-content">
           <div class="text-center mb-8">
-            <div class="text-5xl md:text-6xl font-mono font-bold text-zinc-900 mb-4 break-all" id="main-result">0</div>
+            <div class="text-5xl md:text-6xl font-mono font-bold text-zinc-900 mb-4 break-all" id="main-result" aria-live="polite">0</div>
           </div>
 
           <!-- Power of 16 Visualization -->
@@ -193,6 +248,7 @@
     </div>
 
   </main>
+
 
   <script>
     let currentBits = 8;
@@ -261,12 +317,8 @@
     }
 
     function convertFromHex() {
-      let hex = hexInput.value.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
-
-      // Preserve cursor position by updating value only if it changed invalid chars
-      if (hexInput.value !== hex) {
-        hexInput.value = hex;
-      }
+      // Keep only hex digits, uppercase, without moving the caret
+      let hex = stripInvalidChars(hexInput, /[^0-9A-Fa-f]/g, v => v.toUpperCase());
 
       if (hex === '') {
         decimalInput.value = '';
@@ -481,36 +533,11 @@
       clearVisualizations();
     }
 
-    // Mobile keyboard back button fix
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

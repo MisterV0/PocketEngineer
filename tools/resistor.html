@@ -3,10 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Resistor Color Code Calculator & Decoder — PocketEngineer</title>
   <meta name="description"
     content="Instantly decode 4-band and 5-band resistor color codes with interactive 3D visualization. See resistance value, tolerance, and actual range in real-time. Perfect for electronics engineers and hobbyists.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Resistor Color Code Calculator — PocketEngineer">
   <meta property="og:description"
     content="Click resistor bands to decode resistance, tolerance & range. Interactive 3D visualization with 15 common presets.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/resistor-color-code-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Resistor color code calculator showing a 4-band resistor decoded to 4.7 kilohm">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Resistor Color Code Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Click resistor bands to decode resistance, tolerance & range. Interactive 3D visualization with 15 common presets.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/resistor-color-code-calculator.png">
+  <meta name="twitter:image:alt" content="Resistor color code calculator showing a 4-band resistor decoded to 4.7 kilohm">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       -webkit-tap-highlight-color: transparent;
@@ -38,6 +48,9 @@
     .band-hitbox {
       position: absolute;
       cursor: pointer;
+      border: 0;
+      padding: 0;
+      background: transparent;
       border-radius: 4px;
       transition: background-color 0.2s;
     }
@@ -98,20 +111,63 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Resistor Color Code Calculator",
+      "url": "https://www.pockeng.com/tools/resistor.html",
+      "description": "Instantly decode 4-band and 5-band resistor color codes with interactive 3D visualization. See resistance value, tolerance, and actual range in real-time. Perfect for electronics engineers and hobbyists.",
+      "image": "https://www.pockeng.com/resources/social/resistor-color-code-calculator.png",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Resistor Color Code Calculator",
+      "item": "https://www.pockeng.com/tools/resistor.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-[#F5F5F7] text-zinc-900 min-h-screen font-sans flex flex-col overflow-hidden">
+<body class="pe-page text-zinc-900 min-h-screen font-sans flex flex-col">
 
   <!-- Header: Toggle & Buttons -->
   <header
     class="flex-none px-3 sm:px-6 flex items-center justify-between z-10 bg-white/70 backdrop-blur-md border-b border-black/5 sticky top-0 gap-2 sm:gap-4 min-h-16">
     <!-- Back Button -->
-    <a href="../index.html" class="back-button flex-shrink-0 whitespace-nowrap text-sm sm:text-base">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M15 18l-6-6 6-6" />
-      </svg>
-      Back
-    </a>
+    <a href="../" class="pe-back flex-shrink-0 whitespace-nowrap">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
 
     <!-- H1: SEO-Focused Title -->
     <div class="flex-1 flex flex-col items-center gap-1 py-2 sm:py-4 min-w-0">
@@ -143,7 +199,7 @@
   </header>
 
   <!-- Main Workspace -->
-  <main class="flex-1 overflow-y-auto hide-scroll w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-8 flex flex-col items-center">
 
     <!-- Description -->
     <div class="w-full max-w-2xl mb-6 sm:mb-8 text-center px-2">
@@ -226,7 +282,7 @@
       </div>
       <canvas id="resistorCanvas"
         class="relative z-10 w-full h-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-[1.02]"></canvas>
-      <div id="hitbox-layer" class="absolute inset-0 z-20 w-full h-full"></div>
+      <div id="hitbox-layer" class="absolute inset-0 z-20 w-full h-full" role="group" aria-label="Resistor color bands"></div>
       <div id="hint-text" class="absolute -bottom-16 left-0 right-0 text-center">
         <div
           class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900/5 backdrop-blur-sm border border-zinc-200/50 rounded-full text-xs font-medium text-zinc-600 uppercase tracking-widest">
@@ -241,26 +297,27 @@
     </div>
 
     <!-- Results Card -->
-    <div
-      class="w-full max-w-xl bg-white/60 backdrop-blur-xl border border-white/60 rounded-[32px] shadow-glass p-4 sm:p-8 flex flex-col items-center text-center transition-all mb-10 mx-2">
-      <div class="text-[9px] sm:text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Total Resistance</div>
+    <div aria-live="polite"
+      class="w-full max-w-xl bg-zinc-900 text-white rounded-3xl shadow-2xl shadow-zinc-300/50 p-4 sm:p-8 flex flex-col items-center text-center transition-all mb-10 mx-2">
+      <div class="text-[9px] sm:text-[11px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Total Resistance</div>
       <div class="flex items-baseline gap-2 mb-3 sm:mb-4">
-        <span class="font-mono text-4xl sm:text-6xl font-bold tracking-tighter text-zinc-900 drop-shadow-sm break-all"
+        <span class="font-mono text-4xl sm:text-6xl font-bold tracking-tighter text-white break-all"
           id="result-val">--</span>
       </div>
       <div class="grid grid-cols-2 gap-2 sm:gap-3 w-full">
-        <div class="bg-white/50 rounded-2xl p-2 sm:p-3 border border-white/50">
-          <div class="text-[8px] sm:text-[10px] text-zinc-400 uppercase font-bold mb-1">Tolerance</div>
-          <div class="font-mono text-xs sm:text-lg font-semibold text-zinc-700" id="result-tol">--</div>
+        <div class="bg-white/5 rounded-2xl p-2 sm:p-3 border border-white/10">
+          <div class="text-[8px] sm:text-[10px] text-zinc-500 uppercase font-bold mb-1">Tolerance</div>
+          <div class="font-mono text-xs sm:text-lg font-semibold text-zinc-100" id="result-tol">--</div>
         </div>
-        <div class="bg-white/50 rounded-2xl p-2 sm:p-3 border border-white/50">
-          <div class="text-[8px] sm:text-[10px] text-zinc-400 uppercase font-bold mb-1">Range</div>
-          <div class="font-mono text-xs sm:text-sm font-semibold text-zinc-600 pt-1" id="result-range">--</div>
+        <div class="bg-white/5 rounded-2xl p-2 sm:p-3 border border-white/10">
+          <div class="text-[8px] sm:text-[10px] text-zinc-500 uppercase font-bold mb-1">Range</div>
+          <div class="font-mono text-xs sm:text-sm font-semibold text-zinc-300 pt-1" id="result-range">--</div>
         </div>
       </div>
     </div>
 
   </main>
+
 
   <!-- Color Picker Modal -->
   <div id="picker-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
@@ -268,7 +325,7 @@
       onclick="closePicker()"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
       <div
-        class="bg-white/90 backdrop-blur-2xl w-full max-w-[340px] rounded-[32px] shadow-floating pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[70vh] border border-white/40"
+        class="bg-white/90 backdrop-blur-2xl w-full max-w-[340px] rounded-3xl shadow-floating pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[70vh] border border-white/40"
         id="picker-panel">
         <div class="px-6 py-5 border-b border-zinc-200/50 text-center flex-shrink-0">
           <h2 class="text-lg font-bold text-zinc-900" id="picker-title">Select Color</h2>
@@ -282,13 +339,13 @@
   </div>
 
   <!-- Educational Modal -->
-  <div id="edu-modal" class="fixed inset-0 z-[60] hidden" role="dialog">
+  <div id="edu-modal" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
     <div class="absolute inset-0 bg-zinc-900/30 backdrop-blur-md transition-opacity opacity-0" id="edu-backdrop"
       onclick="toggleEdu(false)"></div>
 
     <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 pointer-events-none">
       <div
-        class="bg-white w-full max-w-2xl rounded-[32px] shadow-2xl pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300"
+        class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl pointer-events-auto transform scale-95 opacity-0 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300"
         id="edu-panel">
 
         <!-- Header -->
@@ -549,8 +606,12 @@
         let bx = startX + (i * spacing);
         if (i === bands - 1) bx = (CW + W) / 2 - 90;
 
-        const div = document.createElement('div');
+        const div = document.createElement('button');
+        div.type = 'button';
         div.className = 'band-hitbox';
+        const bandType = getBandType(i);
+        const role = bandType === 'digit' ? `Band ${i + 1}` : (bandType === 'mult' ? 'Multiplier band' : 'Tolerance band');
+        div.setAttribute('aria-label', `${role}: ${COLORS[selections[i]].name}. Change color`);
         const hw = 60; const hh = 160;
         div.style.left = `${((bx - hw / 2) / CW) * 100}%`;
         div.style.top = `${((CH / 2 - hh / 2) / CH) * 100}%`;
@@ -600,6 +661,8 @@
           ${isSel ? `<div class="text-blue-500"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>` : ''}
         `;
 
+        btn.type = 'button';
+        btn.setAttribute('aria-pressed', isSel ? 'true' : 'false');
         btn.onclick = () => { selections[index] = key; update(); closePicker(); };
         list.appendChild(btn);
       });
@@ -614,6 +677,7 @@
         panel.classList.remove('scale-95', 'opacity-0');
         panel.classList.add('animation-pop-in');
       });
+      openModal(modal, closePicker, list.querySelector('[aria-pressed="true"]'));
     }
 
     function closePicker() {
@@ -623,6 +687,7 @@
       backdrop.classList.add('opacity-0');
       panel.classList.add('scale-95', 'opacity-0');
       setTimeout(() => { modal.classList.add('hidden'); activeIndex = null; }, 200);
+      closeModal(modal);
     }
 
     /* --- EDUCATIONAL --- */
@@ -638,11 +703,13 @@
           panel.classList.remove('scale-95', 'opacity-0');
           panel.classList.add('scale-100', 'opacity-100');
         });
+        openModal(modal, () => toggleEdu(false));
       } else {
         backdrop.classList.add('opacity-0');
         panel.classList.remove('scale-100', 'opacity-100');
         panel.classList.add('scale-95', 'opacity-0');
         setTimeout(() => modal.classList.add('hidden'), 300);
+        closeModal(modal);
       }
     }
 
@@ -737,6 +804,10 @@
     init();
     update();
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

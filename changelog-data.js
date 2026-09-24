@@ -1,5 +1,15 @@
 const changelogData = [
   {
+    version: "v1.4.0",
+    changes: [
+      "New tools: Arduino LCD Designer & Power Station Runtime calculator.",
+      "Matrix calculator adds scaling, power, determinant, inverse, trace and rank. Unit converter adds grams, ounces and troy ounces.",
+      "More accurate results: small values no longer round to zero, and unit conversions use exact definitions.",
+      "Refreshed design: new landing page with tool previews, a new back button and a consistent look across all tools.",
+      "QoL: Escape closes every dialog, better keyboard and screen-reader support, lighter and faster pages, plus several bug fixes."
+    ]
+  },
+  {
     version: "v1.3.0",
     changes: [
       "New tools: Pythagorean Theorem calculator, Matrix operations, LED resistor calculator, Gear ratio calculator, and Percentage calculator.",

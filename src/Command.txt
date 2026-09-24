@@ -1,3 +1,13 @@
-./tailwindcss -i ./input.css -o ./resources/tailwind.css --watch
+./tailwindcss -i ./input.css -o ./resources/tailwind.css --minify --watch
 
-To run from the project root folder anytime
+To run from the project root folder anytime.
+Use --minify so the shipped CSS stays small; drop --watch for a one-off build.
+
+The tailwindcss CLI binary is not committed to git (see .gitignore). To install it:
+  1. Download "tailwindcss-macos-arm64" from
+     https://github.com/tailwindlabs/tailwindcss/releases/tag/v3.4.17
+  2. Save it in the project root as "tailwindcss"
+  3. chmod +x tailwindcss
+
+After changing common.css, app.js or tailwind.css, bump the ?v= number in the
+<link>/<script> tags (currently 1.4.0) so returning visitors get the new files.

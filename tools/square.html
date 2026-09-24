@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Square Geometry Calculator & Visualizer — PocketEngineer</title>
   <meta name="description"
     content="Calculate square properties from any input — side length, diagonal, perimeter, or area. Includes inscribed and circumscribed circle calculations with interactive canvas visualization.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Square Geometry Calculator — PocketEngineer">
   <meta property="og:description"
     content="Enter any square dimension and calculate all properties instantly. Includes incircle and circumscribed circle with live visualization.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/square-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Square calculator diagram with the side and diagonal marked">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Square Geometry Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Enter any square dimension and calculate all properties instantly. Includes incircle and circumscribed circle with live visualization.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/square-calculator.png">
+  <meta name="twitter:image:alt" content="Square calculator diagram with the side and diagonal marked">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     /* Remove input spinners */
     input[type=number]::-webkit-inner-spin-button,
@@ -84,19 +94,6 @@
       }
     }
 
-    .back-button:hover svg {
-      transform: translateX(-2px);
-    }
-
-    .back-button:active {
-      transform: scale(0.96);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .back-button svg {
-      transition: transform 0.2s ease;
-    }
-
     /* Canvas Hide on Mobile & Fill Space */
     @media (max-width: 1024px) {
       .canvas-container {
@@ -117,22 +114,67 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Square Geometry Calculator & Visualizer",
+      "url": "https://www.pockeng.com/tools/square.html",
+      "description": "Calculate square properties from any input — side length, diagonal, perimeter, or area. Includes inscribed and circumscribed circle calculations with interactive canvas visualization.",
+      "image": "https://www.pockeng.com/resources/social/square-calculator.png",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Square Geometry Calculator & Visualizer",
+      "item": "https://www.pockeng.com/tools/square.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden">
+<body class="pe-page text-zinc-900 h-screen flex flex-col overflow-hidden">
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
 
       <!-- Left: Back Button & Info Dropdown -->
-      <div class="flex items-center gap-3">
-        <a href="../index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
+        <div class="w-px h-6 bg-zinc-200 hidden sm:block"></div>
+        <h1 class="text-base sm:text-lg font-semibold text-zinc-900 tracking-tight truncate">Square Geometry Calculator & Visualizer</h1>
         <div class="w-px h-6 bg-zinc-200 hidden md:block"></div>
         <div class="relative z-50 hidden md:block">
           <details class="group">
@@ -161,12 +203,10 @@
 
       <!-- Right controls -->
       <div class="flex items-center gap-4">
-        <button onclick="resetCalc()"
-          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset</button>
+        <button type="button" onclick="resetCalc()" class="pe-btn-reset">Reset</button>
       </div>
     </div>
   </header>
-  <h1 class="sr-only">Square Geometry Calculator & Visualizer</h1>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden relative z-0">
 
@@ -185,7 +225,7 @@
           <div class="grid grid-cols-2 gap-3">
             <!-- Side -->
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
-              <label class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Side Length (s)</label>
+              <label for="in-s" class="text-[10px] font-bold text-blue-500 uppercase mb-1 block">Side Length (s)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-s" oninput="calculate('s')"
                   class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
@@ -195,7 +235,7 @@
 
             <!-- Diagonal -->
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
-              <label class="text-[10px] font-bold text-purple-500 uppercase mb-1 block">Diagonal (d)</label>
+              <label for="in-d" class="text-[10px] font-bold text-purple-500 uppercase mb-1 block">Diagonal (d)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-d" oninput="calculate('d')"
                   class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
@@ -205,7 +245,7 @@
 
             <!-- Perimeter -->
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
-              <label class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Perimeter (P)</label>
+              <label for="in-p" class="text-[10px] font-bold text-emerald-600 uppercase mb-1 block">Perimeter (P)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-p" oninput="calculate('p')"
                   class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
@@ -215,7 +255,7 @@
 
             <!-- Area -->
             <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3">
-              <label class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
+              <label for="in-a" class="text-[10px] font-bold text-rose-500 uppercase mb-1 block">Area (A)</label>
               <div class="flex items-baseline gap-1">
                 <input type="number" id="in-a" oninput="calculate('a')"
                   class="w-full bg-transparent font-mono text-lg outline-none" placeholder="0">
@@ -226,7 +266,7 @@
         </div>
 
         <!-- Formulas Panel -->
-        <div id="formula-panel"
+        <div id="formula-panel" aria-live="polite"
           class="bg-zinc-900 rounded-xl p-5 shadow-lg border border-zinc-700 min-h-[140px] flex flex-col justify-center transition-all">
           <p class="text-zinc-500 text-sm text-center italic font-mono">Formulas appear here...</p>
         </div>
@@ -505,7 +545,7 @@
 
       const m = state.activeMode;
       const unit = 'm'; // Default unit
-      const sStr = state.s.toFixed(2);
+      const sStr = formatSig(state.s, 5);
 
       // Base styles
       const lineClass = "formula-row flex justify-between items-center font-mono text-xs lg:text-sm h-6";
@@ -516,24 +556,24 @@
 
       if (m === 's' || !m) {
         html += `<div class="${lineClass}" style="animation-delay:0ms"><span class="${lbl}">Given Side</span> <span class="${val}">s = ${sStr}</span></div>`;
-        html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-emerald-400">P = 4·s</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
-        html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-rose-400">A = s²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
-        html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-purple-400">d = s·√2</span> <span class="${val}">${state.d.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:50ms"><span class="text-emerald-400">P = 4·s</span> <span class="${val}">${formatSig(state.p, 5)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:100ms"><span class="text-rose-400">A = s²</span> <span class="${val}">${formatSig(state.a, 5)} ${unit}²</span></div>`;
+        html += `<div class="${lineClass}" style="animation-delay:150ms"><span class="text-purple-400">d = s·√2</span> <span class="${val}">${formatSig(state.d, 5)} ${unit}</span></div>`;
       }
       else if (m === 'd') {
-        html += `<div class="${lineClass}"><span class="${lbl}">Given Diag</span> <span class="${val}">d = ${state.d.toFixed(2)}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-blue-400">s = d / √2</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-rose-400">A = d²/2</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Diag</span> <span class="${val}">d = ${formatSig(state.d, 5)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">s = d / √2</span> <span class="${val}">${formatSig(state.s, 5)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-rose-400">A = d²/2</span> <span class="${val}">${formatSig(state.a, 5)} ${unit}²</span></div>`;
       }
       else if (m === 'p') {
-        html += `<div class="${lineClass}"><span class="${lbl}">Given Perim</span> <span class="${val}">P = ${state.p.toFixed(2)}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-blue-400">s = P / 4</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-rose-400">A = (P/4)²</span> <span class="${val}">${state.a.toFixed(2)} ${unit}²</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Perim</span> <span class="${val}">P = ${formatSig(state.p, 5)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">s = P / 4</span> <span class="${val}">${formatSig(state.s, 5)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-rose-400">A = (P/4)²</span> <span class="${val}">${formatSig(state.a, 5)} ${unit}²</span></div>`;
       }
       else if (m === 'a') {
-        html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${state.a.toFixed(2)}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-blue-400">s = √A</span> <span class="${val}">${state.s.toFixed(2)} ${unit}</span></div>`;
-        html += `<div class="${lineClass}"><span class="text-emerald-400">P = 4·√A</span> <span class="${val}">${state.p.toFixed(2)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="${lbl}">Given Area</span> <span class="${val}">A = ${formatSig(state.a, 5)}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-blue-400">s = √A</span> <span class="${val}">${formatSig(state.s, 5)} ${unit}</span></div>`;
+        html += `<div class="${lineClass}"><span class="text-emerald-400">P = 4·√A</span> <span class="${val}">${formatSig(state.p, 5)} ${unit}</span></div>`;
       }
 
       html += `</div>`;
@@ -662,41 +702,11 @@
     // --- MOBILE WARNING MODAL ---
     window.addEventListener('load', checkMobileWarning);
 
-    // --- MOBILE KEYBOARD BACK BUTTON FIX ---
-    // Prevent browser back navigation when keyboard is open
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-
-    // Track when inputs are focused (keyboard opens)
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-
-    // Intercept back button when keyboard is open
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        // Blur active input instead of navigating
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          // Push state back to prevent navigation
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

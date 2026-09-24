@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Gear Ratio Calculator — PocketEngineer</title>
   <meta name="description"
     content="Free gear ratio calculator — enter teeth count, RPM, or torque for driving and driven gears. Visualize meshing gears with animated rotation and real-time transmission ratio.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Gear Ratio Calculator — PocketEngineer">
   <meta property="og:description"
     content="Calculate gear ratio, output RPM, and torque for meshing gear pairs. Animated gear visualization with real-time results.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/gear-ratio-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Gear ratio calculator with two meshing gears of 24 and 16 teeth giving a 3 to 2 ratio">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gear Ratio Calculator — PocketEngineer">
+  <meta name="twitter:description" content="Calculate gear ratio, output RPM, and torque for meshing gear pairs. Animated gear visualization with real-time results.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/gear-ratio-calculator.png">
+  <meta name="twitter:image:alt" content="Gear ratio calculator with two meshing gears of 24 and 16 teeth giving a 3 to 2 ratio">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       font-feature-settings: "cv05", "cv08", "ss01";
@@ -105,22 +115,65 @@
       }
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Gear Ratio Calculator",
+      "url": "https://www.pockeng.com/tools/gear.html",
+      "description": "Free gear ratio calculator — enter teeth count, RPM, or torque for driving and driven gears. Visualize meshing gears with animated rotation and real-time transmission ratio.",
+      "image": "https://www.pockeng.com/resources/social/gear-ratio-calculator.png",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Gear Ratio Calculator",
+      "item": "https://www.pockeng.com/tools/gear.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-[#F5F5F7] text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
+<body class="pe-page text-zinc-900 h-screen flex flex-col md:flex-row overflow-hidden selection:bg-zinc-200 selection:text-zinc-900">
 
   <!-- Left Column -->
   <aside class="w-full md:w-[420px] bg-white border-r border-zinc-300 flex flex-col h-full shadow-[20px_0_40px_rgba(0,0,0,0.02)] z-20 relative">
 
     <header class="flex-none p-8 pb-4 border-b border-zinc-100">
       <div class="flex items-center gap-4 mb-0">
-        <a href="../index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back
+        <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
-        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Gear Ratio</h1>
+        <h1 class="text-2xl font-bold tracking-tight text-zinc-900">Gear Ratio Calculator</h1>
       </div>
     </header>
 
@@ -154,7 +207,7 @@
 
         <!-- Driving Gear -->
         <div>
-          <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Driving Gear (Input)</label>
+          <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">Driving Gear (Input)</span>
           <div class="space-y-2">
             <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2">
               <label for="teeth1" class="text-xs font-medium text-zinc-500 shrink-0 w-14 select-none">Teeth</label>
@@ -178,7 +231,7 @@
 
         <!-- Driven Gear -->
         <div>
-          <label class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2" style="margin-top:18px;">Driven Gear (Output)</label>
+          <span class="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2" style="margin-top:18px;">Driven Gear (Output)</span>
           <div class="ios-input-wrapper flex items-center justify-between bg-white border border-zinc-300 rounded-lg px-3 py-2">
             <label for="teeth2" class="text-xs font-medium text-zinc-500 shrink-0 w-14 select-none">Teeth</label>
             <input type="number" id="teeth2" value="40" min="1" step="1" oninput="calculate()"
@@ -189,7 +242,7 @@
 
       <!-- Output -->
       <div>
-        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5">
+        <div class="relative overflow-hidden bg-[#18181b] text-white rounded-xl shadow-lg p-5" aria-live="polite">
           <div class="absolute -top-10 -right-10 w-32 h-32 bg-zinc-600 blur-[70px] opacity-30 rounded-full pointer-events-none"></div>
           <div class="relative z-10 space-y-4">
             <div>
@@ -239,6 +292,7 @@
     </div>
   </main>
 
+
   <script>
     const canvas = document.getElementById('gearCanvas');
     const ctx = canvas.getContext('2d');
@@ -257,9 +311,9 @@
       state.rpmOut = state.rpmIn / state.ratio;
       state.torqueOut = state.torqueIn * state.ratio;
 
-      document.getElementById('display-ratio').textContent = state.ratio.toFixed(2);
-      document.getElementById('display-rpm').textContent = state.rpmOut.toFixed(2);
-      document.getElementById('display-torque').textContent = state.torqueOut.toFixed(2) + ' N·m';
+      document.getElementById('display-ratio').textContent = formatSig(state.ratio, 4);
+      document.getElementById('display-rpm').textContent = formatSig(state.rpmOut, 5);
+      document.getElementById('display-torque').textContent = formatSig(state.torqueOut, 5) + ' N·m';
 
       const reduction = ((1 - 1 / state.ratio) * 100);
       const tooltip = document.getElementById('type-tooltip');
@@ -277,6 +331,9 @@
         document.getElementById('display-type').textContent = '1:1 Direct';
         tooltip.innerHTML = '<b>1:1 Direct</b>: Equal teeth count — speed and torque are unchanged.';
       }
+
+      // Stopped gears or reduced motion: no loop is running, so redraw here
+      if (prefersReducedMotion || state.rpmIn === 0) draw();
     }
 
     function resizeCanvas() {
@@ -304,8 +361,11 @@
         }
       }
       
-      angle1 += speed;
-      draw();
+      // Only redraw while the gears are actually turning
+      if (speed > 0) {
+        angle1 += speed;
+        draw();
+      }
       requestAnimationFrame(animate);
     }
 
@@ -445,41 +505,21 @@
       ctx.stroke();
     }
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => { resizeCanvas(); draw(); });
     resizeCanvas();
     calculate();
-    requestAnimationFrame(animate);
+    // The turning gears are the explanation; with reduced motion they stay still
+    if (prefersReducedMotion) draw();
+    else requestAnimationFrame(animate);
 
-    // Mobile keyboard fix
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-    document.querySelectorAll('input[type="number"]').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
 
     // --- MOBILE WARNING MODAL ---
     window.addEventListener('load', checkMobileWarning);
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

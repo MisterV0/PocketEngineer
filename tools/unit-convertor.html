@@ -4,22 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
-  <title>Unit Converter (Length, Weight, Temperature & More) — PocketEngineer</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
+  <title>Unit Converter: Length, Weight, Temperature — PocketEngineer</title>
   <meta name="description"
-    content="Free unit converter — length, area, volume, weight, temperature, power, pressure & Roman numerals. Instant bidirectional calculations with all common units.">
+    content="Free unit converter — length, area, volume, weight (kg, g, lbs, oz), temperature, power, pressure & Roman numerals. Instant bidirectional calculations with all common units.">
   <link rel="canonical" href="https://www.pockeng.com/tools/unit-convertor.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.pockeng.com/tools/unit-convertor.html">
   <meta property="og:title" content="Unit Converter — PocketEngineer">
   <meta property="og:description"
     content="Convert between metric and imperial units instantly. Length, area, volume, weight, temperature, power, pressure, and Roman numerals.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/unit-converter.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Unit converter showing 1 kilogram converted to 35.274 ounces">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unit Converter — PocketEngineer">
+  <meta name="twitter:description" content="Convert between metric and imperial units instantly. Length, area, volume, weight, temperature, power, pressure, and Roman numerals.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/unit-converter.png">
+  <meta name="twitter:image:alt" content="Unit converter showing 1 kilogram converted to 35.274 ounces">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     /* Input Polish */
     input[type=number]::-webkit-inner-spin-button,
@@ -70,27 +80,68 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Unit Converter",
+      "url": "https://www.pockeng.com/tools/unit-convertor.html",
+      "description": "Free unit converter — length, area, volume, weight (kg, g, lbs, oz), temperature, power, pressure & Roman numerals. Instant bidirectional calculations with all common units.",
+      "image": "https://www.pockeng.com/resources/social/unit-converter.png",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Unit Converter",
+      "item": "https://www.pockeng.com/tools/unit-convertor.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="bg-zinc-50 text-zinc-900 h-screen flex flex-col overflow-hidden antialiased">
+<body class="pe-page text-zinc-900 h-screen flex flex-col overflow-hidden antialiased">
 
   <!-- Header -->
   <header class="flex-none bg-white border-b border-zinc-200 z-40 relative">
     <div class="max-w-7xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-4">
-        <a href="../index.html" class="back-button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-          Back
+        <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
         <div class="w-px h-6 bg-zinc-200 hidden md:block"></div>
-        <h1 class="text-lg font-semibold text-zinc-900 tracking-tight hidden md:block">Unit Converter</h1>
+        <h1 class="text-base sm:text-lg font-semibold text-zinc-900 tracking-tight">Unit Converter</h1>
       </div>
       <div class="flex items-center gap-4">
-        <button onclick="resetAll()"
-          class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 px-3 py-1.5 rounded-md transition-colors">Reset
-          All</button>
+        <button type="button" onclick="resetAll()" class="pe-btn-reset">Reset All</button>
       </div>
     </div>
   </header>
@@ -106,59 +157,43 @@
 
         <div class="relative flex items-center">
           <a href="#length"
-            class="nav-link active w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Length</a>
-          <button onclick="openInfo('length')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link active w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Length</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#area"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Area</a>
-          <button onclick="openInfo('area')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Area</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#volume"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Volume</a>
-          <button onclick="openInfo('volume')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Volume</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#weight"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Weight
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Weight
             & Mass</a>
-          <button onclick="openInfo('weight')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
         </div>
 
         <div class="relative flex items-center">
           <a href="#temperature"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Temperature</a>
-          <button onclick="openInfo('temperature')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Temperature</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#power"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Power</a>
-          <button onclick="openInfo('power')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Power</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#pressure"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Pressure</a>
-          <button onclick="openInfo('pressure')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Pressure</a>
         </div>
 
         <div class="relative flex items-center">
           <a href="#numerals"
-            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap pr-10">Numerals</a>
-          <button onclick="openInfo('numerals')"
-            class="absolute right-2 md:right-3 w-5 h-5 rounded-full border border-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-colors bg-white shadow-sm focus:outline-none">?</button>
+            class="nav-link w-full px-4 md:px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:bg-zinc-50 transition-colors whitespace-nowrap">Numerals</a>
         </div>
       </div>
     </nav>
@@ -172,13 +207,20 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Length <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <p><strong>Inches ↔ Millimeters:</strong><br/> 1 in = 25.4 mm. Inches accept <strong>fractions</strong> (e.g. <code>3/16</code>, <code>1 1/2</code>). <em>Use when:</em> drill bits, sheet metal, PCB traces, US/imperial specs.</p>
+            <hr class="my-3 border-zinc-100">
+            <p><strong>Kilometers ↔ Miles:</strong><br/> 1 km = 0.621371 mi. <em>Use when:</em> road signs, odometers, running/cycling distances, aviation (nm is different).</p>
+            <hr class="my-3 border-zinc-100">
+            <p><strong>Meters ↔ Feet:</strong><br/> 1 m = 3.28084 ft. <em>Use when:</em> room dimensions, ceiling height, runway length, altitude in feet.</p>
+          </div>
           <div class="space-y-4">
 
             <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                   <div class="flex justify-between items-center mb-1">
-                    <label class="text-[10px] font-bold text-purple-500 uppercase block">Inches (in)</label>
+                    <label for="val-in" class="text-[10px] font-bold text-purple-500 uppercase block">Inches (in)</label>
                     <span class="text-[9px] text-zinc-400 font-medium">Accepts fractions</span>
                   </div>
                   <input type="text" id="val-in" class="w-full bg-transparent font-mono text-lg outline-none"
@@ -189,7 +231,7 @@
                     <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
                   </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                  <label class="text-[10px] font-bold text-pink-500 uppercase block mb-1">Millimeters (mm)</label>
+                  <label for="val-mm" class="text-[10px] font-bold text-pink-500 uppercase block mb-1">Millimeters (mm)</label>
                   <input type="number" id="val-mm" class="w-full bg-transparent font-mono text-lg outline-none"
                     placeholder="0">
                 </div>
@@ -199,7 +241,7 @@
             <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                  <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Kilometers (km)</label>
+                  <label for="val-km" class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Kilometers (km)</label>
                   <input type="number" id="val-km" class="w-full bg-transparent font-mono text-lg outline-none"
                     placeholder="0">
                 </div>
@@ -208,7 +250,7 @@
                     <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
                   </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                  <label class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">Miles (mi)</label>
+                  <label for="val-mi" class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">Miles (mi)</label>
                   <input type="number" id="val-mi" class="w-full bg-transparent font-mono text-lg outline-none"
                     placeholder="0">
                 </div>
@@ -218,7 +260,7 @@
             <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                  <label class="text-[10px] font-bold text-emerald-500 uppercase block mb-1">Meters (m)</label>
+                  <label for="val-m" class="text-[10px] font-bold text-emerald-500 uppercase block mb-1">Meters (m)</label>
                   <input type="number" id="val-m" class="w-full bg-transparent font-mono text-lg outline-none"
                     placeholder="0">
                 </div>
@@ -227,7 +269,7 @@
                     <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
                   </svg></div>
                 <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                  <label class="text-[10px] font-bold text-teal-500 uppercase block mb-1">Feet (ft)</label>
+                  <label for="val-ft" class="text-[10px] font-bold text-teal-500 uppercase block mb-1">Feet (ft)</label>
                   <input type="number" id="val-ft" class="w-full bg-transparent font-mono text-lg outline-none"
                     placeholder="0">
                 </div>
@@ -241,25 +283,33 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Area <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 m²</strong> = 10.7639 sq ft</li>
+            <li><strong>1 Acre</strong> = 43,560 sq ft (≈ 4,046 m²)</li>
+            <li><strong>1 Hectare</strong> = 10,000 m² (≈ 2.47 acres)</li>
+            </ul>
+            <p class="mt-3 text-zinc-600">Sq meters/feet for floors and walls; acres/hectares for land, farms, and real estate.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="grid grid-cols-2 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-cyan-500 uppercase block mb-1">Sq Meters (m²)</label>
+                <label for="val-m2" class="text-[10px] font-bold text-cyan-500 uppercase block mb-1">Sq Meters (m²)</label>
                 <input type="number" id="val-m2" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Sq Feet (sq ft)</label>
+                <label for="val-sqft" class="text-[10px] font-bold text-blue-500 uppercase block mb-1">Sq Feet (sq ft)</label>
                 <input type="number" id="val-sqft" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-green-500 uppercase block mb-1">Acres</label>
+                <label for="val-acre" class="text-[10px] font-bold text-green-500 uppercase block mb-1">Acres</label>
                 <input type="number" id="val-acre" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">Hectares (ha)</label>
+                <label for="val-hectare" class="text-[10px] font-bold text-emerald-600 uppercase block mb-1">Hectares (ha)</label>
                 <input type="number" id="val-hectare" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -272,25 +322,34 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Volume <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 m³</strong> = 1000 L</li>
+            <li><strong>1 L</strong> ≈ 33.814 US fl oz</li>
+            <li><strong>1 US gal</strong> = 128 US fl oz ≈ 3.785 L</li>
+            </ul>
+            <p class="mt-3 text-zinc-600">Cubic meters for solids and large capacities; Liters for fuel and lab work; fl oz for drinks and recipes; gallons for tanks and fuel economy (US).</p>
+            <p class="mt-2 text-xs text-zinc-400">US fluid measures; UK Imperial differs slightly.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-fuchsia-500 uppercase block mb-1">Cubic Meters (m³)</label>
+                <label for="val-m3" class="text-[10px] font-bold text-fuchsia-500 uppercase block mb-1">Cubic Meters (m³)</label>
                 <input type="number" id="val-m3" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Liters (L)</label>
+                <label for="val-l" class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Liters (L)</label>
                 <input type="number" id="val-l" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-blue-500 uppercase block mb-1">US Fl. Ounces (oz)</label>
+                <label for="val-floz" class="text-[10px] font-bold text-blue-500 uppercase block mb-1">US Fl. Ounces (oz)</label>
                 <input type="number" id="val-floz" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">US Gallons (gal)</label>
+                <label for="val-gal" class="text-[10px] font-bold text-indigo-500 uppercase block mb-1">US Gallons (gal)</label>
                 <input type="number" id="val-gal" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -303,20 +362,41 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Weight & Mass <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 kg</strong> = 1000 g ≈ 2.20462 lbs</li>
+            <li><strong>1 lb</strong> = 16 oz = 453.59237 g</li>
+            <li><strong>1 oz</strong> (avoirdupois) = 28.3495 g</li>
+            <li><strong>1 ozt</strong> (troy) = 31.1035 g &mdash; gold, silver, precious metals</li>
+            </ul>
+            <p class="mt-3 text-zinc-600">Grams and ounces for recipes, postage, and small parts; kilograms and pounds for body weight, luggage limits, gym plates, and shipping.</p>
+            <p class="mt-2 text-xs text-zinc-400">Avoirdupois ounce (weight). A fluid ounce is a volume — see the Volume section.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
-            <div class="flex flex-col sm:flex-row items-center gap-3">
-              <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-rose-500 uppercase block mb-1">Kilograms (kg)</label>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label for="val-kg" class="text-[10px] font-bold text-rose-500 uppercase block mb-1">Kilograms (kg)</label>
                 <input type="number" id="val-kg" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
-              <div class="text-zinc-300 rotate-90 sm:rotate-0"><svg width="20" height="20" viewBox="0 0 24 24"
-                  fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
-                </svg></div>
-              <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-orange-500 uppercase block mb-1">Pounds (lbs)</label>
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label for="val-g" class="text-[10px] font-bold text-fuchsia-500 uppercase block mb-1">Grams (g)</label>
+                <input type="number" id="val-g" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
+              </div>
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label for="val-lbs" class="text-[10px] font-bold text-orange-500 uppercase block mb-1">Pounds (lbs)</label>
                 <input type="number" id="val-lbs" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
+              </div>
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label for="val-oz" class="text-[10px] font-bold text-amber-600 uppercase block mb-1">Ounces (oz)</label>
+                <input type="number" id="val-oz" class="w-full bg-transparent font-mono text-lg outline-none"
+                  placeholder="0">
+              </div>
+              <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
+                <label for="val-ozt" class="text-[10px] font-bold text-yellow-600 uppercase block mb-1">Troy Ounces (ozt)</label>
+                <input type="number" id="val-ozt" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
             </div>
@@ -328,20 +408,29 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Temperature <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <p><strong>Formulas:</strong></p>
+            <ul class="list-disc pl-5 space-y-1 mt-2">
+            <li><strong>C → F:</strong> (C × 9/5) + 32</li>
+            <li><strong>F → C:</strong> (F − 32) × 5/9</li>
+            <li><strong>C → K:</strong> C + 273.15</li>
+            </ul>
+            <p class="mt-3 text-zinc-600">Celsius for science and most of the world; Fahrenheit for US weather and some appliances; Kelvin for thermodynamics and absolute zero.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Celsius (°C)</label>
+                <label for="val-c" class="text-[10px] font-bold text-sky-500 uppercase block mb-1">Celsius (°C)</label>
                 <input type="number" id="val-c" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-amber-500 uppercase block mb-1">Fahrenheit (°F)</label>
+                <label for="val-f" class="text-[10px] font-bold text-amber-500 uppercase block mb-1">Fahrenheit (°F)</label>
                 <input type="number" id="val-f" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-purple-500 uppercase block mb-1">Kelvin (K)</label>
+                <label for="val-k" class="text-[10px] font-bold text-purple-500 uppercase block mb-1">Kelvin (K)</label>
                 <input type="number" id="val-k" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -354,10 +443,13 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Power <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <p>1 hp ≈ 0.7457 kW.</p><p class="mt-2 text-zinc-600">Horsepower for cars, lawn mowers, and pumps; kilowatts for electric motors, solar panels, and grid power. Lets you compare engine specs to electrical ratings.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="flex flex-col sm:flex-row items-center gap-3">
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-red-500 uppercase block mb-1">Horsepower (hp)</label>
+                <label for="val-hp" class="text-[10px] font-bold text-red-500 uppercase block mb-1">Horsepower (hp)</label>
                 <input type="number" id="val-hp" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -366,7 +458,7 @@
                   <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
                 </svg></div>
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-yellow-500 uppercase block mb-1">Kilowatts (kW)</label>
+                <label for="val-kw" class="text-[10px] font-bold text-yellow-500 uppercase block mb-1">Kilowatts (kW)</label>
                 <input type="number" id="val-kw" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -379,20 +471,27 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Pressure <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <ul class="list-disc pl-5 space-y-1">
+            <li><strong>1 PSI</strong> ≈ 6894.76 Pa</li>
+            <li><strong>1 bar</strong> = 100,000 Pa ≈ 14.5 PSI</li>
+            </ul>
+            <p class="mt-3 text-zinc-600">PSI for tires and US gauges; Pascals for SI and scientific; bar for European specs and compressors.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-gray-500 uppercase block mb-1">PSI</label>
+                <label for="val-psi" class="text-[10px] font-bold text-gray-500 uppercase block mb-1">PSI</label>
                 <input type="number" id="val-psi" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-zinc-700 uppercase block mb-1">Pascals (Pa)</label>
+                <label for="val-pa" class="text-[10px] font-bold text-zinc-700 uppercase block mb-1">Pascals (Pa)</label>
                 <input type="number" id="val-pa" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
               <div class="input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
-                <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Bar</label>
+                <label for="val-bar" class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Bar</label>
                 <input type="number" id="val-bar" class="w-full bg-transparent font-mono text-lg outline-none"
                   placeholder="0">
               </div>
@@ -405,11 +504,15 @@
           <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4 flex items-center gap-2">
             Numerals <span class="h-px bg-zinc-200 flex-1"></span>
           </h2>
+          <div class="unit-info mb-4 text-sm text-zinc-500 leading-relaxed space-y-2">
+            <p>Same value, different notation. Range <strong>1–3999</strong>. Symbols: I(1), V(5), X(10), L(50), C(100), D(500), M(1000).</p>
+            <p class="mt-2 text-zinc-600">Roman numerals for clock faces, outlines, copyright years, and classic numbering; convert to Arabic for arithmetic and modern use.</p>
+          </div>
           <div class="bg-white rounded-2xl border border-zinc-200 p-5 shadow-sm">
             <div class="flex flex-col sm:flex-row items-center gap-3">
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <div class="flex justify-between items-center mb-1">
-                  <label class="text-[10px] font-bold text-amber-600 uppercase block">Roman Numerals</label>
+                  <label for="val-roman" class="text-[10px] font-bold text-amber-600 uppercase block">Roman Numerals</label>
                   <span class="text-[9px] text-zinc-400 font-medium">I, V, X, L, C, D, M</span>
                 </div>
                 <input type="text" id="val-roman" class="w-full bg-transparent font-mono text-lg outline-none uppercase"
@@ -421,7 +524,7 @@
                 </svg></div>
               <div class="w-full input-card bg-zinc-50 border border-zinc-200 rounded-lg p-3 relative">
                 <div class="flex justify-between items-center mb-1">
-                  <label class="text-[10px] font-bold text-orange-600 uppercase block">Arabic Numerals</label>
+                  <label for="val-arabic" class="text-[10px] font-bold text-orange-600 uppercase block">Arabic Numerals</label>
                   <span class="text-[9px] text-zinc-400 font-medium">1 to 3999</span>
                 </div>
                 <input type="number" id="val-arabic" class="w-full bg-transparent font-mono text-lg outline-none"
@@ -435,129 +538,13 @@
     </main>
   </div>
 
-  <!-- Centered Info Modal -->
-  <div id="info-modal"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none modal-backdrop bg-zinc-900/40 backdrop-blur-sm"
-    onclick="closeInfo(event)">
-    <div
-      class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 md:p-8 transform scale-95 modal-panel flex flex-col max-h-[85vh]"
-      id="info-modal-content">
-      <div class="flex justify-between items-start mb-4">
-        <h3 id="info-title" class="text-xl font-bold text-zinc-900">Title</h3>
-        <button onclick="closeInfo(event, true)" aria-label="Close"
-          class="w-8 h-8 rounded-full bg-zinc-100 hover:bg-zinc-200 flex items-center justify-center text-zinc-500 transition-colors shrink-0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <div class="overflow-y-auto hide-scroll">
-        <div id="info-text" class="text-sm text-zinc-600 leading-relaxed space-y-4">
-          <!-- Content injected via JS -->
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
-    // --- Info Modal Data & Logic ---
-    const infoData = {
-      'length': {
-        title: 'Length Conversions',
-        content: `
-          <p><strong>Inches ↔ Millimeters:</strong><br/> 1 in = 25.4 mm. Inches accept <strong>fractions</strong> (e.g. <code>3/16</code>, <code>1 1/2</code>). <em>Use when:</em> drill bits, sheet metal, PCB traces, US/imperial specs.</p>
-          <hr class="my-3 border-zinc-100">
-          <p><strong>Kilometers ↔ Miles:</strong><br/> 1 km = 0.621371 mi. <em>Use when:</em> road signs, odometers, running/cycling distances, aviation (nm is different).</p>
-          <hr class="my-3 border-zinc-100">
-          <p><strong>Meters ↔ Feet:</strong><br/> 1 m = 3.28084 ft. <em>Use when:</em> room dimensions, ceiling height, runway length, altitude in feet.</p>
-        `
-      },
-      'area': {
-        title: 'Area Conversions',
-        content: `
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>1 m²</strong> = 10.7639 sq ft</li>
-            <li><strong>1 Acre</strong> = 43,560 sq ft (≈ 4,046 m²)</li>
-            <li><strong>1 Hectare</strong> = 10,000 m² (≈ 2.47 acres)</li>
-          </ul>
-          <p class="mt-3 text-zinc-600">Sq meters/feet for floors and walls; acres/hectares for land, farms, and real estate.</p>
-        `
-      },
-      'volume': {
-        title: 'Volume',
-        content: `
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>1 m³</strong> = 1000 L</li>
-            <li><strong>1 L</strong> ≈ 33.814 US fl oz</li>
-            <li><strong>1 US gal</strong> = 128 US fl oz ≈ 3.785 L</li>
-          </ul>
-          <p class="mt-3 text-zinc-600">Cubic meters for solids and large capacities; Liters for fuel and lab work; fl oz for drinks and recipes; gallons for tanks and fuel economy (US).</p>
-          <p class="mt-2 text-xs text-zinc-400">US fluid measures; UK Imperial differs slightly.</p>
-        `
-      },
-      'weight': {
-        title: 'Weight & Mass',
-        content: `<p>1 kg = 2.20462 lbs.</p><p class="mt-2 text-zinc-600">Body weight (kg in most countries, lbs in US/UK), luggage limits, gym plates, shipping weight, and material mass in specs.</p>`
-      },
-      'temperature': {
-        title: 'Temperature',
-        content: `
-          <p><strong>Formulas:</strong></p>
-          <ul class="list-disc pl-5 space-y-1 mt-2">
-            <li><strong>C → F:</strong> (C × 9/5) + 32</li>
-            <li><strong>F → C:</strong> (F − 32) × 5/9</li>
-            <li><strong>C → K:</strong> C + 273.15</li>
-          </ul>
-          <p class="mt-3 text-zinc-600">Celsius for science and most of the world; Fahrenheit for US weather and some appliances; Kelvin for thermodynamics and absolute zero.</p>
-        `
-      },
-      'power': {
-        title: 'Power',
-        content: `<p>1 hp ≈ 0.7457 kW.</p><p class="mt-2 text-zinc-600">Horsepower for cars, lawn mowers, and pumps; kilowatts for electric motors, solar panels, and grid power. Lets you compare engine specs to electrical ratings.</p>`
-      },
-      'pressure': {
-        title: 'Pressure',
-        content: `
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>1 PSI</strong> ≈ 6894.76 Pa</li>
-            <li><strong>1 bar</strong> = 100,000 Pa ≈ 14.5 PSI</li>
-          </ul>
-          <p class="mt-3 text-zinc-600">PSI for tires and US gauges; Pascals for SI and scientific; bar for European specs and compressors.</p>
-        `
-      },
-      'numerals': {
-        title: 'Roman ↔ Arabic Numerals',
-        content: `
-          <p>Same value, different notation. Range <strong>1–3999</strong>. Symbols: I(1), V(5), X(10), L(50), C(100), D(500), M(1000).</p>
-          <p class="mt-2 text-zinc-600">Roman numerals for clock faces, outlines, copyright years, and classic numbering; convert to Arabic for arithmetic and modern use.</p>
-        `
-      }
-    };
-
-    function openInfo(id) {
-      const data = infoData[id];
-      if (!data) return;
-      document.getElementById('info-title').innerHTML = data.title;
-      document.getElementById('info-text').innerHTML = data.content;
-      const modal = document.getElementById('info-modal');
-      const content = document.getElementById('info-modal-content');
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      content.classList.remove('scale-95');
-    }
-
-    function closeInfo(e, force = false) {
-      if (force || e.target.id === 'info-modal') {
-        const modal = document.getElementById('info-modal');
-        const content = document.getElementById('info-modal-content');
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        content.classList.add('scale-95');
-      }
-    }
-
     // --- Utility: Format Number ---
     function formatNumber(num) {
       if (isNaN(num) || !isFinite(num)) return '';
-      return parseFloat(num.toFixed(6)).toString();
+      // 7 significant figures: 1 US fl oz -> 0.00002957353 m³, not 3e-05
+      return formatSig(num, 7);
     }
 
     // --- Utility: Parse Fractions ---
@@ -607,8 +594,8 @@
       inEl.value = formatNumber(parseFloat(mmEl.value) / 25.4);
     });
 
-    bindConverter('val-km', 'val-mi', 0.621371);
-    bindConverter('val-m', 'val-ft', 3.28084);
+    bindConverter('val-km', 'val-mi', 1 / 1.609344);   // 1 mi = 1.609344 km exactly
+    bindConverter('val-m', 'val-ft', 1 / 0.3048);      // 1 ft = 0.3048 m exactly
 
     // 2. Area (4-Way)
     const aM2 = document.getElementById('val-m2');
@@ -646,8 +633,33 @@
     vOz.addEventListener('input', () => updateVolume(vOz, parseFloat(vOz.value) / 33.8140226));
     vGal.addEventListener('input', () => updateVolume(vGal, parseFloat(vGal.value) / 0.264172052));
 
-    // 4. Weight
-    bindConverter('val-kg', 'val-lbs', 2.20462);
+    // 4. Weight & Mass (4-Way, base unit: grams)
+    const wKg = document.getElementById('val-kg');
+    const wG = document.getElementById('val-g');
+    const wLbs = document.getElementById('val-lbs');
+    const wOz = document.getElementById('val-oz');
+    const wOzt = document.getElementById('val-ozt');
+    const G_PER_LB = 453.59237;      // international avoirdupois pound
+    const G_PER_OZ = 28.349523125;   // avoirdupois ounce = 1/16 lb
+    const G_PER_OZT = 31.1034768;    // troy ounce — precious metals
+
+    function updateWeight(source, valInG) {
+      if (isNaN(valInG)) {
+        wKg.value = ''; wG.value = ''; wLbs.value = '';
+        wOz.value = ''; wOzt.value = '';
+        return;
+      }
+      if (source !== wKg) wKg.value = formatNumber(valInG / 1000);
+      if (source !== wG) wG.value = formatNumber(valInG);
+      if (source !== wLbs) wLbs.value = formatNumber(valInG / G_PER_LB);
+      if (source !== wOz) wOz.value = formatNumber(valInG / G_PER_OZ);
+      if (source !== wOzt) wOzt.value = formatNumber(valInG / G_PER_OZT);
+    }
+    wKg.addEventListener('input', () => updateWeight(wKg, parseFloat(wKg.value) * 1000));
+    wG.addEventListener('input', () => updateWeight(wG, parseFloat(wG.value)));
+    wLbs.addEventListener('input', () => updateWeight(wLbs, parseFloat(wLbs.value) * G_PER_LB));
+    wOz.addEventListener('input', () => updateWeight(wOz, parseFloat(wOz.value) * G_PER_OZ));
+    wOzt.addEventListener('input', () => updateWeight(wOzt, parseFloat(wOzt.value) * G_PER_OZT));
 
     // 5. Temperature (3-Way)
     const tC = document.getElementById('val-c');
@@ -673,7 +685,7 @@
     });
 
     // 6. Power
-    bindConverter('val-hp', 'val-kw', 0.7457);
+    bindConverter('val-hp', 'val-kw', 0.74569987158);  // mechanical hp = 745.69987 W
 
     // 7. Pressure (3-Way)
     const pPsi = document.getElementById('val-psi');
@@ -737,7 +749,7 @@
     }
 
     // --- ScrollSpy ---
-    const sections = document.querySelectorAll('section');
+    const sections = document.querySelectorAll('section.scroll-mt-8');
     const navLinks = document.querySelectorAll('.nav-link');
     const scrollContainer = document.getElementById('scroll-container');
 
@@ -758,33 +770,11 @@
 
     sections.forEach(section => observer.observe(section));
 
-    // --- Mobile Keyboard Back Button Fix ---
-    let keyboardOpen = false;
-    let historyStatePushed = false;
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('focus', () => {
-        keyboardOpen = true;
-        if (!historyStatePushed) {
-          history.pushState({ keyboardOpen: true }, '');
-          historyStatePushed = true;
-        }
-      });
-      input.addEventListener('blur', () => {
-        keyboardOpen = false;
-        historyStatePushed = false;
-      });
-    });
-    window.addEventListener('popstate', (e) => {
-      if (keyboardOpen) {
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.tagName === 'INPUT') {
-          activeElement.blur();
-          history.pushState({ keyboardOpen: true }, '');
-          e.preventDefault();
-        }
-      }
-    });
   </script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

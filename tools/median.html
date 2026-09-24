@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-  <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-  <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+  <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
   <title>Median Calculator with Code Generator — PocketEngineer</title>
   <meta name="description"
     content="Calculate the median of any number set with a visual step-by-step breakdown. See the sorted array, highlighted median values, and get ready-to-use C and Python code for the calculation.">
@@ -16,10 +17,19 @@
   <meta property="og:title" content="Median Calculator with Code Generator — PocketEngineer">
   <meta property="og:description"
     content="Find the median of any dataset visually. Step-by-step sorting, highlighted median values, and C/Python code generation.">
-  <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-  <script src="../resources/app.js?v=1.2.0"></script>
-  <link rel="stylesheet" href="../resources/tailwind.css?v=1.2.0">
-  <link rel="stylesheet" href="../resources/fonts.css?v=1.2.0">
+  <meta property="og:image" content="https://www.pockeng.com/resources/social/median-calculator.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Median calculator bar chart with the middle value of the dataset highlighted">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Median Calculator with Code Generator — PocketEngineer">
+  <meta name="twitter:description" content="Find the median of any dataset visually. Step-by-step sorting, highlighted median values, and C/Python code generation.">
+  <meta name="twitter:image" content="https://www.pockeng.com/resources/social/median-calculator.png">
+  <meta name="twitter:image:alt" content="Median calculator bar chart with the middle value of the dataset highlighted">
+  <script src="../resources/app.js?v=1.4.0"></script>
+  <link rel="stylesheet" href="../resources/tailwind.css?v=1.4.0">
+  <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
   <style>
     body {
       background-color: #fafafa;
@@ -173,19 +183,62 @@
       letter-spacing: -0.01em;
     }
   </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Median Calculator",
+      "url": "https://www.pockeng.com/tools/median.html",
+      "description": "Calculate the median of any number set with a visual step-by-step breakdown. See the sorted array, highlighted median values, and get ready-to-use C and Python code for the calculation.",
+      "image": "https://www.pockeng.com/resources/social/median-calculator.png",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and a modern web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "PocketEngineer",
+        "url": "https://www.pockeng.com/"
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Median Calculator",
+      "item": "https://www.pockeng.com/tools/median.html"
+    }
+  ]
+}
+  </script>
 </head>
 
-<body class="text-zinc-900 antialiased min-h-screen flex flex-col">
+<body class="pe-page text-zinc-900 antialiased min-h-screen flex flex-col">
 
   <!-- Header -->
   <header class="flex-none bg-white/80 backdrop-blur-sm border-b border-zinc-200/50 z-50 relative sticky top-0">
     <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="../index.html" class="back-button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        Back
-      </a>
+      <a href="../" class="pe-back">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
+        </a>
       <h1 class="text-lg font-semibold text-zinc-900 tracking-tight">Median Calculator</h1>
       <div class="w-20"></div>
     </div>
@@ -261,7 +314,7 @@
     </div>
 
     <!-- Result Display -->
-    <div id="result-container" class="w-full max-w-4xl mx-auto" style="display: none;">
+    <div id="result-container" class="w-full max-w-4xl mx-auto" style="display: none;" aria-live="polite">
       <div class="result-card bg-white rounded-xl border border-zinc-200/60 p-6 shadow-sm">
         <!-- Header Removed as requested -->
 
@@ -324,6 +377,7 @@
     </div>
 
   </main>
+
 
   <script>
     let numbers = [];
@@ -572,10 +626,10 @@
       const medianValueEl = document.getElementById('median-value');
       const explanationEl = document.getElementById('median-explanation');
 
-      medianValueEl.textContent = median.toFixed(median % 1 !== 0 ? 2 : 0);
+      medianValueEl.textContent = formatSig(median, 8);
 
       if (isEven) {
-        explanationEl.textContent = `With an even number of elements (${n}), the median is the average of the two middle values: ${medianValues[0]} and ${medianValues[1]}. Median = (${medianValues[0]} + ${medianValues[1]}) ÷ 2 = ${median.toFixed(median % 1 !== 0 ? 2 : 0)}`;
+        explanationEl.textContent = `With an even number of elements (${n}), the median is the average of the two middle values: ${medianValues[0]} and ${medianValues[1]}. Median = (${medianValues[0]} + ${medianValues[1]}) ÷ 2 = ${formatSig(median, 8)}`;
       } else {
         explanationEl.textContent = `With an odd number of elements (${n}), the median is the middle value when sorted.`;
       }
@@ -785,12 +839,6 @@ print(f"Median: {median:.2f}")`;
       }
     }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
     async function copyCode() {
       const code = generatedCode[currentLanguage] || codeOutput.textContent;
       if (!code || code.includes('Calculate median')) return;
@@ -898,6 +946,10 @@ print(f"Median: {median:.2f}")`;
     });
   </script>
 
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>

@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="../resources/NewLogo.svg">
-    <link rel="apple-touch-icon" href="../resources/NewLogo.svg">
-    <link rel="stylesheet" href="../resources/common.css?v=1.2.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="../resources/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../resources/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../resources/icon-180.png">
+    <link rel="stylesheet" href="../resources/common.css?v=1.4.0">
     <title>Bitwise Operations Calculator & Explainer — PocketEngineer</title>
     <meta name="description"
         content="Interactive bitwise operations calculator — AND, OR, XOR, NOT, left shift, and right shift explained visually. See binary alignment, step-by-step results, and auto-generated C code examples.">
@@ -16,8 +17,18 @@
     <meta property="og:title" content="Bitwise Operations Calculator — PocketEngineer">
     <meta property="og:description"
         content="Visualize AND, OR, XOR, NOT, and shift operations with binary alignment and C code generation.">
-    <meta property="og:image" content="https://www.pockeng.com/tools/resources/icon_256_256.png">
-    <script src="../resources/app.js?v=1.2.0"></script>
+    <meta property="og:image" content="https://www.pockeng.com/resources/social/bitwise-operations-calculator.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:alt" content="Bitwise operations calculator showing an AND between two 8-bit values">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bitwise Operations Calculator — PocketEngineer">
+    <meta name="twitter:description" content="Visualize AND, OR, XOR, NOT, and shift operations with binary alignment and C code generation.">
+    <meta name="twitter:image" content="https://www.pockeng.com/resources/social/bitwise-operations-calculator.png">
+    <meta name="twitter:image:alt" content="Bitwise operations calculator showing an AND between two 8-bit values">
+    <script src="../resources/app.js?v=1.4.0"></script>
+    <link rel="stylesheet" href="../resources/fonts.css?v=1.4.0">
     <style>
         /* Classic Serif for UI, Typewriter Monospace for Math */
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
@@ -327,28 +338,71 @@
             }
         }
     </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Bitwise Operations Calculator",
+        "url": "https://www.pockeng.com/tools/bitoperations.html",
+        "description": "Interactive bitwise operations calculator — AND, OR, XOR, NOT, left shift, and right shift explained visually. See binary alignment, step-by-step results, and auto-generated C code examples.",
+        "image": "https://www.pockeng.com/resources/social/bitwise-operations-calculator.png",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript and a modern web browser",
+        "isAccessibleForFree": true,
+        "inLanguage": "en",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "PocketEngineer",
+          "url": "https://www.pockeng.com/"
+        }
+      }
+    </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "PocketEngineer",
+      "item": "https://www.pockeng.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Bitwise Operations Calculator",
+      "item": "https://www.pockeng.com/tools/bitoperations.html"
+    }
+  ]
+}
+  </script>
 </head>
 
 <body>
 
     <div class="sheet">
-        <a href="../index.html" class="back-button" style="position: absolute; top: 15px; left: 20px; z-index: 10;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M15 18l-6-6 6-6" />
-            </svg>
-            Back
+        <a href="../" class="pe-back" style="position: absolute; top: 15px; left: 20px; z-index: 10;">
+          <span class="pe-back__icon" aria-hidden="true"><svg viewBox="0 0 9 15"><path d="M7.5 1.5 1.5 7.5l6 6" /></svg></span>
+          <span class="pe-back__label">All Tools</span>
         </a>
 
-        <h1>Bitwise Operations</h1>
+        <h1>Bitwise Operations Calculator</h1>
 
         <!-- Operand A -->
         <div class="operand-row">
             <div class="input-group">
-                <label>Operand A (Decimal)</label>
+                <label for="decA">Operand A (Decimal)</label>
                 <input type="number" id="decA" value="12" oninput="sync('dec', 'A')">
             </div>
             <div class="input-group">
-                <label>Operand A (Binary)</label>
+                <label for="binA">Operand A (Binary)</label>
                 <input type="text" id="binA" value="00001100" oninput="sync('bin', 'A')">
             </div>
         </div>
@@ -356,40 +410,40 @@
         <!-- Operand B -->
         <div class="operand-row" id="operandB-container">
             <div class="input-group">
-                <label>Operand B (Decimal)</label>
+                <label for="decB">Operand B (Decimal)</label>
                 <input type="number" id="decB" value="5" oninput="sync('dec', 'B')">
             </div>
             <div class="input-group">
-                <label>Operand B (Binary)</label>
+                <label for="binB">Operand B (Binary)</label>
                 <input type="text" id="binB" value="00000101" oninput="sync('bin', 'B')">
             </div>
         </div>
 
         <!-- Operators -->
-        <div class="operators-container" id="operator-container">
-            <button class="op-btn active" data-op="&">AND &</button>
-            <button class="op-btn" data-op="|">OR |</button>
-            <button class="op-btn" data-op="^">XOR ^</button>
-            <button class="op-btn" data-op="~">NOT ~</button>
-            <button class="op-btn" data-op="<<">SHL <<< /button>
-                    <button class="op-btn" data-op=">>">SHR >></button>
+        <div class="operators-container" id="operator-container" role="group" aria-label="Operation">
+            <button type="button" class="op-btn active" data-op="&amp;" aria-pressed="true">AND &amp;</button>
+            <button type="button" class="op-btn" data-op="|" aria-pressed="false">OR |</button>
+            <button type="button" class="op-btn" data-op="^" aria-pressed="false">XOR ^</button>
+            <button type="button" class="op-btn" data-op="~" aria-pressed="false">NOT ~</button>
+            <button type="button" class="op-btn" data-op="&lt;&lt;" aria-pressed="false">SHL &lt;&lt;</button>
+            <button type="button" class="op-btn" data-op="&gt;&gt;" aria-pressed="false">SHR &gt;&gt;</button>
         </div>
 
         <!-- Final Result Inputs -->
         <div class="operand-row" style="margin-bottom: 0;">
             <div class="input-group">
-                <label>Result (Decimal)</label>
+                <label for="decRes">Result (Decimal)</label>
                 <input type="text" id="decRes" readonly>
             </div>
             <div class="input-group">
-                <label>Result (Binary)</label>
+                <label for="binRes">Result (Binary)</label>
                 <input type="text" id="binRes" readonly>
             </div>
         </div>
 
         <!-- Result Console -->
-        <div class="console">
-            <div class="console-header">System Output & Explanation</div>
+        <div class="console" aria-live="polite">
+            <div class="console-header">System Output &amp; Explanation</div>
             <div class="rule-text" id="ruleText"></div>
             <div class="visual-math" id="visualMath"></div>
             <div style="margin-top: 16px; text-align: center;">
@@ -411,7 +465,7 @@
                     </div>
                     <span class="filename">bitwise.c</span>
                 </div>
-                <button class="copy-btn" onclick="copyCode(this)">
+                <button type="button" class="copy-btn" onclick="copyCode(this)">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -422,6 +476,7 @@
             <pre class="code-content" id="code-display"></pre>
         </div>
     </div>
+
 
     <script>
         let currentOp = "&";
@@ -437,11 +492,16 @@
         };
 
         // Operator Button Clicking Logic
-        document.querySelectorAll('.op-btn').forEach(btn => {
+        const opButtons = document.querySelectorAll('#operator-container .op-btn');
+        opButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentOp = e.target.getAttribute('data-op');
+                opButtons.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                e.currentTarget.classList.add('active');
+                e.currentTarget.setAttribute('aria-pressed', 'true');
+                currentOp = e.currentTarget.getAttribute('data-op');
                 calculate();
             });
         });
@@ -676,6 +736,10 @@
         };
     </script>
 
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt=""
+      referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 
 </html>
